@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+          rel="stylesheet">
+    <link href="../static/css/font-awesome.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+    <link href="../static/css/pages/dashboard.css" rel="stylesheet">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body id="body">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="templates_origin/index2.html">Huella Gestión</a>
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-cog"></i> Cuenta <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="perfil.html">Perfil</a></li>
+                            <li><a href="index.html">Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-search pull-right">
+                    <input type="text" class="search-query" placeholder="Search">
+                </form>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /navbar-inner -->
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+    <div class="subnavbar-inner">
+        <div class="container">
+            <ul class="mainnav">
+                <li ><a href="empleado.html"><i class="icon-dashboard"></i><span>Inicio</span> </a> </li>
+                <li class="active" class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-folder-open"></i><span>Documentos</span> <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="documentos.html">Ver Documentos</a></li>
+                        <li><a href="documentos.html">Crear Documento</a></li>
+                    </ul>
+                </li>
+                <li><a href="tareas.html"><i class="icon-calendar"></i><span>Tareas</span> </a></li>
+                <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i><span>Mi Cuenta</span> <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="perfil.html">Perfil</a></li>
+                        <li><a href="">Cambiar Contraseña</a></li>
+                        <li><a href="index.html">Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+                <li><a href="templates_origin/guidely.html"><i class="icon-facetime-video"></i><span>Tour</span> </a></li>
+            </ul>
+
+        </div>
+
+        <!-- /container -->
+
+    </div>
+
+    <ol class="breadcrumb " >
+        <div class="breadcrumb-title">
+            <li ><a href="empleado.html"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li ><a href="#">Direccion Estrategica</a> /</li>
+            <li class="active"><a href="#">Nuevo Documento </a> </li>
+        </div>
+    </ol>
+    <!-- /subnavbar-inner -->
+</div>
+<!-- /subnavbar -->
+
+<div class="main">
+
+
+    <!-- List Bussiness -->
+    <div class="main-inner">
+
+        <div class="container">
+
+            <div class="row" >
+
+                    <div id="contenido" style="border: 1px solid #d9d9d9;min-height: 400px; background: white; padding-bottom: 0 !important;">
+
+                    </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /main-inner -->
+</div>
+<!-- /main -->
+<div class="extra">
+    <div class="extra-inner">
+        <div class="container">
+            <div class="row">
+                <div class="span3">
+                    <h4>
+                        About Free Admin Template</h4>
+                    <ul>
+                        <li><a href="javascript:;">Huella Logistica</a></li>
+                        <li><a href="javascript:;">Recursos</a></li>
+                        <li><a href="javascript:;">Nosotros</a></li>
+                        <li><a href="javascript:;">Gestion</a></li>
+                    </ul>
+                </div>
+                <!-- /span3 -->
+                <div class="span3">
+                    <h4>
+                        Support</h4>
+                    <ul>
+                        <li><a href="javascript:;">Frequently Asked Questions</a></li>
+                        <li><a href="javascript:;">Ask a Question</a></li>
+                        <li><a href="javascript:;">Video Tutorial</a></li>
+                        <li><a href="javascript:;">Feedback</a></li>
+                    </ul>
+                </div>
+                <!-- /span3 -->
+                <div class="span3">
+                    <h4>
+                        Something Legal</h4>
+                    <ul>
+                        <li><a href="javascript:;">Read License</a></li>
+                        <li><a href="javascript:;">Terms of Use</a></li>
+                        <li><a href="javascript:;">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <!-- /span3 -->
+                <div class="span3">
+                    <h4>
+                        Open Source jQuery Plugins</h4>
+                    <ul>
+                        <li><a href="http://www.egrappler.com">Open Source jQuery Plugins</a></li>
+                        <li><a href="http://www.egrappler.com;">HTML5 Responsive Tempaltes</a></li>
+                        <li><a href="http://www.egrappler.com;">Free Contact Form Plugin</a></li>
+                        <li><a href="http://www.egrappler.com;">Flat UI PSD</a></li>
+                    </ul>
+                </div>
+                <!-- /span3 -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /extra-inner -->
+</div>
+
+<!-- /extra -->
+<div class="footer">
+    <div class="footer-inner">
+        <div class="container">
+            <div class="row">
+                <div class="span12"> &copy; 2013 <a href="http://www.egrappler.com/">Bootstrap Responsive Admin Template</a>. </div>
+                <!-- /span12 -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /footer-inner -->
+</div>
+<!-- /footer -->
+<style>
+    .search{
+        display: inline-block;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+    .search-input{
+        margin: 10px;
+    }
+
+</style>
+<!-- backbone templates -->
+<script type="text/template" id="procesos">
+
+    <div class="widget ">
+
+        <div class="widget-header">
+            <i class="icon-user"></i>
+            <h3>PERFIL</h3>
+        </div> <!-- /widget-header -->
+
+        <div class="widget-content">
+            <div class="span3" style="height: 250px;  padding: 15px; border: 1px solid grey; text-align: center"> <img src="../static/img/default-user.png"/></div>
+            <form id="edit-profile" class="form-horizontal">
+                <fieldset>
+
+                    <div class="control-group">
+                        <label class="control-label" for="firstname">Nombre</label>
+                        <div class="controls">
+                            <input type="text" class="span6 disabled" id="firstname" value="John" disabled>
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+                    <div class="control-group">
+                        <label class="control-label" for="username">Tipo de Identificación</label>
+                        <div class="controls">
+
+                            <select class="span6 " disabled>
+                                <option>Cedula de Ciudadania</option>
+                                <option>Cedula de Extranjeria</option>
+                                <option>Pasaporte</option>
+                            </select>
+
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+
+                    <div class="control-group">
+                        <label class="control-label" for="firstname">Identificación</label>
+                        <div class="controls">
+                            <input type="text" class="span6 disabled" id="firstname" value="1234567890" disabled>
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+
+                    <div class="control-group">
+                        <label class="control-label">Sexo</label>
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="radio"  name="radiobtns" checked> Masculino
+                            </label>
+
+                            <label class="radio inline">
+                                <input type="radio"  name="radiobtns"> Femenino
+                            </label>
+
+                        </div>	<!-- /controls -->
+                    </div> <!-- /control-group -->
+
+                    <div class="control-group">
+                        <label class="control-label" for="lastname">Correo Electronico</label>
+                        <div class="controls">
+                            <input type="email" class="span6" id="lastname" value="micorreo@esto.com">
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">Direccion</label>
+                        <div class="controls">
+                            <textarea class="span6" id="email" >Tu direccion
+                            </textarea>
+
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+                    <div class="control-group">
+                        <label class="control-label" for="lastname">Telefono 1</label>
+                        <div class="controls">
+                            <input type="number" class="span6" id="lastname" value="1234567">
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+                    <div class="control-group">
+                        <label class="control-label" for="lastname">Telefono 2</label>
+                        <div class="controls">
+                            <input type="number" class="span6" id="lastname" value="7654321">
+                        </div> <!-- /controls -->
+                    </div> <!-- /control-group -->
+
+
+                    <div class="control-group">
+                        <label class="control-label">Foto</label>
+                        <div class="controls">
+                            <label class="radio inline">
+                                <input type="file" class="doc" id="doc_link" name="radiobtns">
+                            </label>
+
+
+                        </div>	<!-- /controls -->
+                    </div> <!-- /control-group -->
+
+                    <hr>
+
+                    <div>
+                        <button class="btn btn-primary pull-right" style="margin: 0 5px" type="submit" class="btn btn-primary">Editar</button>
+
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div> <!-- /widget-content -->
+
+    </div> <!-- /widget -->
+
+</script>
+
+<script type="text/template" id="crear_proceso"></script>
+<script type="text/template" id="ver_proceso"></script>
+
+<script type="text/template" id="perfiles">Perfiles</script>
+<script type="text/template" id="crear_perfil"></script>
+<script type="text/template" id="ver_perfil"></script>
+
+<script type="text/template" id="tareas">Tareas</script>
+<script type="text/template" id="crear_tarea"></script>
+<!-- /backbone templates -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../static/js/jquery-1.7.2.min.js"></script>
+<script src="../static/js/underscore.js"></script>
+<script src="../static/js/backbone-min.js"></script>
+<script src="../static/js/excanvas.min.js"></script>
+<script src="../static/js/chart.min.js" type="text/javascript"></script>
+
+<script src="../static/js/bootstrap.js"></script>
+
+<script language="javascript" type="text/javascript" src="../static/js/full-calendar/fullcalendar.min.js"></script>
+
+<script src="../static/js/base.js"></script>
+
+<script>
+    $( document ).ready(function() {
+        console.log('imprime');
+
+
+
+        var EmpresaModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var empresas = Backbone.Collection.extend({
+            model:EmpresaModel
+        });
+        var DocumentoModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var Documentos = Backbone.Collection.extend({
+            model:DocumentoModel
+        });
+        var ProcesoModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var procesos = Backbone.Collection.extend({
+            model:ProcesoModel
+        });
+
+        var EmpresaView = Backbone.View.extend({
+            el: $('body'),
+            container: $('#contenido'),
+            empresa_model: new EmpresaModel(),
+            proceso_model: new ProcesoModel(),
+            procesos_template:_.template($('#procesos').html()),
+            perfiles_template:_.template($('#perfiles').html()),
+            tareas_template:_.template($('#tareas').html()),
+
+            events: {
+
+                "click .ver_proceso": "verProceso",
+                "click #ver_tareas": "verTareas",
+                "click .search_by": "buscarDocumento",
+                "click .doc": "validaArchivo"
+
+
+            },
+
+            initialize: function () {
+//                this.container.html('');
+//                this.container.append(this.empleados_template(this.empresa_model.toJSON()));
+//                return this;
+            },
+
+            render: function(){
+                this.container.html('');
+                this.container.append(this.procesos_template());
+
+                return this;
+            },
+            verEmpleados: function (ev) {
+                ev.preventDefault();
+                var self =this
+                this.container.html('');
+                this.container.append(this.empleados_template());
+                this.ifSmallDevice(this.container);
+
+                return this;
+            },
+            verProceso: function (ev) {
+                ev.preventDefault();
+                titulo=$(ev.target).html();
+                console.log(titulo);
+                this.container.find('#nombre_proceso').html(titulo);
+                this.container.html('');
+                this.container.append(this.procesos_template());
+                this.container.find('#nombre_proceso').html(titulo);
+                this.ifSmallDevice(this.container);
+                return this;
+            },
+
+            ifSmallDevice: function (container) {
+                if($(window).width()<=768)
+                    $("html, body").animate({ scrollTop: container.offset().top -15}, 1000);
+
+            },
+            eliminaItem: function (ev) {
+                ev.preventDefault();
+                var element=$(ev.target);
+
+                if(element.hasClass('elimina-empleado')){
+                    $('#eliminaEmpleado').modal('show');
+                    console.log('empleado'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-empleado')){
+                    $('#eliminaEmpleado').modal('show');
+                    console.log('empleado'+element.parent().parent().parent().attr('id'))
+                }
+                if(element.hasClass('elimina-proceso')){
+                    $('#eliminaProceso').modal('show');
+                    console.log('proceso'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-proceso')){
+                    $('#eliminaProceso').modal('show');
+                    console.log('proceso'+element.parent().parent().parent().attr('id'))
+                }
+
+                if(element.hasClass('elimina-perfil')){
+                    $('#eliminaPerfil').modal('show');
+                    console.log('perfil'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-perfil')){
+                    $('#eliminaPerfil').modal('show');
+                    console.log('perfil'+element.parent().parent().parent().attr('id'))
+                }
+
+                if(element.hasClass('elimina-tarea')){
+                    $('#eliminaTarea').modal('show');
+                    console.log('tarea'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-tarea')){
+                    $('#eliminaTarea').modal('show');
+                    console.log('tarea'+element.parent().parent().parent().attr('id'))
+                }
+            },
+
+            buscarDocumento: function (ev) {
+                ev.preventDefault();
+                this.container.find('#input_busqueda').html('');
+                this.container.find('#input_busqueda').css('display', 'block')
+
+                if($(ev.target).attr('id')=='tipo_documento'){
+
+                    this.container.find('#input_busqueda').html('<div class="span4"><select class="span4" style="margin-bottom: 0 !important;"><option>Caracterizacion</option><option>1</option><option>1</option></select>');
+                    this.container.find('#input_busqueda').append('<button  style="display: inline-block; margin left: 8px;" >Buscar por tipo</button></div>');
+                }
+
+                else if($(ev.target).attr('id')=='nombre_documento'){
+
+                    this.container.find('#input_busqueda').html('<div class="span4"><input class="span3" style="margin-bottom: 0 !important;" type="text">');
+                    this.container.find('#input_busqueda').append('<button  style="display: inline-block; margin left: 8px;">Buscar por nombre</button></div>');
+                }
+
+                else if($(ev.target).attr('id')=='fecha_documento'){
+
+                    this.container.find('#input_busqueda').html('<div class="span4"><input class="span3" style="margin-bottom: 0 !important;" type="date">');
+                    this.container.find('#input_busqueda').append('<button  style="display: inline-block; margin left: 8px;" >Buscar por fecha</button></div>');
+                }
+
+            },
+            validaArchivo: function (ev) {
+                console.log('entro a validaD')
+
+                if($(ev.target).attr('id')=='doc_file'){
+
+                    this.container.find('.documento_link').css('display', 'none');
+                    this.container.find('.documento_archivo').css('display', 'block');
+                }
+
+                else if($(ev.target).attr('id')=='doc_link'){
+                    this.container.find('.documento_link').css('display', 'block');
+                    this.container.find('.documento_archivo').css('display', 'none');
+                }
+
+            },
+            creaProceso: function (ev) {
+                ev.preventDefault();
+                $('#creaProceso').modal('show');
+            }
+
+        });
+
+        var view = new EmpresaView();
+        view.render();
+    });
+
+</script>
+
+
+</body>
+</html>

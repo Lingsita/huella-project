@@ -1,0 +1,132 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+    {% block custom_head %}
+    <title>Login - Huella Gestion</title>
+
+    <link href="../static/css/font-awesome.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/pages/signin.css" rel="stylesheet" type="text/css">
+    <script src="{% static "js/jquery-1.7.2.min.js" %}"></script>
+    <link href="{% static "js/jquery-ui-1.11.4/jquery-ui.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "stylesheets/main.css" %}" rel="stylesheet" type="text/css">
+    {% endblock %}
+
+
+    {% block title_bar %}
+        <div class="navbar navbar-fixed-top">
+
+            <div class="navbar-inner">
+
+                <div class="container">
+
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <a class="brand" href="#">
+                        Huella Gestión
+                    </a>
+
+                    <div class="nav-collapse">
+                        <ul class="nav pull-right">
+
+                            <li class="">
+                                <a href="#" class="">
+                                    ¿No recuerdas tu contraseña?
+                                </a>
+
+                            </li>
+
+                            <li class="">
+                                <a href="index.html" class="">
+                                    <i class="icon-chevron-left"></i>
+                                    Volver a la pagina de Inicio
+                                </a>
+
+                            </li>
+                        </ul>
+
+                    </div><!--/.nav-collapse -->
+
+                </div> <!-- /container -->
+
+            </div> <!-- /navbar-inner -->
+
+        </div> <!-- /navbar -->
+    {% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<div class="">
+
+    <div class="content clearfix">
+        {% if error_message %}
+        <div class="alert alert-danger one-session">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {# <strong>Atención!</strong> #}
+          ¡{{ error_message }}!
+        </div>
+        {% endif %}
+        <a class="go-home" href="{% url 'index' %}"><i class="icon-chevron-right"></i><span>Ir a la Página Principal</span></a>
+
+    </div> <!-- /content -->
+
+</div> <!-- /account-container -->
+
+<style>
+    .ui-keyboard {
+{#	/* adjust overall keyboard size using "font-size" */#}
+{#	font-size: 14px;#}
+{#	text-align: center;#}
+{#	/* include the following setting to place the#}
+{#	keyboard at the bottom of the browser window */#}
+{#	width: 100%;#}
+{#	height: auto;#}
+{#	left: 0px;#}
+{#	top: auto;#}
+{#	bottom: 0px;#}
+{#	position: fixed;#}
+}
+</style>
+<script>
+    $(function() {
+
+    $('#username').keyboard({
+        layout: 'international',
+        usePreview: false,
+        position: {
+                of: null,
+                // null (attach to input/textarea) or a jQuery object (attach elsewhere)
+                my: 'right top',
+                at: 'center bottom',
+                at2: 'center bottom'
+            }
+    }).addTyping({
+        showTyping: true,
+        delay: 250
+    });
+
+    $('#password').keyboard({
+        layout: 'international',
+        usePreview: false
+    })
+    // activate the typing extension
+    .addTyping({
+        showTyping: true,
+        delay: 250
+    });
+
+
+});
+
+</script>
+<script src="/static/js/bootstrap.js"></script>
+
+<script src="/static/js/signin.js"></script>
+{% endblock %}
+

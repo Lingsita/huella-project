@@ -1,0 +1,170 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+
+    {% block custom_head %}
+    <title>Login - Huella Gestion</title>
+
+    <link href="../static/css/font-awesome.css" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="../static/css/pages/signin.css" rel="stylesheet" type="text/css">
+    <script src="{% static "js/jquery-1.7.2.min.js" %}"></script>
+    <link href="{% static "js/jquery-ui-1.11.4/jquery-ui.css" %}" rel="stylesheet" type="text/css">
+    <link href="{% static "stylesheets/main.css" %}" rel="stylesheet" type="text/css">
+
+	<!-- keyboard widget css & script (required) -->
+	<link href="{% static "keyboard/keyboard.css" %}" rel="stylesheet">
+	<script src="{% static "keyboard/jquery.keyboard.js" %}"></script>
+
+	<!-- keyboard extensions (optional) -->
+	<script src="{% static "keyboard/jquery.mousewheel.js" %}"></script>
+	<script src="{% static "keyboard/jquery.keyboard.extension-typing.js" %}"></script>
+	<script src="{% static "keyboard/jquery.keyboard.extension-autocomplete.js" %}"></script>
+{#	<script src="{% static "keyboard/jquery.keyboard.extension-caret.js" %}"></script>#}
+    {% endblock %}
+
+
+    {% block title_bar %}
+        <div class="navbar navbar-fixed-top">
+
+            <div class="navbar-inner">
+
+                <div class="container">
+
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <a class="brand" href="#">
+                        Huella Gestión
+                    </a>
+
+                    <div class="nav-collapse">
+                        <ul class="nav pull-right">
+
+                            <li class="">
+                                <a href="#" class="">
+                                    ¿No recuerdas tu contraseña?
+                                </a>
+
+                            </li>
+
+                            <li class="">
+                                <a href="index.html" class="">
+                                    <i class="icon-chevron-left"></i>
+                                    Volver a la pagina de Inicio
+                                </a>
+
+                            </li>
+                        </ul>
+
+                    </div><!--/.nav-collapse -->
+
+                </div> <!-- /container -->
+
+            </div> <!-- /navbar-inner -->
+
+        </div> <!-- /navbar -->
+    {% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+<div class="account-container">
+
+    <div class="content clearfix">
+        {% if error_message %}
+        <div class="alert alert-danger">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {# <strong>Atención!</strong> #}
+          {{ error_message }}
+        </div>
+        {% endif %}
+        <form action="{% url 'index' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <h1>Inicio de Sesión</h1>
+            <div class="login-fields">
+                <p>Por Favor ingresa tus datos de usuario</p>
+                <div class="field">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" value="" placeholder="Usuario" class="login username-field" />
+                </div> <!-- /field -->
+
+                <div class="field">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" value="" placeholder="Contraseña" class="login password-field"/>
+                </div> <!-- /password -->
+
+            </div> <!-- /login-fields -->
+
+            <div class="login-actions">
+				
+
+
+                <button type="submit" class="button btn btn-success btn-large">Iniciar Sesion</button>
+                <div class="login-extra">
+                    <a href="#">Restaurar Contraseña</a>
+                </div> <!-- /login-extra -->
+
+            </div> <!-- .actions -->
+
+        </form>
+
+    </div> <!-- /content -->
+
+</div> <!-- /account-container -->
+
+<style>
+    .ui-keyboard {
+{#	/* adjust overall keyboard size using "font-size" */#}
+{#	font-size: 14px;#}
+{#	text-align: center;#}
+{#	/* include the following setting to place the#}
+{#	keyboard at the bottom of the browser window */#}
+{#	width: 100%;#}
+{#	height: auto;#}
+{#	left: 0px;#}
+{#	top: auto;#}
+{#	bottom: 0px;#}
+{#	position: fixed;#}
+}
+</style>
+<script>
+    $(function() {
+
+    $('#username').keyboard({
+        layout: 'international',
+        usePreview: false,
+        position: {
+                of: null,
+                // null (attach to input/textarea) or a jQuery object (attach elsewhere)
+                my: 'right top',
+                at: 'center bottom',
+                at2: 'center bottom'
+            }
+    }).addTyping({
+        showTyping: true,
+        delay: 250
+    });
+
+    $('#password').keyboard({
+        layout: 'international',
+        usePreview: false
+    })
+    // activate the typing extension
+    .addTyping({
+        showTyping: true,
+        delay: 250
+    });
+
+
+});
+
+</script>
+<script src="/static/js/bootstrap.js"></script>
+
+<script src="/static/js/signin.js"></script>
+{% endblock %}
+

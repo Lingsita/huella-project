@@ -1,0 +1,78 @@
+/* media */
+/* only for specific resolution */
+/* line 49, ../sass/main.scss */
+.alert-danger {
+  text-shadow: none;
+  background-color: #FCE3E3;
+  border: 1px solid #FBD5D5;
+  color: #C05353;
+}
+/* line 54, ../sass/main.scss */
+.alert-danger .close {
+  padding-bottom: 7px;
+}
+/* line 57, ../sass/main.scss */
+.alert-danger.one-session {
+  padding: 40px;
+  font-size: 20px;
+}
+
+/* line 62, ../sass/main.scss */
+.go-home {
+  padding-right: 10px;
+  font-size: 16px;
+  line-height: 18px;
+}
+/* line 66, ../sass/main.scss */
+.go-home:hover {
+  text-decoration: none;
+}
+/* line 69, ../sass/main.scss */
+.go-home span {
+  padding: 0 6px;
+}
+
+/* line 73, ../sass/main.scss */
+.footer {
+  bottom: 0;
+}
+
+/* Forms */
+/* line 79, ../sass/main.scss */
+.new-item {
+  padding: 0 40px;
+}
+/* line 81, ../sass/main.scss */
+.new-item label {
+  float: left;
+  width: 20%;
+  text-align: right;
+}
+/* line 87, ../sass/main.scss */
+.new-item input {
+  margin-left: 30px;
+  float: left;
+  width: 70%;
+}
+/* line 92, ../sass/main.scss */
+.new-item textarea {
+  margin-left: 30px;
+  float: left;
+  width: 70%;
+  max-height: 100px;
+}
+@media (max-width: 570px) {
+  /* line 79, ../sass/main.scss */
+  .new-item {
+    padding: 0 10px;
+  }
+  /* line 100, ../sass/main.scss */
+  .new-item label, .new-item input, .new-item textarea {
+    width: 100%;
+    margin: auto 0;
+  }
+  /* line 104, ../sass/main.scss */
+  .new-item textarea {
+    max-height: 70px;
+  }
+}

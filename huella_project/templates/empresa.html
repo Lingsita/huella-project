@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+<link href="../static/css/font-awesome.css" rel="stylesheet">
+<link href="../static/css/style.css" rel="stylesheet">
+<link href="../static/css/pages/dashboard.css" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body id="body">
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><a class="brand" href="templates_origin/index2.html">Huella Gestión</a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+          <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                            class="icon-cog"></i> Cuenta <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;">Perfil</a></li>
+              <li><a href="javascript:;">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-search pull-right">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>
+      </div>
+      <!--/.nav-collapse --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /navbar-inner --> 
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+        <ul class="mainnav">
+            <li class="active"><a href="admin.html"><i class="icon-dashboard"></i><span>Inicio</span> </a> </li>
+            <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Menu</span> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="admin_empresas.html">Empresas</a></li>
+                    <li><a href="templates_origin/faq.html">Usuarios</a></li>
+                    <li><a href="formularios.html">Formularios</a></li>
+                </ul>
+            </li>
+            <li><a href="templates_origin/guidely.html"><i class="icon-facetime-video"></i><span>Tour</span> </a></li>
+            <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-user"></i><span>Mi Cuenta</span> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="templates_origin/icons.html">Perfil</a></li>
+                    <li><a href="templates_origin/faq.html">Cambiar Contraseña</a></li>
+                    <li><a href="templates_origin/login.html">Cerrar Sesión</a></li>
+                </ul>
+            </li>
+            <li><a href="templates_origin/shortcodes.html"><i class="icon-code"></i><span>About</span> </a> </li>
+
+        </ul>
+    </div>
+
+    <!-- /container -->
+
+  </div>
+
+    <ol class="breadcrumb " >
+        <div class="breadcrumb-title">
+            <li><a href="#"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li ><a href="#">Empresas</a> /</li>
+            <li class="active"><a href="#">Huella Logistica</a></li>
+
+        </div>
+    </ol>
+
+  <!-- /subnavbar-inner -->
+</div>
+<!-- /subnavbar -->
+
+<div class="main">
+    <!-- Modal Ver Empleado-->
+    <div class="modal fade modal-lg" id="verEmpleado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog " role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">LING LUNG ZUÑIGA</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="span3" >
+                        <div style="border:solid #d9d9d9 1px; width: 0 auto; margin:auto; padding: 10px; text-align: center" ><img style="width: 100%" src="../static/img/default-user.png"></div>
+                    </div>
+                    <div class="span 7">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombre Completo</label>
+                                <div class="controls">
+                                    Ling Lung Zuñiga
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Tipo de Documento</label>
+                                <div class="controls">
+                                    Cedula de Ciudadanía
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Documento de Identificación:</label>
+                                <div class="controls">
+                                    1112311111
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Perfil</label>
+                                <div class="controls">
+                                    MiPerfil
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">E-mail:</label>
+                                <div class="controls">
+                                    linglung1047@gmail.com
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Dirección:</label>
+                                <div class="controls">
+                                    Av. siempre viva Springfield
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Telefono 1</label>
+                                <div class="controls">
+                                    555 - 5555
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Telefono 2:</label>
+                                <div class="controls">
+                                    555 - 5555
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                        </fieldset>
+                    </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-editar-empleado">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Crea Empleado-->
+    <div class="modal fade modal-lg" id="creaEmpleado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog " role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">NUEVO EMPLEADO</h4>
+                </div>
+                <div class="modal-body modal-body-lg">
+                    <form id="crea_empleado" class="form-horizontal">
+                        <fieldset>
+
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombres</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="firstname" value="John">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Apellidos</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="lastname" value="Donga">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Documento de Identificación</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="lastname" value="123456789">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label">Tipo de Documento</label>
+
+
+                                <div class="controls">
+                                    <label class="radio inline">
+                                        <input type="radio"  name="radiobtns"> Cedula de Ciudadania
+                                    </label>
+
+                                    <label class="radio inline">
+                                        <input type="radio" name="radiobtns"> Cedula de Extranjeria
+                                    </label>
+
+                                    <label class="radio inline">
+                                        <input type="radio" name="radiobtns"> Pasaporte
+                                    </label>
+                                </div>	<!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="email">Email</label>
+                                <div class="controls">
+                                    <input type="text" class="span4" id="email" value="john.donga@egrappler.com">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group ">
+                                <label class="control-label" for="lastname">Dirección</label>
+                                <div class="controls">
+                                    <select class="span3">
+                                        <option>Ciudad</option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                    <textarea placeholder="Dirección" class="span3"></textarea>
+                                </div> <!-- /controls -->
+
+                            </div> <!-- /control-group -->
+
+                            <!--<div class="control-group ">-->
+                                <!--<label class="control-label" for="lastname">Dirección</label>-->
+                                <!--<div class="controls">-->
+                                    <!--<textarea class="span6"></textarea>-->
+                                <!--</div> &lt;!&ndash; /controls &ndash;&gt;-->
+                            <!--</div> &lt;!&ndash; /control-group &ndash;&gt;-->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Telefono</label>
+                                <div class="controls">
+                                    <input type="text" class="span3" placeholder="telefono 1" id="lastname" value="">
+                                    <input type="text" class="span3" placeholder="telefono 2" id="lastname" value="">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label">Privilegios: </label>
+
+                                <div class="controls">
+                                    <label class="checkbox inline">
+                                        <input type="checkbox"> Marcar como administrador
+                                    </label>
+                                </div>		<!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Perfil</label>
+                                <div class="controls">
+                                    <select>
+                                        <option>Calidad</option>
+                                        <option>TIC's</option>
+                                        <option>Otra</option>
+                                    </select>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Foto</label>
+                                <div class="controls">
+                                    <input type="file" data-buttonText="Your label here.">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Crea Proceso-->
+    <div class="modal fade modal-lg" id="creaProceso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog " role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">NUEVO PROCESO</h4>
+                </div>
+                <div class="modal-body modal-body-lg">
+                    <form id="crea_proceso" class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Categoria</label>
+                                <div class="controls">
+                                    <select>
+                                        <option></option>
+                                        <option></option>
+                                        <option></option>
+                                    </select>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombre</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="firstname" value="John">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">ID</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="lastname" value="Donga">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Descripción</label>
+                                <div class="controls">
+                                    <textarea class="span6"></textarea>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Crea Perfil-->
+    <div class="modal fade modal-lg" id="creaPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog " role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">NUEVO PERFIL</h4>
+                </div>
+                <div class="modal-body modal-body-lg">
+                    <form id="crea_proceso" class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombre</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="firstname" value="John">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">ID</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="lastname" value="Donga">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Descripción</label>
+                                <div class="controls">
+                                    <textarea class="span6"></textarea>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
+                                <div class="controls">
+                                    <select multiple="multiple" class="span6">
+                                        <option>Direccion Estrategica</option>
+                                        <option>Proceso2</option>
+                                        <option>Proceso3</option>
+                                        <option>Proceso4</option>
+                                    </select>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal ver Perfil-->
+    <div class="modal fade modal-lg" id="verPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog " role="document" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">NUEVO PERFIL</h4>
+                </div>
+                <div class="modal-body modal-body-lg">
+                    <form id="crea_proceso" class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombre</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="firstname" value="John">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">ID</label>
+                                <div class="controls">
+                                    <input type="text" class="span6" id="lastname" value="Donga">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Descripción</label>
+                                <div class="controls">
+                                    <textarea class="span6"></textarea>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
+                                <div class="controls">
+                                    <select multiple="multiple" class="span6">
+                                        <option>Direccion Estrategica</option>
+                                        <option>Proceso2</option>
+                                        <option>Proceso3</option>
+                                        <option>Proceso4</option>
+                                    </select>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Formatos</label>
+                                <div class="controls">
+                                    <div class="span3" style="margin-left: 0 !important;">
+                                        <select multiple="multiple" class="span3">
+                                            <option>Direccion Estrategica</option>
+                                            <option>Proceso2</option>
+                                            <option>Proceso3</option>
+                                            <option>Proceso4</option>
+                                        </select>
+                                    </div>
+                                    <div class="span2" ><button class="btn btn-warning button-agregar-formulario">Agregar Formato</button></div>
+                                </div> <!-- /controls -->
+
+                            </div> <!-- /control-group -->
+
+                        </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Crear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Agrega Formulario a Perfil-->
+    <div class="modal fade" id="agregaFormulario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Perfil</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                    <fieldset>
+                    <div class="control-group">
+                        <label class="control-label" for="lastname">Elige los formularios para agregarlos al perfil:</label>
+                        <div class="controls">
+                            Arrastra el cursor presionado sobre los formatos que deseas elegir o utiliza la tecla Shift
+                            <div class="span3" style="margin-left: 0 !important; ">
+                                <select multiple="multiple" class="span5" style=" min-height:150px;">
+                                    <option>Formato Para Perfil Gerente</option>
+                                    <option>Formato Para Perfil SubGerente</option>
+                                    <option>Formato Para Perfil Operacional</option>
+                                    <option>Formato Para Perfil Administrador</option>
+                                    <option>Formato Para Perfil Gerente</option>
+                                    <option>Formato Para Perfil SubGerente</option>
+                                    <option>Formato Para Perfil Operacional</option>
+                                    <option>Formato Para Perfil Administrador</option>
+                                </select>
+
+                            </div>
+
+                        </div> <!-- /controls -->
+
+                    </div> <!-- /control-group -->
+
+                    </fieldset>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Elimina Empleado-->
+    <div class="modal fade" id="eliminaEmpleado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Empleado</h4>
+                </div>
+                <div class="modal-body">
+                    Para eliminar al empleado LING LUNG ZUÑIGA usted debe ser usuario Administrador.<br>
+                    Por favor digite su clave para continuar.<br>
+                    <input type="text">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Elimina Proceso-->
+    <div class="modal fade" id="eliminaProceso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Proceso</h4>
+                </div>
+                <div class="modal-body">
+                    Para eliminar un proceso usted debe ser usuario Administrador.<br>
+                    Por favor digite su clave para continuar.<br>
+                    <input type="text">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Elimina Perfil-->
+    <div class="modal fade" id="eliminaPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Perfil</h4>
+                </div>
+                <div class="modal-body">
+                    Para eliminar un perfil usted debe ser usuario Administrador.<br>
+                    Por favor digite su clave para continuar.<br>
+                    <input type="text">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Elimina Tarea-->
+    <div class="modal fade" id="eliminaTarea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Tarea</h4>
+                </div>
+                <div class="modal-body">
+                    Para eliminar un empleado usted debe ser usuario Administrador.<br>
+                    Por favor digite su clave para conyinuar.<br>
+                    <input type="text">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Button for add bussiness -->
+
+
+    <!-- List Bussiness -->
+    <div class="main-inner">
+
+    <div class="container">
+
+      <div class="row" >
+          <div class="span2">
+
+              <button id="ver_procesos" class="btn btn-success large-button">PROCESOS</button><br>
+              <button id="ver_empleados" class="btn btn-success large-button" >EMPLEADOS</button><br>
+              <button id="ver_perfiles" class="btn btn-success large-button">PERFILES</button><br>
+              <button id="ver_tareas" class="btn btn-success large-button">CREAR TAREA</button><br>
+
+          </div>
+          <div class="span10">
+
+              <div id="contenido" style="border: 1px solid #d9d9d9; background-color:#fff; min-height: 200px">
+
+              </div>
+          </div>
+
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /main-inner --> 
+</div>
+<!-- /main -->
+<div class="extra">
+  <div class="extra-inner">
+    <div class="container">
+      <div class="row">
+                    <div class="span3">
+                        <h4>
+                            About Free Admin Template</h4>
+                        <ul>
+                            <li><a href="javascript:;">Huella Logistica</a></li>
+                            <li><a href="javascript:;">Recursos</a></li>
+                            <li><a href="javascript:;">Nosotros</a></li>
+                            <li><a href="javascript:;">Gestion</a></li>
+                        </ul>
+                    </div>
+                    <!-- /span3 -->
+                    <div class="span3">
+                        <h4>
+                            Support</h4>
+                        <ul>
+                            <li><a href="javascript:;">Frequently Asked Questions</a></li>
+                            <li><a href="javascript:;">Ask a Question</a></li>
+                            <li><a href="javascript:;">Video Tutorial</a></li>
+                            <li><a href="javascript:;">Feedback</a></li>
+                        </ul>
+                    </div>
+                    <!-- /span3 -->
+                    <div class="span3">
+                        <h4>
+                            Something Legal</h4>
+                        <ul>
+                            <li><a href="javascript:;">Read License</a></li>
+                            <li><a href="javascript:;">Terms of Use</a></li>
+                            <li><a href="javascript:;">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <!-- /span3 -->
+                    <div class="span3">
+                        <h4>
+                            Open Source jQuery Plugins</h4>
+                        <ul>
+                            <li><a href="http://www.egrappler.com">Open Source jQuery Plugins</a></li>
+                            <li><a href="http://www.egrappler.com;">HTML5 Responsive Tempaltes</a></li>
+                            <li><a href="http://www.egrappler.com;">Free Contact Form Plugin</a></li>
+                            <li><a href="http://www.egrappler.com;">Flat UI PSD</a></li>
+                        </ul>
+                    </div>
+                    <!-- /span3 -->
+                </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /extra-inner --> 
+</div>
+
+<!-- /extra -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> &copy; 2013 <a href="http://www.egrappler.com/">Bootstrap Responsive Admin Template</a>. </div>
+        <!-- /span12 --> 
+      </div>
+      <!-- /row --> 
+    </div>
+    <!-- /container --> 
+  </div>
+  <!-- /footer-inner --> 
+</div>
+<!-- /footer -->
+
+<!-- backbone templates -->
+<script type="text/template" id="empleados">
+
+    <div class="widget widget-table action-table" >
+        <div class="widget-header"> <i class="icon-th-list"></i>
+            <h3>EMPLEADOS</h3>
+            <button class="btn btn-success pull-right button-crear-empleado" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Empleado</button>
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content" >
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th> Nombre </th>
+                    <th> Identificación</th>
+                    <th > Perfil </th>
+                    <th class="td-actions"> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="ling">
+                    <td> Ling Lung Zuñiga</td>
+                    <td> 900305826 - 1 </td>
+                    <td> Sistemas </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog "> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> Ling Lung Zuñiga</td>
+                    <td> 900305826 - 1 </td>
+                    <td> Sistemas </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> Ling Lung Zuñiga</td>
+                    <td> 900305826 - 1 </td>
+                    <td> Sistemas </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> Ling Lung Zuñiga </td>
+                    <td> 900305826 - 1 </td>
+                    <td> Sistemas </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> Ling Lung Zuñiga </td>
+                    <td> 900305826 - 1 </td>
+                    <td> Sistemas </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /widget-content -->
+    </div>
+
+</script>
+<script type="text/template" id="crear_empleado">
+
+</script>
+<script type="text/template" id="ver_empleado">
+
+
+
+</script>
+<script type="text/template" id="procesos">
+    <div class="widget widget-table action-table" >
+        <div class="widget-header"> <i class="icon-th-list"></i>
+            <h3>PROCESOS</h3>
+            <button class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Proceso</button>
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content" >
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th> Nombre </th>
+                    <th> Codigo</th>
+                    <th > Categoría</th>
+                    <th class="td-actions"> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="ling">
+                    <td> DIRECCIÓN ESTRATÉGICA</td>
+                    <td> 900305826 - 1 </td>
+                    <td> PROCESOS GERENCIALES </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> DIRECCIÓN ESTRATÉGICA</td>
+                    <td> 900305826 - 1 </td>
+                    <td> PROCESOS GERENCIALES </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> DIRECCIÓN ESTRATÉGICA</td>
+                    <td> 900305826 - 1 </td>
+                    <td> PROCESOS GERENCIALES </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> DIRECCIÓN ESTRATÉGICA </td>
+                    <td> 900305826 - 1 </td>
+                    <td> PROCESOS GERENCIALES </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr>
+                    <td> DIRECCIÓN ESTRATÉGICA </td>
+                    <td> 900305826 - 1 </td>
+                    <td> PROCESOS GERENCIALES </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /widget-content -->
+    </div>
+
+
+</script>
+
+<script type="text/template" id="crear_proceso"></script>
+<script type="text/template" id="ver_proceso"></script>
+
+<script type="text/template" id="perfiles">
+    <div class="widget widget-table action-table" >
+        <div class="widget-header"> <i class="icon-th-list"></i>
+            <h3>PERFILES</h3>
+            <button class="btn btn-success pull-right button-crear-perfil" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Perfil</button>
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content" >
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th> Nombre </th>
+                    <th> Descripción</th>
+                    <th> </th>
+                    <th class="td-actions"> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="ling">
+                    <td> Perfil 1</td>
+                    <td> Descripcion del perfil </td>
+                    <td class="td-actions"><a class="btn btn-warning" type="button">Tareas</a></td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> Perfil 1</td>
+                    <td> Descripcion del perfil </td>
+                    <td class="td-actions"> <a class="btn btn-warning" type="button">Tareas</a></td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> Perfil 1</td>
+                    <td> Descripcion del perfil </td>
+                    <td class="td-actions"> <a class="btn btn-warning" type="button">Tareas</a></td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> Perfil 1</td>
+                    <td> Descripcion del perfil </td>
+                    <td class="td-actions"> <a class="btn btn-warning" type="button">Tareas</a></td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> Perfil 1</td>
+                    <td> Descripcion del perfil </td>
+                    <td class="td-actions"> <a class="btn btn-warning" type="button">Tareas</a></td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-proceso "><i class="btn-icon-only icon-remove"> </i></a></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /widget-content -->
+    </div>
+
+</script>
+<script type="text/template" id="crear_perfil"></script>
+<script type="text/template" id="ver_perfil"></script>
+
+<script type="text/template" id="tareas">
+
+    <div class="widget widget-table action-table" style="margin-bottom: 0 !important; " >
+        <div class="widget-header"> <i class="icon-calendar"></i>
+            <h3>NUEVA TAREA</h3>
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content" style="margin-top: 20px" >
+                <div class="span 7">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombre:</label>
+                                <div class="controls">
+                                    <input class="span4">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Dirección:</label>
+                                <div class="controls">
+                                    <textarea class="span4"></textarea>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Fecha de Entrega:</label>
+                                <div class="controls">
+                                    <input class="span4" type="date">
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Asignar a:</label>
+                                <div class="controls">
+                                    <select class="span4">
+                                        <option>Perfil 1</option>
+                                        <option>Perfil 2</option>
+                                        <option>Perfil 3</option>
+                                        <option>Perfil 4</option>
+                                        <option>Perfil 5</option>
+                                    </select>
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+                            <div class="pull-right" style="padding: 20px">
+                                <button type="button" class="btn btn-primary">Crear Tarea</button>
+                            </div>
+                        </fieldset>
+                    </form>
+
+            </div>
+        </div>
+    </div>
+    <!---------- Finish Modal--------------->
+</script>
+<script type="text/template" id="crear_tarea"></script>
+<!-- /backbone templates -->
+
+<!-- Le javascript
+================================================== --> 
+<!-- Placed at the end of the document so the pages load faster --> 
+<script src="../static/js/jquery-1.7.2.min.js"></script>
+<script src="../static/js/underscore.js"></script>
+<script src="../static/js/backbone-min.js"></script>
+<script src="../static/js/excanvas.min.js"></script>
+<script src="../static/js/chart.min.js" type="text/javascript"></script>
+
+<script src="../static/js/bootstrap.js"></script>
+
+<script language="javascript" type="text/javascript" src="../static/js/full-calendar/fullcalendar.min.js"></script>
+ 
+<script src="../static/js/base.js"></script>
+
+<script>
+    $( document ).ready(function() {
+        console.log('imprime');
+
+
+
+        var EmpresaModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var empresas = Backbone.Collection.extend({
+            model:EmpresaModel
+        });
+        var EmpleadoModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var empleados = Backbone.Collection.extend({
+            model:EmpleadoModel
+        });
+        var ProcesoModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var procesos = Backbone.Collection.extend({
+            model:ProcesoModel
+        });
+        var PerfilModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var perfiles = Backbone.Collection.extend({
+            model:PerfilModel
+        });
+        var TareaModel = Backbone.Model.extend({
+            defaults: {
+                nombre:'',
+                nit: "",
+                direccion: "",
+                telefono1: "",
+                telefono2: '',
+                descripcion:'',
+                sitio_web:'',
+                activo: ""
+            }
+        });
+        var Tareas = Backbone.Collection.extend({
+            model:TareaModel
+        });
+
+        var EmpresaView = Backbone.View.extend({
+            el: $('body'),
+            container: $('#contenido'),
+            empresa_model: new EmpresaModel(),
+            proceso_model: new ProcesoModel(),
+            perfil_model: new PerfilModel(),
+            tarea_model: new TareaModel(),
+            empleados_template:_.template($('#empleados').html()),
+            procesos_template:_.template($('#procesos').html()),
+            perfiles_template:_.template($('#perfiles').html()),
+            tareas_template:_.template($('#tareas').html()),
+
+            events: {
+                "click #ver_empleados": "verEmpleados",
+                "click #ver_procesos": "verProcesos",
+                "click #ver_perfiles": "verPerfiles",
+                "click #ver_tareas": "verTareas",
+                "click .btn-elimina-item": "eliminaItem",
+                "click .button-crear-empleado": "creaEmpleado",
+                "click .btn-ver-empleado": "verEmpleado",
+                "click .btn-editar-empleado": "editarEmpleado",
+                "click .button-crear-proceso": "creaProceso",
+                "click .button-crear-perfil": "creaPerfil",
+                "click .button-ver-perfil": "verPerfil",
+                "click .button-agregar-formulario": "agregarFormatoPerfil"
+
+            },
+
+            initialize: function () {
+//                this.container.html('');
+//                this.container.append(this.empleados_template(this.empresa_model.toJSON()));
+//                return this;
+            },
+
+            render: function(){
+                this.container.html('');
+                this.container.append(this.procesos_template());
+
+                return this;
+            },
+            verEmpleados: function (ev) {
+                ev.preventDefault();
+                var self =this
+                this.container.html('');
+                this.container.append(this.empleados_template());
+                this.ifSmallDevice(this.container);
+
+                return this;
+            },
+            verProcesos: function (ev) {
+                ev.preventDefault();
+                this.container.html('');
+                this.container.append(this.procesos_template());
+                this.ifSmallDevice(this.container);
+                return this;
+            },
+            verPerfiles: function (ev) {
+                ev.preventDefault();
+                this.container.html('');
+                this.container.append(this.perfiles_template());
+                this.ifSmallDevice(this.container);
+                return this;
+            },
+            verTareas: function (ev) {
+                ev.preventDefault();
+                this.container.html('');
+                this.container.append(this.tareas_template());
+                this.ifSmallDevice(this.container);
+                return this;
+            },
+            ifSmallDevice: function (container) {
+                if($(window).width()<=768)
+                    $("html, body").animate({ scrollTop: container.offset().top -15}, 1000);
+
+            },
+            eliminaItem: function (ev) {
+                ev.preventDefault();
+                var element=$(ev.target);
+
+                if(element.hasClass('elimina-empleado')){
+                    $('#eliminaEmpleado').modal('show');
+                    console.log('empleado'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-empleado')){
+                    $('#eliminaEmpleado').modal('show');
+                    console.log('empleado'+element.parent().parent().parent().attr('id'))
+                }
+                if(element.hasClass('elimina-proceso')){
+                    $('#eliminaProceso').modal('show');
+                    console.log('proceso'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-proceso')){
+                    $('#eliminaProceso').modal('show');
+                    console.log('proceso'+element.parent().parent().parent().attr('id'))
+                }
+
+                if(element.hasClass('elimina-perfil')){
+                    $('#eliminaPerfil').modal('show');
+                    console.log('perfil'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-perfil')){
+                    $('#eliminaPerfil').modal('show');
+                    console.log('perfil'+element.parent().parent().parent().attr('id'))
+                }
+
+                if(element.hasClass('elimina-tarea')){
+                    $('#eliminaTarea').modal('show');
+                    console.log('tarea'+element.parent().parent().attr('id'))
+                }else if(  element.parent().hasClass('elimina-tarea')){
+                    $('#eliminaTarea').modal('show');
+                    console.log('tarea'+element.parent().parent().parent().attr('id'))
+                }
+            },
+            creaEmpleado: function (ev) {
+                ev.preventDefault();
+                $('#creaEmpleado').modal('show');
+            },
+            verEmpleado: function (ev) {
+                ev.preventDefault();
+                $('#verEmpleado').modal('show');
+            },
+            editarEmpleado: function (ev) {
+                ev.preventDefault();
+                $('#verEmpleado').modal('hide');
+                $('#creaEmpleado').modal('show');
+            },
+            creaProceso: function (ev) {
+                ev.preventDefault();
+                $('#creaProceso').modal('show');
+            },
+            creaPerfil: function (ev) {
+                ev.preventDefault();
+                $('#creaPerfil').modal('show');
+            },
+            verPerfil: function (ev) {
+                ev.preventDefault();
+                $('#verPerfil').modal('show');
+            },
+            agregarFormatoPerfil: function (ev) {
+                ev.preventDefault();
+                //$('#agregaFormulario').modal('show');
+                $('#agregaFormulario').modal({backdrop: 'static'});
+            }
+
+        });
+
+        var view = new EmpresaView();
+        view.render();
+    });
+
+</script>
+
+
+</body>
+</html>
