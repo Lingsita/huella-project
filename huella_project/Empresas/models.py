@@ -8,6 +8,7 @@ from Formularios.models import Registro, Formulario
 
 
 class Empresa(models.Model):
+
     nombre = models.CharField(max_length=150, null=False)
     direccion= models.CharField(max_length=150)
     NIT=models.CharField(max_length=150, verbose_name="NIT o Identificación")
@@ -15,6 +16,8 @@ class Empresa(models.Model):
     telefono2=models.CharField(max_length=20, blank=True)
     email=models.CharField(max_length=150, blank=True)
     active=models.BooleanField(null=False, blank=False, default=True)
+    class Meta:
+        verbose_name = 'Empresa'
     def __unicode__(self):
         return u'{0}'.format(self.nombre)
 

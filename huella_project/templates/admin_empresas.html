@@ -21,16 +21,21 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Modal Crea Empresa-->
-    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="creaEmpresaModal" >
+
+
+
+    <!-- List Bussiness -->
+    <div class="main-inner">
+     <!-- Modal Crea Empresa-->
+    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="creaEmpresaModal" ng-controller="CrearEmpresaCtrl">
         <div class="modal-dialog " role="document" >
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="">NUEVA EMPRESA</h4>
                 </div>
-                <div class="modal-body modal-body-lg">
-                    <form id="crea_empresa" class=" new-item form-horizontal">
+                <form id="crea_empresa" name="crea_empresa" ng-submit="submit()" class=" new-item form-horizontal"  novalidate>
+                    <div class="modal-body modal-body-lg">
                         {% if form %}
 
                         <fieldset>
@@ -77,13 +82,15 @@
 
                         </fieldset>
                         {% endif %}
-                    </form>
+                    </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Crear</button>
-                </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" ng-disabled="!crea_empresa.$valid" class="btn btn-primary">Crear</button>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
@@ -111,12 +118,6 @@
         </div>
     </div>
     <!---------- Finish Modal--------------->
-
-    <!-- Button for add bussiness -->
-
-    <!-- List Bussiness -->
-    <div class="main-inner">
-{#    <div ng-view></div>#}
     <div class="container"  ng-controller="EmpresaCtrl">
       <div class="row" style="margin-left: auto;">
 
@@ -132,16 +133,25 @@
                   <div class="control-group" style="display: inline-block">
                       <div class="controls">
                           <label id="nombre_empresa" class="radio inline search_by">
-                              <input id="nombre_empresa" type="radio" name="radiobtns"> Nombre
+                              <input ng-model="lookup_filter" id="lookup_filter" type="radio" value="nombre" name="lookup_filter"> Nombre
                           </label>
                           <label id="id_empresa" class="radio inline search_by">
-                              <input  id="id_empresa" type="radio" name="radiobtns"> NIT o Identificación
+                              <input ng-model="lookup_filter" id="lookup_filter" type="radio"  value="NIT" name="lookup_filter" > NIT o Identificación
                           </label>
                       </div>	<!-- /controls -->
                   </div> <!-- /control-group -->
-
               </div>
-              <div  class="widget-header" id="input_busqueda" style="display: none; padding: 5px 13px 0px 13px"></div>
+              <div  class="widget-header" id="input_busqueda" style=" padding: 5px 13px 0px 13px">
+                  <div class="row-fluid">
+                      <div class="span6">
+                          <input class="span6" ng-model="lookup_field" class="" style="margin-bottom: 0 !important;" type="text">
+                      </div>
+                      <div class="span6">
+                        <button  style="display: inline-block; " ng-click="searchEmpresa()"> Buscar </button>
+                      </div>
+                  </div>
+              </div>
+
               <!-- /widget-header -->
               <div class="widget-content" >
 
@@ -157,16 +167,28 @@
                       <tbody>
                       <tr ng-repeat="empresa in empresas">
                           {% verbatim %}
-                          <td> {{ empresa.nombre }} </td>
-                          <td> {{ empresa.NIT }} </td>
-                          <td class="td-actions"><a href="empresa.html" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
+                              <td> {{ empresa.nombre }} </td>
+                              <td> {{ empresa.NIT }} </td>
                           {% endverbatim %}
+                          <td class="td-actions"><a href="{% url 'Empresas:detail' %}{% verbatim %}/?nit={{  empresa.NIT }}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
+
                       </tr>
 
 
                       </tbody>
                   </table>
+
               </div>
+              {% verbatim %}
+
+                <div class="pagination pull-right">
+                    <button ng-if="previous" ng-click="getEmpresas(previous)" >Anterior</button>
+                    <button ng-repeat="(key, value) in pages" ng-click="getEmpresas(value)" >{{ key }}</button>
+                    <button ng-if="next" ng-click="getEmpresas(next)" >Siguiente</button>
+                </div>
+
+
+              {% endverbatim %}
               <!-- /widget-content -->
           </div>
 
@@ -184,59 +206,10 @@
 {% block some_extra_js %}
 <script>
     $( document ).ready(function() {
-        console.log('dadassa')
+
         $('[data-toggle="tooltip"]').tooltip();
 
-        var DocumentRow = Backbone.View.extend({
-            el: $('body'),
-            container: $('.main'),
 
-            events: {
-                "click .btn-elimina_empresa": "eliminar",
-                "click .button.delete": "destroy",
-                "click .search_by": "buscarEmpresa"
-            },
-
-            initialize: function () {
-                return this;
-                // this.listenTo(this.model, "change", this.render);
-                console.log('imprime');
-            },
-
-            render: function() {
-                console.log('inicio')
-            },
-
-            eliminar: function (ev) {
-
-                ev.preventDefault();
-                console.log('elimina');
-                $('#eliminaEmpresa').modal('show');
-            },
-            buscarEmpresa: function (ev) {
-                console.log('imprime');
-
-                this.container.find('#input_busqueda').html('');
-                this.container.find('#input_busqueda').css('display', 'block')
-
-                if($(ev.target).attr('id')=='nombre_empresa'){
-
-                    this.container.find('#input_busqueda').html('<div class="span4"><input class="span4" style="margin-bottom: 0 !important;" type="text">');
-                    this.container.find('#input_busqueda').append('<button  style="display: inline-block; margin left: 8px;">Buscar por nombre</button></div>');
-                }
-
-                else if($(ev.target).attr('id')=='id_empresa'){
-
-                    this.container.find('#input_busqueda').html('<div class="span4"><input class="span4" style="margin-bottom: 0 !important;" type="text">');
-                    this.container.find('#input_busqueda').append('<button  style="display: inline-block; margin left: 8px;" >Buscar por identificacion</button></div>');
-                }
-
-            }
-
-        });
-
-        var view = new DocumentRow();
-        view.render();
     });
 
 </script>

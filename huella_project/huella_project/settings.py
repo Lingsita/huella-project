@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'Accounts',
     'Chat',
     'Empresas',
+    'Empresas.api',
     'Formularios',
     'rest_framework',
 

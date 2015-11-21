@@ -1,7 +1,11 @@
 from django.contrib import admin
 from Empresas.models import *
 # Register your models here.
-admin.site.register(Empresa)
+
+class PruebaAdmin(admin.ModelAdmin):
+    list_display=['nombre','NIT','active']
+
+admin.site.register(Empresa, PruebaAdmin)
 admin.site.register(Perfil)
 admin.site.register(Empleado)
 admin.site.register(CategoriaProceso)
