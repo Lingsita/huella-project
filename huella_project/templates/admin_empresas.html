@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block navbar %}
+    <script>
+
+    </script>
     <li class="active"><a href="admin.html"><i class="icon-dashboard"></i><span>Inicio</span> </a> </li>
     <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-long-arrow-down"></i><span>Menu</span> <b class="caret"></b></a>
         <ul class="dropdown-menu">
@@ -21,13 +24,10 @@
 {% endblock %}
 
 {% block content %}
-
-
-
     <!-- List Bussiness -->
     <div class="main-inner">
      <!-- Modal Crea Empresa-->
-    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="creaEmpresaModal" ng-controller="CrearEmpresaCtrl">
+    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="creaEmpresaModal" ng-controller="EmpresaCtrl">
         <div class="modal-dialog " role="document" >
             <div class="modal-content">
                 <div class="modal-header">
@@ -37,6 +37,7 @@
                 <form id="crea_empresa" name="crea_empresa" ng-submit="submit()" class=" new-item form-horizontal"  novalidate>
                     <div class="modal-body modal-body-lg">
                         {% if form %}
+                            {% csrf_token %}
 
                         <fieldset>
 
@@ -97,59 +98,82 @@
     <!---------- Finish Modal--------------->
 
     <!-- Modal Elimina Empresa-->
-    <div class="modal fade" id="eliminaEmpresa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Eliminar</h4>
-                </div>
-                <div class="modal-body">
-                    Para eliminar una empresa usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para confirmar.<br>
-                    <input type="text">
+    <div ng-controller="EmpresaCtrl">
+     <script type="text/ng-template" id="modal-eliminaEmpresa.html">
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
-                </div>
-            </div>
+          <div class="modal-header">
+            <h3 class="modal-title">Eliminar Empresa </h3>
         </div>
-    </div>
+        <div class="modal-body">
+            {% verbatim %}
+            Usted va a eliminar la Empresa "{{ e_empresa.nombre }}" <br>
+            NIT o ID:{{ e_empresa.nit }}<br><br>
+            <input type="hidden"  id="e_empresa_id">
+            ¿Está seguro de realizar esta acción? Esta acción sólo podrá deshacerla el administrador del sistema.<br>
+            {% endverbatim %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+   </div>
+
     <!---------- Finish Modal--------------->
+
     <div class="container"  ng-controller="EmpresaCtrl">
       <div class="row" style="margin-left: auto;">
 
-          <div class="widget widget-table action-table" >
-              <div class="widget-header"> <i class="icon-th-list"></i>
-                  <h3>Empresas</h3>
-                  <button class="btn btn-success pull-right button-crear-empresa" style="margin-right: 25px;   margin-top: 6px;" data-toggle="modal" data-target="#creaEmpresa"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nueva Empresa</button>
 
-              </div>
-              <div id="buscar_empresa" class="widget-header">
-                  <i class="icon-search"></i>
-                  <label class="search" style="">Buscar por:</label>
-                  <div class="control-group" style="display: inline-block">
-                      <div class="controls">
-                          <label id="nombre_empresa" class="radio inline search_by">
-                              <input ng-model="lookup_filter" id="lookup_filter" type="radio" value="nombre" name="lookup_filter"> Nombre
-                          </label>
-                          <label id="id_empresa" class="radio inline search_by">
-                              <input ng-model="lookup_filter" id="lookup_filter" type="radio"  value="NIT" name="lookup_filter" > NIT o Identificación
-                          </label>
-                      </div>	<!-- /controls -->
-                  </div> <!-- /control-group -->
-              </div>
-              <div  class="widget-header" id="input_busqueda" style=" padding: 5px 13px 0px 13px">
-                  <div class="row-fluid">
-                      <div class="span6">
-                          <input class="span6" ng-model="lookup_field" class="" style="margin-bottom: 0 !important;" type="text">
-                      </div>
-                      <div class="span6">
-                        <button  style="display: inline-block; " ng-click="searchEmpresa()"> Buscar </button>
+          <div id="status_message" class="alert alert-success" style="display: none">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              <strong>Warning!</strong> <div id="message" style="display: inline-block"></div>
+          </div>
+          <div id="bad_status_message" class="alert alert-block" style="display: none">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              <strong>Warning!</strong> <div id="message" style="display: inline-block"></div>
+          </div>
+
+          <div class="widget widget-table action-table" >
+
+                  <div class="widget-header"> <i class="icon-th-list"></i>
+                      <h3>Empresas</h3>
+                      <button class="btn btn-success pull-right button-crear-empresa" style="margin-right: 25px;   margin-top: 6px;" data-toggle="modal" data-target="#creaEmpresa"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nueva Empresa</button>
+
+                  </div>
+                  <div id="buscar_empresa" class="widget-header buscar-empresa-form">
+                      <div class="row">
+                          <div class="span2">
+                              <i class="icon-search"></i>
+                              <label class="search-label" style="">Buscar por:</label>
+                          </div>
+                          <div class="span4 radio-controls">
+                              <div class="control-group" style="display: inline-block">
+                                  <div class="controls">
+                                      <label id="nombre_empresa" class="radio inline search_by">
+                                          <input ng-model="lookup_filter" id="lookup_filter" type="radio" value="nombre" name="lookup_filter"> Nombre
+                                      </label>
+                                      <label id="id_empresa" class="radio inline search_by">
+                                          <input ng-model="lookup_filter" id="lookup_filter" type="radio"  value="NIT" name="lookup_filter" > NIT o Identificación
+                                      </label>
+                                  </div>	<!-- /controls -->
+                              </div> <!-- /control-group -->
+                          </div>
+
                       </div>
                   </div>
+
+              <div  class="widget-header" id="input_busqueda" style=" padding: 5px 13px 0px 13px">
+
+                      <div class="row">
+                          <div class="span6">
+                              <input class="span6" ng-model="lookup_field" class="" style="margin-bottom: 0 !important;" type="text">
+                          </div>
+                          <div class="span2">
+                            <button  style="display: inline-block; " ng-click="searchEmpresa()"> Buscar </button>
+                          </div>
+                      </div>
+
               </div>
 
               <!-- /widget-header -->
@@ -169,9 +193,13 @@
                           {% verbatim %}
                               <td> {{ empresa.nombre }} </td>
                               <td> {{ empresa.NIT }} </td>
-                          {% endverbatim %}
-                          <td class="td-actions"><a href="{% url 'Empresas:detail' %}{% verbatim %}/?nit={{  empresa.NIT }}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
 
+                          <td class="td-actions">
+                              <a href="{% url 'Empresas:detail' %}{% verbatim %}/?nit={{  empresa.NIT }}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a>
+                                {% verbatim %}
+
+                              <a ng-click="confirmaEliminaEmpresa(empresa.nombre, empresa.NIT, empresa.pk )" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
+                          {% endverbatim %}
                       </tr>
 
 

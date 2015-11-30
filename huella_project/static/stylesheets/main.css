@@ -72,3 +72,8 @@
     max-height: 70px;
   }
 }
+
+/* line 111, ../sass/main.scss */
+.buscar-empresa-form .radio-controls label {
+  line-height: 18px;
+}

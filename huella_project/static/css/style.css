@@ -10,21 +10,18 @@ Bootstrap Admin Template by EGrappler.com
 
 body {
 	background: #f9f6f1;
-	/*font: 13px/1.7em 'Open Sans';*/
-	font: 13px/1.7em "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 13px/1.7em 'Open Sans';
 }
     
 p { 
-	/*font: 13px/1.7em 'Open Sans'; 	*/
-	font: 13px/1.7em "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: 13px/1.7em 'Open Sans'; 	
 }
     
 input,
 button,
 select,
 textarea {
-  /*font-family: 'Open Sans';*/
-	font: 13px/1.7em "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans';
 }
 
 .dropdown .dropdown-menu {
@@ -71,7 +68,6 @@ textarea {
 .navbar .container {
 	position: relative;
 }
-
 
 .navbar-inner {
 	padding: 7px 0;
@@ -138,7 +134,7 @@ textarea {
 	
 }
 
-.subnavbar  .container > ul > li {
+.subnavbar .container > ul > li {
 	float: left;
 	
 	min-width: 90px;
@@ -154,7 +150,7 @@ textarea {
 	
 }
 
-.subnavbar  .container > ul > li > a {
+.subnavbar .container > ul > li > a {
 	display: block;
 	
 	height: 100%;
@@ -165,12 +161,12 @@ textarea {
 	color: #b2afaa;
 }
 
-.subnavbar  .container > ul > li > a:hover {
+.subnavbar .container > ul > li > a:hover {
 	color: #888;
 	text-decoration: none;
 }
 
-.subnavbar  .container > ul > li > a > i {
+.subnavbar .container > ul > li > a > i {
 	display: inline-block;
 	
 	width: 24px;
@@ -180,7 +176,7 @@ textarea {
 	font-size: 20px;
 }
 
-.subnavbar  .container > ul > li > a > span {
+.subnavbar .container > ul > li > a > span {
 	display: block;
 	
 }
@@ -247,13 +243,7 @@ textarea {
 }
 
 
-/*------------------------------------------------------------------
-breadcrumb*/
 
-/*.breadcrumb {*/
-	/*padding-left: 135px;*/
-
-/*}*/
 
 
 /*------------------------------------------------------------------
@@ -263,7 +253,7 @@ breadcrumb*/
 .main {
 	padding-bottom: 2em;
 	
-	/*border-bottom: 1px solid #000;*/
+	border-bottom: 1px solid #000;
 }
 
 
@@ -277,13 +267,14 @@ breadcrumb*/
 	border-top: 1px solid #585858;
 	border-bottom: 1px solid #000;
 
-
 }
 
 .extra-inner {
 	padding: 20px 0;
+	
 	font-size: 11px;
 	color: #BBB;
+	
 	background: #1A1A1A;
 }
 
@@ -308,14 +299,17 @@ breadcrumb*/
 	list-style: none;
 }
 
+
+
+
 /*------------------------------------------------------------------
 [6. Footer/ .footer]
 */
 
 .footer {
 	margin-top: 0;
+	
 	border-top: 1px solid #292929;
-
 }
 
 .footer-inner {
@@ -335,11 +329,7 @@ breadcrumb*/
 	text-decoration: none;
 }
 
-.custom-bottom{
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-}
+
 /*------------------------------------------------------------------
 [6. Widget / .widget]
 */
@@ -1286,11 +1276,6 @@ color: #333;
 /*------------------------------------------------------------------
 [2. Max Width: 1200px]
 */
-.contenido{
-	border: 1px solid #d9d9d9;
-	min-height: 400px;
-	background: url('../img/watermark.png')
-}
 
 @media (min-width: 1200px) {
 	.navbar .search-query {
@@ -1300,66 +1285,3 @@ color: #333;
 }
 
 
-/* Custom css*/
-@media (min-width: 900px) {
-	.modal-lg{
-
-		width: 840px;
-		margin: -250px 0 0 -420px;
-	}
-	.modal-body-lg{
-		/*max-height: 500px;*/
-	}
-	.breadcrumb-title{
-		width: 1170px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-}
-@media (max-width: 900px) {
-	.contenido{
-		background: url('../img/watermark900.png');
-	}
-}
-@media (max-width: 768px) {
-	.contenido{
-		background: url('../img/768.png');
-	}
-}
-
-.search{
-	display: inline-block;
-	padding-right: 5px;
-	padding-left: 5px;
-}
-.search-input{
-	margin: 10px;
-}
-
-.large-button{
-	min-width: 100%;
-	display: block;
-	min-height: 50px;
-	background-color: #00ba8b;
-}
-.procesos ul{
-	background-color: white;
-}
-
-.procesos ul>.title-nav{
-	height: 2.5em;
-	background-color: #00ba8b;
-	color: white;
-	line-height: 35px;
-	padding: 5px 10px;
-
-	/*border: solid 1px black;*/
-
-}
-.not-active {
-	pointer-events: none;
-	cursor: default;
-	background-color: #ddd;
-	color: #000;
-}

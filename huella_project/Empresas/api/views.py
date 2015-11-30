@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.filters import DjangoFilterBackend
+from rest_framework.permissions import IsAdminUser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from rest_framework import permissions
+from Accounts.models import Log
 from Empresas.api.filters import EmpresaFilter
 from Empresas.api.pagination import StandardResultsSetPagination
 from Empresas.forms import CrearEmpresaForm
@@ -16,24 +20,41 @@ from rest_framework.response import Response
 
 class EmpresaViewSet(viewsets.ModelViewSet):
     serializer_class = EmpresaSerializer
-    queryset = Empresa.objects.all()
+    queryset = Empresa.objects.filter(active=True)
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
     filter_class = EmpresaFilter
 
-    # def list(self, request):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-    #     serializer = self.serializer_class(queryset, many=True)
-    #     return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        print request.data
+        log = Log(user=request.user, actividad='Creacion de Empresa', descripcion='Creacion de Empresa {0} con NIT: {1} '.format(request.data['nombre'], request.data['NIT']))
+        log.save()
+        return super(EmpresaViewSet,self).create(request, *args, **kwargs)
 
-    def get_queryset(self):
-        queryset = self.queryset.filter(active=True)
-        return queryset
+    def destroy(self, request, *args, **kwargs):
+        print request.user
+        empresa =  self.get_object()
+        empresa.active=False
+        empresa.save()
+        log = Log(user=request.user, actividad='Desactivacion de Empresa', descripcion='Desactivacion de Empresa {0} con NIT: {1} '.format(empresa.nombre, empresa.NIT))
+        log.save()
+        return Response(status=204)
+
+
+    # # def list(self, request):
+    # #     queryset = self.filter_queryset(self.get_queryset())
+    # #     page = self.paginate_queryset(queryset)
+    # #     if page is not None:
+    # #         serializer = self.get_serializer(page, many=True)
+    # #         return self.get_paginated_response(serializer.data)
+    # #     serializer = self.serializer_class(queryset, many=True)
+    # #     return Response(serializer.data)
+    #
+    # def get_queryset(self):
+    #     queryset = self.queryset.filter(active=True)
+    #     return queryset
 
 
 

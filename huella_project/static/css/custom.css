@@ -60,3 +60,8 @@
     background-color: #59CFB7;
     margin-bottom: 17px;
 }
+
+.search-label{
+    display: inline-block;
+    padding-left: 10px;
+}

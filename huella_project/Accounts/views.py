@@ -42,8 +42,11 @@ def admin_empresas(request):
 
 
 def logout_session(request):
-    userSession=UserSession.objects.get(ip = request.session['uu_id'])
-    userSession.active=False
-    userSession.save()
+    try:
+        userSession=UserSession.objects.get(ip = request.session['uu_id'])
+        userSession.active=False
+        userSession.save()
+    except UserSession.DoesNotExist:
+        print "no exite el identificador de session"
     logout(request)
     return redirect('index')

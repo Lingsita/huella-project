@@ -8,10 +8,12 @@ from Formularios.models import Registro, Formulario
 
 
 class Empresa(models.Model):
-
+    permissions={
+        'delete','delete empresa'
+    }
     nombre = models.CharField(max_length=150, null=False)
     direccion= models.CharField(max_length=150)
-    NIT=models.CharField(max_length=150, verbose_name="NIT o Identificación")
+    NIT=models.CharField(max_length=150, unique=True, verbose_name="NIT o Identificación")
     telefono1=models.CharField(max_length=20, blank=True)
     telefono2=models.CharField(max_length=20, blank=True)
     email=models.CharField(max_length=150, blank=True)

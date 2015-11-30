@@ -51,15 +51,18 @@ INSTALLED_APPS = (
 )
 GRAPPELLI_ADMIN_TITLE= "Administrador Huella Gestion"
 MIDDLEWARE_CLASSES = (
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'huella_project.middleware.unique_session.OnlyOneSession',
+    # 'huella_project.middleware.unique_session.OnlyOneSession',
+
 )
 
 ROOT_URLCONF = 'huella_project.urls'
@@ -96,14 +99,7 @@ DATABASES = {
         'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',
     },
-    # 'user_session':{
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'huella_gestion',                      # Or path to database file if using sqlite3.
-    #     'USER': 'admin',                      # Not used with sqlite3.
-    #     'PASSWORD': '123456',                  # Not used with sqlite3.
-    #     'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-    #     'PORT': '5432',
-    # }
+
 }
 
 

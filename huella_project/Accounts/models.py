@@ -19,7 +19,7 @@ class Log(models.Model):
     user = models.ForeignKey(User)
     actividad = models.CharField(max_length=150)
     descripcion = models.CharField(max_length=150)
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
 class UserSession(models.Model):
     user=models.ForeignKey(User)
