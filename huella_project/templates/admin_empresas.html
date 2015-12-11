@@ -27,73 +27,74 @@
     <!-- List Bussiness -->
     <div class="main-inner">
      <!-- Modal Crea Empresa-->
-    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="creaEmpresaModal" ng-controller="EmpresaCtrl">
-        <div class="modal-dialog " role="document" >
-            <div class="modal-content">
+    <div ng-controller="EmpresaCtrl">
+    <script type="text/ng-template" id="modal-creaEmpresa.html">
+
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="">NUEVA EMPRESA</h4>
                 </div>
-                <form id="crea_empresa" name="crea_empresa" ng-submit="submit()" class=" new-item form-horizontal"  novalidate>
-                    <div class="modal-body modal-body-lg">
-                        {% if form %}
-                            {% csrf_token %}
 
-                        <fieldset>
+                <form id="crea_empresa" name="crea_empresa" class=" new-item form-horizontal"  novalidate>
+                    <div class="modal-body">
+                        <div class="modal-body modal-body-lg">
+                            {% if form %}
 
-                            <div class="control-group">
-                                {{ form.nombre.label_tag}}
-                                <div class="controls">
-                                    {{ form.nombre}}
+                                {% csrf_token %}
 
+                            <fieldset>
+
+                                <div class="control-group">
+                                    {{ form.nombre.label_tag}}
+                                    <div class="controls">
+                                        {{ form.nombre}}
+
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="control-group">
-                                 {{ form.NIT.label_tag}}
-                                <div class="controls">
-                                     {{ form.NIT}}
+                                <div class="control-group">
+                                     {{ form.NIT.label_tag}}
+                                    <div class="controls">
+                                         {{ form.NIT}}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="control-group">
-                                {{ form.direccion.label_tag}}
-                                <div class="controls">
-                                    {{ form.direccion}}
+                                <div class="control-group">
+                                    {{ form.direccion.label_tag}}
+                                    <div class="controls">
+                                        {{ form.direccion}}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="control-group">
-                                {{ form.telefono1.label_tag}}
-                                <div class="controls">
-                                    {{ form.telefono1}}
+                                <div class="control-group">
+                                    {{ form.telefono1.label_tag}}
+                                    <div class="controls">
+                                        {{ form.telefono1}}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="control-group">
-                                {{ form.telefono2.label_tag}}
-                                <div class="controls">
-                                    {{ form.telefono2}}
+                                <div class="control-group">
+                                    {{ form.telefono2.label_tag}}
+                                    <div class="controls">
+                                        {{ form.telefono2}}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="control-group">
-                                {{ form.email.label_tag}}
-                                <div class="controls">
-                                   {{ form.email}}
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
+                                <div class="control-group">
+                                    {{ form.email.label_tag}}
+                                    <div class="controls">
+                                       {{ form.email}}
+                                    </div> <!-- /controls -->
+                                </div> <!-- /control-group -->
 
-                        </fieldset>
-                        {% endif %}
+                            </fieldset>
+                            {% endif %}
+                        </div>
                     </div>
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" ng-disabled="!crea_empresa.$valid" class="btn btn-primary">Crear</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Cancelar</button>
+                        <button type="button" ng-disabled="!crea_empresa.$valid" class="btn btn-primary" ng-click="ok()">Crear</button>
                     </div>
                 </form>
-
-            </div>
-        </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
 
@@ -124,21 +125,21 @@
     <div class="container"  ng-controller="EmpresaCtrl">
       <div class="row" style="margin-left: auto;">
 
-
+          {% csrf_token %}
           <div id="status_message" class="alert alert-success" style="display: none">
               <button type="button" class="close" data-dismiss="alert">×</button>
-              <strong>Warning!</strong> <div id="message" style="display: inline-block"></div>
+              <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
           </div>
           <div id="bad_status_message" class="alert alert-block" style="display: none">
               <button type="button" class="close" data-dismiss="alert">×</button>
-              <strong>Warning!</strong> <div id="message" style="display: inline-block"></div>
+              <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
           </div>
 
           <div class="widget widget-table action-table" >
 
                   <div class="widget-header"> <i class="icon-th-list"></i>
                       <h3>Empresas</h3>
-                      <button class="btn btn-success pull-right button-crear-empresa" style="margin-right: 25px;   margin-top: 6px;" data-toggle="modal" data-target="#creaEmpresa"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nueva Empresa</button>
+                      <button ng-click="openModal()" class="btn btn-success pull-right button-crear-empresa" style="margin-right: 25px;   margin-top: 6px;" data-toggle="modal" data-target="#creaEmpresa"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nueva Empresa</button>
 
                   </div>
                   <div id="buscar_empresa" class="widget-header buscar-empresa-form">
@@ -190,16 +191,14 @@
                       </thead>
                       <tbody>
                       <tr ng-repeat="empresa in empresas">
-                          {% verbatim %}
-                              <td> {{ empresa.nombre }} </td>
-                              <td> {{ empresa.NIT }} </td>
+
+                              <td ng-bind="empresa.nombre">  </td>
+                              <td ng-bind="empresa.NIT">  </td>
 
                           <td class="td-actions">
-                              <a href="{% url 'Empresas:detail' %}{% verbatim %}/?nit={{  empresa.NIT }}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a>
-                                {% verbatim %}
-
-                              <a ng-click="confirmaEliminaEmpresa(empresa.nombre, empresa.NIT, empresa.pk )" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
-                          {% endverbatim %}
+                              <a href="{% url 'Empresas:detail' %}?id={% verbatim %}{{ empresa.pk}}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a>
+                              <a ng-click="confirmaEliminaEmpresa(empresa.nombre, empresa.NIT, empresa.pk )" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a>
+                          </td>
                       </tr>
 
 
@@ -234,10 +233,7 @@
 {% block some_extra_js %}
 <script>
     $( document ).ready(function() {
-
         $('[data-toggle="tooltip"]').tooltip();
-
-
     });
 
 </script>

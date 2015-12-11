@@ -1,21 +1,20 @@
-from django.shortcuts import render, redirect
+# -*- encoding: utf-8 -*-
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 from rest_framework import permissions
-from Accounts.models import Log
-from Empresas.api.filters import EmpresaFilter
+from Accounts.models import Log, Usuario
+from Empresas.api.filters import EmpresaFilter, EmpleadoFilter, ProcesoFilter
 from Empresas.api.pagination import StandardResultsSetPagination
 from Empresas.forms import CrearEmpresaForm
-from Empresas.models import Empresa
-from Empresas.serializers import EmpresaSerializer
-from rest_framework.views import APIView
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso, Formato
+from Empresas.serializers import EmpresaSerializer, EmpleadoSerializer, ProcesoSerializer
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 # Create your views here.
 
 class EmpresaViewSet(viewsets.ModelViewSet):
@@ -42,52 +41,6 @@ class EmpresaViewSet(viewsets.ModelViewSet):
         log.save()
         return Response(status=204)
 
-
-    # # def list(self, request):
-    # #     queryset = self.filter_queryset(self.get_queryset())
-    # #     page = self.paginate_queryset(queryset)
-    # #     if page is not None:
-    # #         serializer = self.get_serializer(page, many=True)
-    # #         return self.get_paginated_response(serializer.data)
-    # #     serializer = self.serializer_class(queryset, many=True)
-    # #     return Response(serializer.data)
-    #
-    # def get_queryset(self):
-    #     queryset = self.queryset.filter(active=True)
-    #     return queryset
-
-
-
-    # def get(self, request, format=None):
-
-# class EmpresasRest(APIView):
-#     serializer= EmpresaSerializer
-#     def get(self, request, format=None):
-#         empresas = Empresa.objects.filter(active=True)
-#         resp= self.serializer(empresas, many=True)
-#         return Response(resp.data)
-#     def post(self, request, format=None):
-#         empresa= self.serializer(data= request.data)
-#         if empresa.is_valid():
-#             empresa.save()
-#             resp= self.serializer(empresa.data, many=False)
-#             #return Response(resp.data)
-#             return JSONResponse(empresa.data)
-#         else:
-#
-#             return Response({'message': 'this is my message for fail post'})
-#
-# empresas_rest= EmpresasRest.as_view()
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
 def admin_empresas(request):
     if request.method == "POST":
         form = CrearEmpresaForm(request.POST)
@@ -101,47 +54,98 @@ def admin_empresas(request):
     return render(request, 'admin_empresas.html', {'form': form})
 
 
-def empresas_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    print('dasdas')
-    if request.method == 'GET':
-        empresas = Empresa.objects.filter(active=True)
-        serializer = EmpresaSerializer(empresas, many=True)
-        return JSONResponse(serializer.data)
+class EmpleadoViewSet(viewsets.ModelViewSet):
+    serializer_class = EmpleadoSerializer
+    queryset = Empleado.objects.filter(active=True)
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
+    filter_class = EmpleadoFilter
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = EmpresaSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+    @detail_route(methods=['get'])
+    def get_empleados(self, request, id=None):
+        print request.data
+        queryset = Empleado.objects.filter(perfil__empresa=id)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def upload_foto(self, request, id=None):
+        empleado=get_object_or_404(Empleado, pk=id)
+        file = request.FILES['file']
+        from django.conf import settings
+        new_path = settings.MEDIA_ROOT
+        print new_path
+        destination = open(new_path+file.name, 'wb+')
+        for chunk in file.chunks():
+            destination.write(chunk)
+        destination.close()
+
+        # do some stuff with uploaded file
+        print file
+        return Response(status=204)
 
 
-def empresa_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        empresa = Empresa.objects.get(pk=pk)
-    except Empresa.DoesNotExist:
-        return HttpResponse(status=404)
+    def perform_create(self, serializer):
+        print(self.request.data)
+        print self.request.data['identificacion']
+        user = User(username=self.request.data['identificacion'], email=self.request.data['email'])
+        password = User.objects.make_random_password()
+        user.set_password(password)
+        user.save()
+        usuario=Usuario(user=user)
+        usuario.save()
+        # send_mail('New User Huella Gestion', 'Here is the password: {0}.'.format(password), 'linglung1047@gmail.com',
+        #     [self.request.data['email']], fail_silently=False)
+        perfil=Perfil.objects.get(id=self.request.data['perfil'])
+        serializer.save(usuario=usuario, perfil=perfil)
 
-    if request.method == 'GET':
-        serializer = EmpresaSerializer(empresa)
-        return JSONResponse(serializer.data)
+class ProcesoViewSet(viewsets.ModelViewSet):
+    serializer_class = ProcesoSerializer
+    queryset = Proceso.objects.filter(active=True)
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
+    filter_class = ProcesoFilter
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = EmpresaSerializer(empresa, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JSONResponse(serializer.data)
-        return JSONResponse(serializer.errors, status=400)
+    @detail_route(methods=['get'])
+    def get_procesos(self, request, id=None):
+        print request.data
+        queryset = Proceso.objects.filter(categoria__empresa=id)
 
-    elif request.method == 'DELETE':
-        empresa.delete()
-        return HttpResponse(status=204)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        print(request.data['formatos_asignados'])
+
+        if request.data['categoria']:
+            categoria=get_object_or_404(CategoriaProceso.objects.filter(active=True), pk=request.data['categoria'])
+            try:
+                Proceso.objects.get(active=True, codigo=request.data['codigo'])
+            except Proceso.DoesNotExist:
+                proceso = Proceso(nombre=request.data['nombre'], descripcion=request.data['descripcion'], codigo=request.data['codigo'], categoria=categoria)
+                proceso.save()
+                for fa in request.data['formatos_asignados']:
+                    print fa
+                    formato=Formato.objects.get(id=fa)
+                    proceso.formatos_asignados.add(formato)
+                    proceso.save()
+                serializer = ProcesoSerializer(proceso)
+                return Response(serializer.data)
+
+        return Response(status=202)

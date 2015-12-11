@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from rest_framework.pagination import PageNumberPagination
 
 __author__ = 'linglung'

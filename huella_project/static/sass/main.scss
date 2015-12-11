@@ -45,7 +45,20 @@ $media-lg:1200px;
         @content
     }
 }
-
+@mixin horizontal-relative-center(){
+    position: relative;
+    left: 50%;
+    -ms-transform: translateX(-50%); /* IE 9 */
+   	-webkit-transform: translateX(-50%); /* Safari */
+    transform: translateX(-50%);
+}
+@mixin vertical-relative-center(){
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%); /* IE 9 */
+   	-webkit-transform: translateY(-50%); /* Safari */
+    transform: translateY(-50%);
+}
 .alert-danger{
     text-shadow: none;
     background-color: #FCE3E3;
@@ -113,3 +126,49 @@ $media-lg:1200px;
         }
     }
 }
+.custom-bottom{
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+/* buttons */
+.empresa-page{
+    .panel{
+        .btn-success{
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+    }
+}
+.modal{
+
+
+    @media (min-width: 992px) {
+        position: fixed;
+        left: 50%;
+        -ms-transform: translateX(-50%); /* IE 9 */
+        -webkit-transform: translateX(-50%); /* Safari */
+        transform: translateX(-20%);
+        width: 900px;
+    }
+    .modal-body{
+        padding: 20px 50px;
+
+           .control-group{
+                .ce-input{
+                    input{
+                        width: 100%;
+                    }
+                    textarea{
+                        width: 100%;
+                    }
+                }
+            }
+
+    }
+
+
+}
+

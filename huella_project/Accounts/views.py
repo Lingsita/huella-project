@@ -39,14 +39,12 @@ def index (request):
 def admin_empresas(request):
     return render(request, 'admin.html', {})
 
-
-
 def logout_session(request):
-    try:
-        userSession=UserSession.objects.get(ip = request.session['uu_id'])
-        userSession.active=False
-        userSession.save()
-    except UserSession.DoesNotExist:
-        print "no exite el identificador de session"
+    # try:
+    #     userSession=UserSession.objects.get(ip = request.session['uu_id'])
+    #     userSession.active=False
+    #     userSession.save()
+    # except UserSession.DoesNotExist:
+    #     print "no existe el identificador de session"
     logout(request)
     return redirect('index')

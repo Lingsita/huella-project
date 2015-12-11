@@ -96,12 +96,22 @@ DATABASES = {
         'NAME': 'huella_gestion',                      # Or path to database file if using sqlite3.
         'USER': 'admin',                      # Not used with sqlite3.
         'PASSWORD': '123456',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',
     },
 
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -120,14 +130,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(BASE_DIR, 'static/'),
 )
-
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 try:
     from local_settings import *
 except ImportError:

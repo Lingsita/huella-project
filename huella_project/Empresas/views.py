@@ -1,40 +1,15 @@
+# -*- encoding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from Empresas.forms import CrearEmpresaForm
+from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm
 from Empresas.models import Empresa
 from Empresas.serializers import EmpresaSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 # Create your views here.
-class EmpresasRest(APIView):
-    serializer= EmpresaSerializer
-    def get(self, request, format=None):
-        empresas = Empresa.objects.filter(active=True)
-        resp= self.serializer(empresas, many=True)
-        return Response(resp.data)
-    def post(self, request, format=None):
-        empresa= self.serializer(data= request.data)
-        if empresa.is_valid():
-            empresa.save()
-            resp= self.serializer(empresa.data, many=False)
-            #return Response(resp.data)
-            return JSONResponse(empresa.data)
-        else:
-
-            return Response({'message': 'this is my message for fail post'})
-
-empresas_rest= EmpresasRest.as_view()
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
 
 def admin_empresas(request):
     if request.method == "POST":
@@ -50,13 +25,25 @@ def admin_empresas(request):
 
 def empresa_detail(request):
     if request.method == "GET":
-        id=request.GET['nit']
-        if id is not None:
-            print(id)
-        return render(request, 'empresa.html', {})
+        id=request.GET['id']
+        try:
+            empresa = Empresa.objects.get(id=id)
+            form_procesos=CrearProcesoForm(empresa=empresa)
+            form_empleados=CrearEmpleadoForm(empresa=empresa)
+            return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos})
+        except Empresa.DoesNotExist:
+            return redirect('/empresas/empresas')
 
-def crear_empresa(request):
-    pass
+#Another django rest solutions
+
+class JSONResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into JSON.
+    """
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        kwargs['content_type'] = 'application/json'
+        super(JSONResponse, self).__init__(content, **kwargs)
 
 def empresas_list(request):
     """
@@ -101,3 +88,23 @@ def empresa_detail_rest(request, pk):
     elif request.method == 'DELETE':
         empresa.delete()
         return HttpResponse(status=204)
+
+
+class EmpresasRest(APIView):
+    serializer= EmpresaSerializer
+    def get(self, request, format=None):
+        empresas = Empresa.objects.filter(active=True)
+        resp= self.serializer(empresas, many=True)
+        return Response(resp.data)
+    def post(self, request, format=None):
+        empresa= self.serializer(data= request.data)
+        if empresa.is_valid():
+            empresa.save()
+            resp= self.serializer(empresa.data, many=False)
+            #return Response(resp.data)
+            return JSONResponse(empresa.data)
+        else:
+
+            return Response({'message': 'this is my message for fail post'})
+
+empresas_rest= EmpresasRest.as_view()

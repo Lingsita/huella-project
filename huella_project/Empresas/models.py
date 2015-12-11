@@ -1,11 +1,14 @@
 # -*- encoding: utf-8 -*-
-
 from django.db import models
 
 # Create your models here.
 from Accounts.models import Usuario
 from Formularios.models import Registro, Formulario
 
+import os
+
+def get_image_path(instance, filename):
+    return os.path.join('user_fotos', str(instance.id), filename)
 
 class Empresa(models.Model):
     permissions={
@@ -13,7 +16,7 @@ class Empresa(models.Model):
     }
     nombre = models.CharField(max_length=150, null=False)
     direccion= models.CharField(max_length=150)
-    NIT=models.CharField(max_length=150, unique=True, verbose_name="NIT o Identificación")
+    NIT=models.CharField(max_length=150, unique=True, verbose_name="NIT o Identificacion")
     telefono1=models.CharField(max_length=20, blank=True)
     telefono2=models.CharField(max_length=20, blank=True)
     email=models.CharField(max_length=150, blank=True)
@@ -38,32 +41,38 @@ class Empleado(models.Model):
     perfil = models.ForeignKey(Perfil)
     direccion = models.CharField(max_length=150)
     codigo = models.CharField(max_length=150)
+    foto= models.FileField(upload_to=get_image_path, blank=True, null=True)
+    telefono1= models.CharField(max_length=20, blank=True)
+    telefono2= models.CharField(max_length=20, blank=True)
     is_admin=models.BooleanField(default=False)
     active=models.BooleanField(null=False, blank=False, default=True)
+
     def __unicode__(self):
         return u'%s %s' % (self.nombre, self.apellido)
 
 class CategoriaProceso(models.Model):
     nombre = models.CharField(max_length=150)
     empresa = models.ForeignKey(Empresa)
+    active = models.BooleanField(null=False, blank=False, default=True)
     def __unicode__(self):
-        return u'%s %s' % (self.nombre, self.apellido)
+        return u'%s' % (self.nombre)
 
 class Formato(models.Model):
     formulario=models.ForeignKey(Formulario)
     descripcion=models.CharField(max_length=150)
     empresa = models.ForeignKey(Empresa)
     def __unicode__(self):
-        return u'%s %s' % (self.nombre, self.apellido)
+        return u'%s' % (self.descripcion)
 
 class Proceso(models.Model):
     nombre = models.CharField(max_length=150, null=False)
+    codigo = models.CharField(max_length=150, default=0)
     categoria = models.ForeignKey(CategoriaProceso)
     descripcion = models.CharField(max_length=150)
     formatos_asignados = models.ManyToManyField(Formato)
     active=models.BooleanField(null=False, blank=False, default=True)
     def __unicode__(self):
-        return u'%s %s' % (self.nombre, self.apellido)
+        return u'%s' % (self.nombre)
 
 class Documento(models.Model):
     formato = models.CharField(max_length=150, null=False)
@@ -81,3 +90,5 @@ class Tarea(models.Model):
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
     active=models.BooleanField(null=False, blank=False, default=True)
+    def __unicode__(self):
+        return u'%s %s' % (self.nombre)

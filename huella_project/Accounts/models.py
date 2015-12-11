@@ -7,7 +7,7 @@ from datetime import datetime
 class Usuario(models.Model):
     #model for user account
     user = models.ForeignKey(User)
-    change_password_date = models.DateTimeField('change password date')
+    change_password_date = models.DateTimeField(default=datetime.now, verbose_name='change password date')
     superuser = models.BooleanField(null=False, blank=False, default=False)
 
 class Permiso(models.Model):
