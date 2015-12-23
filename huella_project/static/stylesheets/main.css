@@ -1,56 +1,61 @@
 /* media */
 /* only for specific resolution */
 /* line 62, ../sass/main.scss */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* line 66, ../sass/main.scss */
 .alert-danger {
   text-shadow: none;
   background-color: #FCE3E3;
   border: 1px solid #FBD5D5;
   color: #C05353;
 }
-/* line 67, ../sass/main.scss */
+/* line 71, ../sass/main.scss */
 .alert-danger .close {
   padding-bottom: 7px;
 }
-/* line 70, ../sass/main.scss */
+/* line 74, ../sass/main.scss */
 .alert-danger.one-session {
   padding: 40px;
   font-size: 20px;
 }
 
-/* line 75, ../sass/main.scss */
+/* line 79, ../sass/main.scss */
 .go-home {
   padding-right: 10px;
   font-size: 16px;
   line-height: 18px;
 }
-/* line 79, ../sass/main.scss */
+/* line 83, ../sass/main.scss */
 .go-home:hover {
   text-decoration: none;
 }
-/* line 82, ../sass/main.scss */
+/* line 86, ../sass/main.scss */
 .go-home span {
   padding: 0 6px;
 }
 
-/* line 86, ../sass/main.scss */
+/* line 90, ../sass/main.scss */
 .footer {
   bottom: 0;
 }
 
 /* Forms */
-/* line 94, ../sass/main.scss */
+/* line 98, ../sass/main.scss */
 .new-item label {
   float: left;
   width: 20%;
   text-align: right;
 }
-/* line 100, ../sass/main.scss */
+/* line 104, ../sass/main.scss */
 .new-item input {
   margin-left: 30px;
   float: left;
   width: 70%;
 }
-/* line 105, ../sass/main.scss */
+/* line 109, ../sass/main.scss */
 .new-item textarea {
   margin-left: 30px;
   float: left;
@@ -58,27 +63,27 @@
   max-height: 100px;
 }
 @media (max-width: 570px) {
-  /* line 92, ../sass/main.scss */
+  /* line 96, ../sass/main.scss */
   .new-item {
     padding: 0 10px;
   }
-  /* line 113, ../sass/main.scss */
+  /* line 117, ../sass/main.scss */
   .new-item label, .new-item input, .new-item textarea {
     width: 100%;
     margin: auto 0;
   }
-  /* line 117, ../sass/main.scss */
+  /* line 121, ../sass/main.scss */
   .new-item textarea {
     max-height: 70px;
   }
 }
 
-/* line 124, ../sass/main.scss */
+/* line 128, ../sass/main.scss */
 .buscar-empresa-form .radio-controls label {
   line-height: 18px;
 }
 
-/* line 129, ../sass/main.scss */
+/* line 133, ../sass/main.scss */
 .custom-bottom {
   bottom: 0;
   position: absolute;
@@ -86,15 +91,14 @@
 }
 
 /* buttons */
-/* line 138, ../sass/main.scss */
+/* line 142, ../sass/main.scss */
 .empresa-page .panel .btn-success {
   padding: 12px;
-  width: 100%;
   margin-bottom: 5px;
 }
 
 @media (min-width: 992px) {
-  /* line 145, ../sass/main.scss */
+  /* line 149, ../sass/main.scss */
   .modal {
     position: fixed;
     left: 50%;
@@ -106,15 +110,36 @@
     width: 900px;
   }
 }
-/* line 156, ../sass/main.scss */
+/* line 158, ../sass/main.scss */
 .modal .modal-body {
   padding: 20px 50px;
 }
-/* line 161, ../sass/main.scss */
+/* line 163, ../sass/main.scss */
 .modal .modal-body .control-group .ce-input input {
   width: 100%;
 }
-/* line 164, ../sass/main.scss */
+/* line 166, ../sass/main.scss */
 .modal .modal-body .control-group .ce-input textarea {
   width: 100%;
+}
+
+/* line 174, ../sass/main.scss */
+.small-td {
+  text-align: center !important;
+  width: 80px;
+}
+
+/* line 179, ../sass/main.scss */
+.ver_proceso {
+  pointer-events: none;
+  cursor: default;
+  background-color: #ddd;
+  color: #000;
+}
+/* line 184, ../sass/main.scss */
+.ver_proceso.active {
+  background-color: #ffffff;
+  color: #19bc9c;
+  cursor: pointer;
+  pointer-events: auto;
 }

@@ -1,50 +1,37 @@
 
-    <div class="widget widget-table action-table" style="margin-bottom: 0 !important; " >
+    <div class="widget widget-table action-table" >
         <div class="widget-header"> <i class="icon-calendar"></i>
             <h3>NUEVA TAREA</h3>
+{#             <input id="tarea">#}
+             <button ng-click="creaTarea()" class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nueva Tarea</button>
+
         </div>
         <!-- /widget-header -->
-        <div class="widget-content" style="margin-top: 20px" >
-                <div class="span 7">
-                    <form class="form-horizontal">
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Nombre:</label>
-                                <div class="controls">
-                                    <input class="span4">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
+        <div class="widget-content" >
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th> Nombre </th>
+                    <th > Empleado</th>
+                     <th > Fecha de Inicio</th>
+                    <th > Fecha de Entrega</th>
+                    <th class="td-actions"> </th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% verbatim %}
+                    <tr ng-repeat="tarea in tareas">
+                        <td class="small-td"> {{ tarea.nombre }} </td>
+                        <td> {{ tarea.empleado.nombre }} {{ tarea.empleado.apellido }} </td>
+                        <td> {{ tarea.fecha_inicio | date:"dd/MM/yyyy 'hora:' hh:mma"}} </td>
+                        <td> {{ tarea.fecha_fin | date:"dd/MM/yyyy 'hora:' hh:mma"}} </td>
+                        <td class="td-actions"><button ng-click="getTarea(tarea.pk)" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></button><button ng-click="eliminaTarea(tarea.nombre,tarea.pk)" class="btn btn-danger btn-small btn-elimina-item "><i class="btn-icon-only icon-remove"> </i></button></td>
+                    </tr>
 
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Dirección:</label>
-                                <div class="controls">
-                                    <textarea class="span4"></textarea>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Fecha de Entrega:</label>
-                                <div class="controls">
-                                    <input class="span4" type="date">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Asignar a:</label>
-                                <div class="controls">
-                                    <select class="span4">
-                                        <option>Perfil 1</option>
-                                        <option>Perfil 2</option>
-                                        <option>Perfil 3</option>
-                                        <option>Perfil 4</option>
-                                        <option>Perfil 5</option>
-                                    </select>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="pull-right" style="padding: 20px">
-                                <button type="button" class="btn btn-primary">Crear Tarea</button>
-                            </div>
-                        </fieldset>
-                    </form>
 
-            </div>
+                    {% endverbatim %}
+                </tbody>
+            </table>
         </div>
+        <!-- /widget-content -->
     </div>

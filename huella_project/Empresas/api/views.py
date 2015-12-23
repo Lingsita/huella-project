@@ -8,11 +8,12 @@ from rest_framework.filters import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser
 from rest_framework import permissions
 from Accounts.models import Log, Usuario
-from Empresas.api.filters import EmpresaFilter, EmpleadoFilter, ProcesoFilter
+from Empresas.api.filters import EmpresaFilter, EmpleadoFilter, ProcesoFilter, PerfilFilter, CategoriaProcesoFilter
 from Empresas.api.pagination import StandardResultsSetPagination
 from Empresas.forms import CrearEmpresaForm
-from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso, Formato
-from Empresas.serializers import EmpresaSerializer, EmpleadoSerializer, ProcesoSerializer
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso, Formato, Tarea
+from Empresas.serializers import EmpresaSerializer, EmpleadoSerializer, ProcesoSerializer, PerfilSerializer, \
+    CategoriaProcesoSerializer, TareasSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 # Create your views here.
@@ -48,9 +49,8 @@ def admin_empresas(request):
             empresa = form.save()
             return redirect('admin_empresas')
     else:
-        print('dasdasm,n,mn,')
+
         form = CrearEmpresaForm()
-        print(form)
     return render(request, 'admin_empresas.html', {'form': form})
 
 
@@ -65,8 +65,19 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def get_empleados(self, request, id=None):
-        print request.data
-        queryset = Empleado.objects.filter(perfil__empresa=id)
+        queryset = Empleado.objects.filter(perfil__empresa=id, active=True).order_by('nombre')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def get_empleados_by_perfil(self, request, id=None):
+        queryset = Empleado.objects.filter(perfil=id, active=True).order_by('nombre')
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -82,20 +93,38 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         file = request.FILES['file']
         from django.conf import settings
         new_path = settings.MEDIA_ROOT
-        print new_path
         destination = open(new_path+file.name, 'wb+')
         for chunk in file.chunks():
             destination.write(chunk)
         destination.close()
 
         # do some stuff with uploaded file
-        print file
-        return Response(status=204)
 
+        empleado.foto=file
+        empleado.save()
+        serializer=EmpleadoSerializer(empleado)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        empleado= self.get_object()
+        empleado.nombre= request.data['nombre']
+        empleado.apellido= request.data['apellido']
+        user=empleado.usuario.user
+        user.email= request.data['email']
+        user.save()
+        empleado.direccion= request.data['direccion']
+        empleado.tipo_documento=request.data['tipo_documento']
+        empleado.identificacion= request.data['identificacion']
+        empleado.codigo= request.data['codigo']
+        empleado.telefono1= request.data['telefono1']
+        empleado.telefono2= request.data['telefono2']
+        empleado.is_admin=request.data['is_admin']
+        empleado.perfil=get_object_or_404(Perfil, id=request.data['perfil'])
+        empleado.save()
+        serializer=EmpleadoSerializer(empleado)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
-        print(self.request.data)
-        print self.request.data['identificacion']
         user = User(username=self.request.data['identificacion'], email=self.request.data['email'])
         password = User.objects.make_random_password()
         user.set_password(password)
@@ -106,6 +135,28 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         #     [self.request.data['email']], fail_silently=False)
         perfil=Perfil.objects.get(id=self.request.data['perfil'])
         serializer.save(usuario=usuario, perfil=perfil)
+
+    def destroy(self, request, *args, **kwargs):
+        empleado =  self.get_object()
+        empleado.active=False
+        empleado.save()
+        log = Log(user=request.user, actividad='Desactivacion de Empleado', descripcion='Desactivacion de Empleado {0} en empresa: {1} '.format(empleado.nombre, empleado.perfil.empresa.nombre))
+        log.save()
+        return Response(status=204)
+
+class CategoriaProcesoViewSet(viewsets.ModelViewSet):
+    serializer_class = CategoriaProcesoSerializer
+    queryset = CategoriaProceso.objects.filter(active=True)
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
+    filter_class = CategoriaProcesoFilter
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        empresa=get_object_or_404(Empresa, pk=self.request.data['empresa'])
+        serializer.save(empresa=empresa)
 
 class ProcesoViewSet(viewsets.ModelViewSet):
     serializer_class = ProcesoSerializer
@@ -118,8 +169,7 @@ class ProcesoViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def get_procesos(self, request, id=None):
-        print request.data
-        queryset = Proceso.objects.filter(categoria__empresa=id)
+        queryset = Proceso.objects.filter(categoria__empresa=id, active=True)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -130,22 +180,186 @@ class ProcesoViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
-        print(request.data['formatos_asignados'])
-
+        content={}
         if request.data['categoria']:
             categoria=get_object_or_404(CategoriaProceso.objects.filter(active=True), pk=request.data['categoria'])
             try:
                 Proceso.objects.get(active=True, codigo=request.data['codigo'])
+                content={
+                    'codigo': 'Existe un proceso con este codigo en la empresa'
+                }
+                return Response(content, status=400)
             except Proceso.DoesNotExist:
                 proceso = Proceso(nombre=request.data['nombre'], descripcion=request.data['descripcion'], codigo=request.data['codigo'], categoria=categoria)
                 proceso.save()
                 for fa in request.data['formatos_asignados']:
-                    print fa
+
                     formato=Formato.objects.get(id=fa)
                     proceso.formatos_asignados.add(formato)
                     proceso.save()
                 serializer = ProcesoSerializer(proceso)
                 return Response(serializer.data)
+        else:
+            content={
+                'categoria': 'El proceso debe tener una categoria'
+            }
+        return Response(content, status=400)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            proceso = get_object_or_404(Proceso, codigo=request.data['codigo'])
+            return super(ProcesoViewSet,self).update(request, *args, **kwargs)
+        except Proceso.DoesNotExist:
+            content={
+                'codigo': 'Existe un proceso con este codigo en la empresa'
+            }
+            return Response(content, status=400)
+
+    def destroy(self, request, *args, **kwargs):
+        proceso =  self.get_object()
+        proceso.active=False
+        proceso.save()
+        log = Log(user=request.user, actividad='Desactivacion de Proceso', descripcion='Desactivacion de Proceso {0} en empresa: {1} '.format(proceso.nombre, proceso.categoria.empresa.nombre))
+        log.save()
+        return Response(status=204)
+
+class PerfilViewSet(viewsets.ModelViewSet):
+    serializer_class = PerfilSerializer
+    queryset = Perfil.objects.filter(active=True)
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
+    filter_class = PerfilFilter
+
+    @detail_route(methods=['get'])
+    def get_perfiles(self, request, id=None):
+
+        queryset = Perfil.objects.filter(empresa=id, active=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+
+        if request.data['empresa']:
+            empresa=get_object_or_404(Empresa.objects.filter(active=True), pk=request.data['empresa'])
+            try:
+                Perfil.objects.get(active=True, codigo=request.data['codigo'])
+                content = {'perfil_exists': 'Ya existe un perfil con este codigo'}
+                return Response(content, status=202)
+            except Perfil.DoesNotExist:
+                perfil = Perfil(nombre=request.data['nombre'], descripcion=request.data['descripcion'], codigo=request.data['codigo'], empresa=empresa)
+                perfil.save()
+
+                for fa in request.data['formatos_asignados']:
+
+                    formato=Formato.objects.get(id=fa)
+                    perfil.formatos_asignados.add(formato)
+                    perfil.save()
+                for pr in request.data['procesos']:
+                    proceso=Proceso.objects.get(id=pr)
+                    perfil.procesos.add(proceso)
+                    perfil.save()
+                serializer = PerfilSerializer(perfil)
+                log = Log(user=request.user, actividad='Creacion de Perfil', descripcion='Creacion de perfil {0} en empresa: {1} '.format(perfil.nombre, perfil.empresa.nombre))
+                log.save()
+                return Response(serializer.data)
 
         return Response(status=202)
+
+    def destroy(self, request, *args, **kwargs):
+        perfil =  self.get_object()
+        perfil.active=False
+        perfil.save()
+        log = Log(user=request.user, actividad='Desactivacion de Perfil', descripcion='Desactivacion de Perfil {0} en empresa: {1} '.format(perfil.nombre, perfil.empresa.nombre))
+        log.save()
+        return Response(status=204)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.nombre = request.data['nombre']
+        instance.codigo = request.data['codigo']
+        instance.descripcion = request.data['descripcion']
+        procesos= request.data['procesos']
+        formatos_asignados=request.data['formatos_asignados']
+        proc=[]
+        formas=[]
+
+        for p in procesos:
+            ps=Proceso.objects.get(pk=p)
+            proc.append(ps)
+
+        for f in formatos_asignados:
+            fa=Formato.objects.get(pk=f)
+            formas.append(fa)
+        instance.procesos=proc
+        instance.formatos_asignados=formas
+        instance.save()
+        serializer=PerfilSerializer(instance)
+        return Response(serializer.data)
+
+class TareasViewSet(viewsets.ModelViewSet):
+    serializer_class = TareasSerializer
+    queryset = Tarea.objects.filter(active=True)
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminUser,)
+
+    @detail_route(methods=['get'])
+    def get_tareas(self, request, id=None):
+        queryset = Tarea.objects.filter(empleado__perfil__empresa=id, active=True)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        empleado = get_object_or_404(Empleado, pk=self.request.data['empleado'], active=True)
+        serializer.save(empleado=empleado)
+
+    def destroy(self, request, *args, **kwargs):
+        tarea =  self.get_object()
+        tarea.active=False
+        tarea.save()
+        log = Log(user=request.user, actividad='Desactivacion de Tarea', descripcion='Desactivacion de Tarea {0} {1} asignada a: {2} en empresa: {3} '.format(tarea.nombre, tarea.empleado.nombre,  tarea.empleado.apellido, tarea.empleado.perfil.empresa.nombre))
+        log.save()
+        return Response(status=204)
+
+    def update(self, request, *args, **kwargs):
+        tarea =  self.get_object()
+        log = Log(user=request.user, actividad='Modificacion de Tarea', descripcion='Modificacion de Tarea {0} en empresa: {1} '.format(tarea.nombre, tarea.empleado.perfil.empresa.nombre))
+        log.save()
+
+        if isinstance(request.data['empleado'], int):
+            print('entro a string')
+            empleado = get_object_or_404(Empleado, pk=request.data['empleado'], active=True)
+            tarea.empleado=empleado
+            tarea.fecha_fin=request.data['fecha_fin']
+            tarea.nombre=request.data['nombre']
+            tarea.descripcion=request.data['descripcion']
+            tarea.save()
+            serializer=PerfilSerializer(tarea)
+            return Response(serializer.data)
+
+        elif request.data['empleado']=="" or request.data['empleado']==None:
+            empleado = get_object_or_404(Empleado, pk=self.request.data['empleado'], active=True)
+        else:
+            return super(TareasViewSet,self).update(request, *args, **kwargs)
+
+
+
+
+
+
+
+

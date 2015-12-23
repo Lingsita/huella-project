@@ -1,0 +1,109 @@
+    <div class="widget widget-table action-table" ng-controller="DocumentoCtrl">
+        <div class="widget-header"> <i class="icon-th-list"></i>
+            <h3>DOCUMENTOS : <div style="display: inline-block" id="nombre_proceso"></div></h3>
+            <a href="documentos.html" class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Documento</a>
+        </div>
+        <div id="buscar_documento" class="widget-header">
+            <i class="icon-search"></i>
+            <label class="search" style="">Buscar por:</label>
+            <div class="control-group" style="display: inline-block">
+                <div class="controls">
+                    <label id="tipo_documento" class="radio inline search_by">
+                        <input id="tipo_documento" type="radio"  name="radiobtns"> Tipo de Documento
+                    </label>
+
+                    <label id="nombre_documento" class="radio inline search_by">
+                        <input id="nombre_documento" type="radio" name="radiobtns"> Nombre
+                    </label>
+                    <label id="fecha_documento" class="radio inline search_by">
+                        <input  id="fecha_documento" type="radio" name="radiobtns"> Fecha de Publicación
+                    </label>
+                </div>	<!-- /controls -->
+            </div> <!-- /control-group -->
+
+        </div>
+        <div  class="widget-header" id="input_busqueda" style="display: none; padding: 5px 13px 0px 13px"></div>
+        <!-- /widget-header -->
+        <div class="widget-content" >
+            <table class="table table-striped table-bordered" >
+                <thead>
+                <tr>
+                    <th> Código </th>
+                    <th> Nombre </th>
+                    <th> Tipo </th>
+                    <th> Versión</th>
+                    <th> Elaboró</th>
+                    <th> Fecha de Emisión</th>
+                    <th> Fecha de Publicación</th>
+                    <th class="td-actions"> Archivo </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-paper-clip"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a title="archivo externo" href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-paper-clip"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"> </i></a></td>
+                </tr>
+                <tr id="ling">
+                    <td> 0001</td>
+                    <td> FORMATO DE CAPTURA DE CLIENTES </td>
+                    <td> CARACTERIZACION </td>
+                    <td> 1 </td>
+                    <td> LUIS GUILLERMO BARRETO</td>
+                    <td> 01/06/2015 </td>
+                    <td> 01/06/2015 08:30 AM </td>
+                    <td class="td-actions"><a href="javascript:;" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"> </i></a></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /widget-content -->
+    </div>
+
+

@@ -1,39 +1,3 @@
-/**
- * Created by linglung on 7/14/15.
- */
-$( document ).ready(function() {
-    $('[data-toggle="tooltip"]').tooltip();
-
-    var Formulario = Backbone.View.extend({
-        el: $('body'),
-        container: $('.main'),
-
-        events: {
-            "click .guarda-formulario": "crear"
-        },
-
-        initialize: function () {
-            return this;
-            // this.listenTo(this.model, "change", this.render);
-            console.log('imprime');
-        },
-
-        render: function() {
-        },
-        crear: function (ev) {
-            ev.preventDefault();
-            console.log('crea');
-            $('#guardaFormulario').modal('show');
-        },
-
-
-    });
-
-    var view = new Formulario();
-    view.render();
-
-});
-
 $(function() {
     $( "#tipos li" ).draggable({
         appendTo: "body",

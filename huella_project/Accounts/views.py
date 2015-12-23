@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from Accounts.models import UserSession
 import uuid
+from Empresas.models import Empleado, Proceso
 import constantes
 # Create your views here.
 
@@ -12,7 +13,15 @@ def index (request):
         if request.user.is_superuser:
             return admin_empresas(request)
         else:
-            return render(request, 'empleado.html', {})
+            try:
+                empleado=Empleado.objects.get(usuario__user=request.user)
+                empresa=empleado.perfil.empresa
+                procesos_empresa=Proceso.objects.filter(active=True, categoria__empresa=empresa)
+                procesos=empleado.perfil.procesos
+                print procesos.all()
+                return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
+            except Empleado.DoesNotExist:
+                return render(request, 'empleado.html', {})
     else:
         if request.method =="POST":
             user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -21,14 +30,22 @@ def index (request):
                 # the password verified for the user
                 if user.is_active:
                     login(request, user)
-                    device_uuid = str(uuid.uuid4())
-                    userSession=UserSession(user=user, ip = device_uuid, active=True)
-                    userSession.save()
-                    request.session['uu_id'] = device_uuid
+                    # device_uuid = str(uuid.uuid4())
+                    # userSession=UserSession(user=user, ip = device_uuid, active=True)
+                    # userSession.save()
+                    # request.session['uu_id'] = device_uuid
                     if user.is_superuser:
                         return admin_empresas(request)
                     else:
-                        return render(request, 'empleado.html', {})
+                        try:
+                            empleado=Empleado.objects.get(usuario__user=user)
+                            empresa=empleado.perfil.empresa
+                            procesos_empresa=Proceso.objects.filter(active=True, categoria__empresa=empresa)
+                            procesos=empleado.perfil.procesos
+                            print procesos.all()
+                            return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
+                        except Empleado.DoesNotExist:
+                            return render(request, 'empleado.html', {})
                 else:
                     return render(request, 'inicio_sesion.html', {'error_message': constantes.NO_AUTH_USER})
             else:

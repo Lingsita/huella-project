@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 __author__ = 'linglung'
 import django_filters
-from Empresas.models import Empresa, Empleado, Proceso
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso
 from Empresas.serializers import EmpresaSerializer
 from rest_framework import filters
 from rest_framework import generics
@@ -32,4 +32,21 @@ class ProcesoFilter(django_filters.FilterSet):
 
     class Meta:
         model = Proceso
+        # fields = ['nombre', 'categoria,' 'descripcion']
+
+class CategoriaProcesoFilter(django_filters.FilterSet):
+
+    nombre = django_filters.CharFilter(name="nombre", lookup_type='icontains')
+
+    class Meta:
+        model = CategoriaProceso
+        # fields = ['nombre', 'categoria,' 'descripcion']
+
+class PerfilFilter(django_filters.FilterSet):
+
+    nombre = django_filters.CharFilter(name="nombre", lookup_type='icontains')
+    codigo = django_filters.CharFilter(name="codigo", lookup_type='icontains')
+
+    class Meta:
+        model = Perfil
         # fields = ['nombre', 'apellido,' 'identificacion', 'codigo']

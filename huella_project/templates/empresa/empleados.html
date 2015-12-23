@@ -1,5 +1,5 @@
 
-    <div class="widget widget-table action-table" ng-controller="EmpleadosCtrl" >
+    <div class="widget widget-table action-table"  >
         <div class="widget-header"> <i class="icon-th-list"></i>
             <h3>EMPLEADOS</h3>
             <button  ng-click="creaEmpleado()" class="btn btn-success pull-right button-crear-empleado" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Empleado</button>
@@ -22,7 +22,7 @@
                         <td>{{ empleado.nombre }} {{ empleado.apellido }}</td>
                         <td> {{ empleado.identificacion }} </td>
                         <td> {{ empleado.perfil.nombre }} </td>
-                        <td class="td-actions"><a href="" class="btn btn-small btn-success btn-ver-empleado"><i class="btn-icon-only icon-cog"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina-item elimina-empleado"><i class="btn-icon-only icon-remove"> </i></a></td>
+                        <td class="td-actions"><button ng-click="getEmpleado(empleado.pk)" class="btn btn-small btn-success button-ver-perfil"><i class="btn-icon-only icon-cog"> </i></button><button ng-click="eliminaEmpleado(empleado.nombre+' '+empleado.apellido, empleado.perfil.nombre, empleado.pk)" class="btn btn-danger btn-small btn-elimina-item "><i class="btn-icon-only icon-remove"> </i></button></td>
                     </tr>
                     {% endverbatim %}
                 </tbody>

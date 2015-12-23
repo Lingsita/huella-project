@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    </div>
+
     <ol class="breadcrumb " >
         <div class="breadcrumb-title">
             <li><a href="#"><i class=" icon-caret-right"></i> Inicio</a> /</li>
@@ -36,81 +36,190 @@
 
 {% block content %}
     <!-- Modal Ver Empleado-->
-    <div class="modal fade modal-lg" id="verEmpleado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog " role="document" >
+    <div ng-controller="EmpleadosCtrl">
+        <script type="text/ng-template"  id="modal-verEmpleado.html">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="">LING LUNG ZUÑIGA</h4>
+                    <button type="button" class="close"ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">{% verbatim %}{{ current_empleado.nombre }} {{ current_empleado.apellido }}{% endverbatim %}</h4>
                 </div>
                 <div class="modal-body">
+
                     <div class="span3" >
-                        <div style="border:solid #d9d9d9 1px; width: 0 auto; margin:auto; padding: 10px; text-align: center" ><img style="width: 100%" src="{% static 'img/default-user.png'%}"></div>
+                        {% verbatim %}
+                        <div ng-if="current_empleado.foto != null" style="border:solid #d9d9d9 1px; width: 0 auto; margin:auto; padding: 10px; text-align: center" ><img style="width: 100%" ng-src="{{  current_empleado.foto }}"></div>
+                        {% endverbatim %}
+                        <div ng-if="current_empleado.foto == null" style="border:solid #d9d9d9 1px; width: 0 auto; margin:auto; padding: 10px; text-align: center" ><img style="width: 100%" src="{% static 'img/default-user.png' %}"></div>
                     </div>
+                    {% verbatim %}
                     <div class="span 7">
                         <form class="form-horizontal">
                             <fieldset>
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Nombre Completo</label>
                                     <div class="controls">
-                                        Ling Lung Zuñiga
+                                        {{ current_empleado.nombre }} {{ current_empleado.apellido }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Tipo de Documento</label>
                                     <div class="controls">
-                                        Cedula de Ciudadanía
+                                        {{ current_empleado.tipo_documento }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Documento de Identificación:</label>
                                     <div class="controls">
-                                        1112311111
+                                       {{ current_empleado.identificacion }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Perfil</label>
                                     <div class="controls">
-                                        MiPerfil
+                                       {{ current_empleado.perfil.nombre }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
 
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">E-mail:</label>
                                     <div class="controls">
-                                        linglung1047@gmail.com
+                                        {{ current_empleado.usuario.user.email }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Dirección:</label>
                                     <div class="controls">
-                                        Av. siempre viva Springfield
+                                       {{ current_empleado.direccion }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Telefono 1</label>
                                     <div class="controls">
-                                        555 - 5555
+                                       {{ current_empleado.telefono1 }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
                                 <div class="control-group">
                                     <label class="control-label" for="firstname">Telefono 2:</label>
                                     <div class="controls">
-                                        555 - 5555
+                                       {{ current_empleado.telefono2 }}
                                     </div> <!-- /controls -->
                                 </div> <!-- /control-group -->
 
                             </fieldset>
                         </form>
                     </div>
-
+                    {% endverbatim %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary btn-editar-empleado">Editar</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" ng-click="ok()"  class="btn btn-primary">Editar</button>
+
                 </div>
+           </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
+     <!-- Modal Modifica Empleado-->
+    <div ng-controller="EmpleadosCtrl">
+
+        <script type="text/ng-template"  id="modal-modificaEmpleado.html">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="">NUEVO EMPLEADO</h4>
             </div>
-        </div>
+            <form id="crea_empleado" class="form-horizontal">
+                <div class="modal-body crea-empleado ">
+                    {% if form_mempleado %}
+                        {% csrf_token %}
+                        <fieldset>
+                            {##}
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">Nombres</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.nombre }}
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Apellidos</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.apellido }}
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Documento de Identificación</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.identificacion }}
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Tipo de Documento </label>
+                                <div class="controls">
+                                    {{ form_mempleado.tipo_documento }}
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Codigo</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.codigo }}
+                                </div> <!-- /controls -->
+                            </div> <!-- /control-group -->
+
+                            <div class="control-group">
+                                <label class="control-label" for="email">Email</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.email }}
+                                </div>
+                            </div>
+
+                            <div class="control-group ">
+                                <label class="control-label" for="lastname">Dirección</label>
+                                <div class="controls ce-input">
+                                    {{ form_mempleado.direccion }}
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Telefono</label>
+                                <div class="controls">
+                                    {{ form_mempleado.telefono1 }}
+                                    {{ form_mempleado.telefono2 }}
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Privilegios: </label>
+
+                                <div class="controls">
+                                    <label class="checkbox inline">
+                                        <input type="checkbox" ng-model="datos.is_admin"> Marcar como administrador
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Perfil</label>
+                                <div class="controls">
+                                    {{ form_mempleado.perfil }}
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">Foto</label>
+                                <div class="controls">
+                                         <input type="file" id="mfoto" file-input="mfoto"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    {% endif %}
+                </div>
+            </form>
+
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()"  class="btn btn-primary">Aceptar</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
     <!-- Modal Crea Empleado-->
@@ -202,8 +311,6 @@
                                 <label class="control-label" for="lastname">Foto</label>
                                 <div class="controls">
                                          <input type="file" id="foto" file-input="foto"/>
-                                         <button ng-click="subirImagen()"></button>
-                                        <button ng-click="openFoto()">FOTO</button>
                                 </div>
                             </div>
                         </fieldset>
@@ -277,131 +384,218 @@
         </script>
     </div>
     <!---------- Finish Modal--------------->
-    <!-- Modal Crea Perfil-->
-    <div class="modal fade modal-lg" id="creaPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog " role="document" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="">NUEVO PERFIL</h4>
-                </div>
-                <div class="modal-body modal-body-lg">
-                    <form id="crea_proceso" class="form-horizontal">
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Nombre</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="firstname" value="John">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
+    <!-- Modal Ver Proceso-->
+    <div ng-controller="ProcesosCtrl">
+        <script type="text/ng-template"  id="modal-modificaProceso.html">
 
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">ID</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="lastname" value="Donga">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Descripción</label>
-                                <div class="controls">
-                                    <textarea class="span6"></textarea>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
-                                <div class="controls">
-                                    <select multiple="multiple" class="span6">
-                                        <option>Direccion Estrategica</option>
-                                        <option>Proceso2</option>
-                                        <option>Proceso3</option>
-                                        <option>Proceso4</option>
-                                    </select>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                        </fieldset>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Crear</button>
-                </div>
+            <div class="modal-header">
+                <h4 class="modal-title" id="">PROCESO: {% verbatim %}{{ current_proceso.nombre }}{% endverbatim %}</h4>
             </div>
-        </div>
+            <div class="modal-body">
+                <form id="crea_proceso" class="form-horizontal">
+                    {% if form_procesos %}
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Categoria</label>
+                            <div class="controls ce-input">
+                                {{ form_mpro.current_proceso_categoria }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls ce-input">
+                                {{ form_mpro.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Código</label>
+                            <div class="controls ce-input">
+                                {{ form_mpro.codigo }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls ce-input">
+                                {{ form_mpro.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        {% if form_mpro.current_proceso_formatos_asignados %}
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Formatos Asignados</label>
+                            <div class="controls">
+                                {{ form_mpro.current_proceso_formatos_asignados }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        {% endif %}
+
+                    </fieldset>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Editar</button>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Crea Categoria Proceso-->
+    <div ng-controller="ProcesosCtrl">
+        <script type="text/ng-template"  id="modal-creaCategoria.html">
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">NUEVA CATEGORIA DE PROCESOS</h4>
+            </div>
+            <div class="modal-body modal_perfil">
+                {% if form_categoria %}
+                <form id="crea_proceso" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls">
+                                {{ form_categoria.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls">
+                                {{ form_categoria.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        {{ form_categoria.categoria_empresa }}
+
+                    </fieldset>
+                </form>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button"  ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button"  ng-click="ok()" class="btn btn-primary">Crear</button>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Crea Perfil-->
+    <div ng-controller="PerfilesCtrl">
+        <script type="text/ng-template"  id="modal-creaPerfil.html">
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">NUEVO PERFIL</h4>
+            </div>
+            <div class="modal-body modal_perfil">
+                {% if form_perfiles %}
+                <form id="crea_proceso" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls">
+                                {{ form_perfiles.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">ID</label>
+                            <div class="controls">
+                                {{ form_perfiles.codigo }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls">
+                                {{ form_perfiles.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
+                            <div class="controls">
+                                {{ form_perfiles.procesos }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Formatos a los que esta asociado este perfil</label>
+                            <div class="controls">
+                                {{ form_perfiles.formatos_asignados_perfil }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        {{ form_perfiles.empresa }}
+                    </fieldset>
+                </form>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button"  ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button"  ng-click="ok()" class="btn btn-primary">Crear</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
     <!-- Modal ver Perfil-->
-    <div class="modal fade modal-lg" id="verPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog " role="document" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="">NUEVO PERFIL</h4>
-                </div>
-                <div class="modal-body modal-body-lg">
-                    <form id="crea_proceso" class="form-horizontal">
-                        <fieldset>
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Nombre</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="firstname" value="John">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">ID</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="lastname" value="Donga">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Descripción</label>
-                                <div class="controls">
-                                    <textarea class="span6"></textarea>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
-                                <div class="controls">
-                                    <select multiple="multiple" class="span6">
-                                        <option>Direccion Estrategica</option>
-                                        <option>Proceso2</option>
-                                        <option>Proceso3</option>
-                                        <option>Proceso4</option>
-                                    </select>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Formatos</label>
-                                <div class="controls">
-                                    <div class="span3" style="margin-left: 0 !important;">
-                                        <select multiple="multiple" class="span3">
-                                            <option>Direccion Estrategica</option>
-                                            <option>Proceso2</option>
-                                            <option>Proceso3</option>
-                                            <option>Proceso4</option>
-                                        </select>
-                                    </div>
-                                    <div class="span2" ><button class="btn btn-warning button-agregar-formulario">Agregar Formato</button></div>
-                                </div> <!-- /controls -->
-
-                            </div> <!-- /control-group -->
-
-                        </fieldset>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Crear</button>
-                </div>
+    <div ng-controller="PerfilesCtrl">
+        <script type="text/ng-template"  id="modal-modificaPerfil.html">
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">PERFIL: {% verbatim %} {{ current_perfil.nombre }} {% endverbatim %}</h4>
             </div>
-        </div>
+            <div class="modal-body">
+                <form id="crea_proceso" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls">
+                                {{ form_mp.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">ID</label>
+                            <div class="controls">
+                                {{ form_mp.codigo }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls">
+                                {{ form_mp.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Procesos a los que esta asociado este perfil</label>
+                            <div class="controls">
+
+                                {{ form_mp.current_perfil_procesos }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Formatos a los que esta asociado este perfil</label>
+                            <div class="controls">
+                                {{ form_mp.current_perfil_formatos_asignados }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                        {{ form_mp.empresa }}
+                    </fieldset>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Editar</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
     <!-- Modal Agrega Formulario a Perfil-->
@@ -450,105 +644,210 @@
         </div>
     </div>
     <!---------- Finish Modal--------------->
+    <!-- Modal Crea Tarea-->
+    <div ng-controller="TareasCtrl">
+        <script type="text/ng-template"  id="modal-creaTarea.html">
+
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">NUEVA TAREA</h4>
+            </div>
+            <div class="modal-body modal_perfil"  ng-init="dateFields()">
+                {% if form_tarea %}
+                <form id="crea_proceso" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls">
+                                {{ form_tarea.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls">
+                                {{ form_tarea.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Asignar a</label>
+                            <div class="controls">
+                                {{ form_tarea.perfil }}
+                                <input id="empleado_tarea" placeholder="Ingrese un nombre" style="display: none">
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Fecha de Entrega:</label>
+                            <div class="controls">
+                                {{ form_tarea.fecha_fin }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                    </fieldset>
+                </form>
+                {% endif %}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button"  ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button"  ng-click="ok()" class="btn btn-primary">Crear</button>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
+    <!-- Modal Modifica Tarea-->
+    <div ng-controller="TareasCtrl">
+        <script type="text/ng-template"  id="modal-modificaTarea.html">
+
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="">MODIFICAR TAREA</h4>
+            </div>
+            <div class="modal-body modal_perfil"  ng-init="dateFields()">
+                {% if form_mtarea %}
+                <form id="crea_proceso" class="form-horizontal">
+                    <fieldset>
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Nombre</label>
+                            <div class="controls">
+                                {{ form_mtarea.nombre }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Descripción</label>
+                            <div class="controls">
+                                {{ form_mtarea.descripcion }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="lastname">Asignar a</label>
+                            <div class="controls">
+                                {{ form_mtarea.perfil }}
+                                <input id="current_empleado_tarea" placeholder="Ingrese un nombre">
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                        <div class="control-group">
+                            <label class="control-label" for="firstname">Fecha de Entrega:</label>
+                            <div class="controls">
+                                {{ form_mtarea.fecha_fin }}
+                            </div> <!-- /controls -->
+                        </div> <!-- /control-group -->
+                    </fieldset>
+                </form>
+                {% endif %}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button"  ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button"  ng-click="ok()" class="btn btn-primary">Finalizar Edición</button>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
     <!-- Modal Elimina Empleado-->
-    <div class="modal fade" id="eliminaEmpleado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
+    <div ng-controller="EmpleadosCtrl">
+        <script type="text/ng-template"  id="modal-eliminaEmpleado.html">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" ng-click="cancel()" class="close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Eliminar Empleado</h4>
                 </div>
                 <div class="modal-body">
-                    Para eliminar al empleado LING LUNG ZUÑIGA usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para continuar.<br>
-                    <input type="text">
+                    Si presiona el boton "Eliminar", se desactivará el empleado: {% verbatim %}"{{ e_empleado.nombre }}" que tiene perfil "{{ e_empleado.perfil }}" {% endverbatim %}.<br>
+                    Presione "Cancelar" si no desea realizar esta acción.
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
+                    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
                 </div>
-            </div>
-        </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
     <!-- Modal Elimina Proceso-->
-    <div class="modal fade" id="eliminaProceso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Eliminar Proceso</h4>
-                </div>
-                <div class="modal-body">
-                    Para eliminar un proceso usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para continuar.<br>
-                    <input type="text">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
-                </div>
+    <div ng-controller="ProcesosCtrl">
+        <script type="text/ng-template"  id="modal-eliminaProceso.html">
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Proceso</h4>
             </div>
-        </div>
+            <div class="modal-body">
+                Si presiona el boton "Eliminar", se desactivará el proceso: {% verbatim %}"{{ e_proceso.nombre }}"{% endverbatim %}.<br>
+                Presione "Cancelar" si no desea realizar esta acción.
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
     <!-- Modal Elimina Perfil-->
-    <div class="modal fade" id="eliminaPerfil" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Eliminar Perfil</h4>
-                </div>
-                <div class="modal-body">
-                    Para eliminar un perfil usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para continuar.<br>
-                    <input type="text">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
-                </div>
+    <div ng-controller="PerfilesCtrl">
+        <script type="text/ng-template"  id="modal-eliminaPerfil.html">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Perfil</h4>
             </div>
-        </div>
+            <div class="modal-body">
+                Si presiona el boton "Eliminar", se desactivará el perfil {% verbatim %}"{{ e_perfil.nombre }}"{% endverbatim %}, los empleados que tengan asignado este perfil no podrán ejecutar sus tareas.<br>
+                Presione "Cancelar" si no desea realizar esta acción.
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
-    <!-- Modal Elimina Tarea-->
-    <div class="modal fade" id="eliminaTarea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Eliminar Tarea</h4>
-                </div>
-                <div class="modal-body">
-                    Para eliminar un empleado usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para conyinuar.<br>
-                    <input type="text">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
-                </div>
+   <!-- Modal Elimina Tarea-->
+    <div ng-controller="TareasCtrl">
+        <script type="text/ng-template"  id="modal-eliminaTarea.html">
+            <div class="modal-header">
+                <button type="button" ng-click="cancel()" class="close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Eliminar Tarea</h4>
             </div>
-        </div>
+            <div class="modal-body">
+                Si presiona el boton "Eliminar", se eliminará la tarea: {% verbatim %}"{{ e_tarea.nombre }}"{% endverbatim %}.<br>
+                Presione "Cancelar" si no desea realizar esta acción.
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
+            </div>
+        </script>
     </div>
     <!---------- Finish Modal--------------->
+    <style>
+        .ui-autocomplete{
+            z-index:1051;
 
+        }
+    </style>
     <div class="main-inner empresa-page">
             {% csrf_token %}
+
         <div class="container">
+            <div id="status_message" class="alert alert-success" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div id="bad_status_message" class="alert alert-danger" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
 
             <div class="row" >
                 <div class="span2 panel">
 
                     <a href="#procesos" id="ver_procesos" class="btn btn-success large-button">PROCESOS</a><br>
-                    <a href="#empleados" id="ver_empleados" class="btn btn-success large-button" >EMPLEADOS</a><br>
                     <a href="#perfiles" id="ver_perfiles" class="btn btn-success large-button">PERFILES</a><br>
+                    <a href="#empleados" id="ver_empleados" class="btn btn-success large-button" >EMPLEADOS</a><br>
                     <a href="#tareas" id="ver_tareas" class="btn btn-success large-button">CREAR TAREA</a><br>
 
                 </div>
@@ -572,6 +871,7 @@
         $( document ).ready(function(){
             window.empresa='{{ empresa.pk }}'
         });
+
     </script>
     <script src="{% static 'js/angular/admin/empresa_controller.js' %}"></script>
 {% endblock %}

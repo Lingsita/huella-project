@@ -5,8 +5,11 @@ from Empresas.models import *
 class PruebaAdmin(admin.ModelAdmin):
     list_display=['nombre','NIT','active']
 
+class PerfilAdmin(admin.ModelAdmin):
+    list_display=['nombre','descripcion','empresa','active']
+
 admin.site.register(Empresa, PruebaAdmin)
-admin.site.register(Perfil)
+admin.site.register(Perfil, PerfilAdmin)
 admin.site.register(Empleado)
 admin.site.register(CategoriaProceso)
 admin.site.register(Proceso)

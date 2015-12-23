@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm
-from Empresas.models import Empresa
-from Empresas.serializers import EmpresaSerializer
+from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm, CrearPerfilForm, ModificarPerfilForm, \
+    ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm
+from Empresas.models import Empresa, Formato
+from Empresas.serializers import EmpresaSerializer, FormatosSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -30,9 +31,16 @@ def empresa_detail(request):
             empresa = Empresa.objects.get(id=id)
             form_procesos=CrearProcesoForm(empresa=empresa)
             form_empleados=CrearEmpleadoForm(empresa=empresa)
-            return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos})
+            form_perfiles=CrearPerfilForm(empresa=empresa)
+            form_mp = ModificarPerfilForm(empresa=empresa)
+            form_mpro = ModificarProcesoForm(empresa=empresa)
+            form_mempleado = ModificarEmpleadoForm(empresa=empresa)
+            form_categoria = CrearCategoriaProcesoForm(empresa=empresa)
+            form_tarea = CrearTareaForm(empresa=empresa)
+            form_mtarea = ModificaTareaForm(empresa=empresa)
+            return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos, 'form_perfiles':form_perfiles, 'form_mp':form_mp, 'form_mpro':form_mpro, 'form_mempleado':form_mempleado, 'form_categoria':form_categoria, 'form_tarea':form_tarea, 'form_mtarea':form_mtarea})
         except Empresa.DoesNotExist:
-            return redirect('/empresas/empresas')
+            return redirect('/empresas')
 
 #Another django rest solutions
 
@@ -108,3 +116,4 @@ class EmpresasRest(APIView):
             return Response({'message': 'this is my message for fail post'})
 
 empresas_rest= EmpresasRest.as_view()
+

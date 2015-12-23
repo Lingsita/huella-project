@@ -2,7 +2,7 @@
 __author__ = 'linglung'
 from django.forms import widgets
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
-from Empresas.models import Empresa, Empleado, Proceso, Perfil, Tarea, CategoriaProceso
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, Tarea, CategoriaProceso, Formato
 
 
 class EmpresaSerializer(ModelSerializer):
@@ -14,30 +14,36 @@ class EmpresaSerializer(ModelSerializer):
 class EmpleadoSerializer(ModelSerializer):
     class Meta:
         model = Empleado
-        fields = ('pk','usuario', 'nombre', 'apellido', 'identificacion','perfil','direccion', 'codigo', 'telefono1', 'telefono2', 'is_admin', 'active')
-        depth = 1
+        fields = ('pk','usuario', 'nombre', 'apellido', 'identificacion','tipo_documento','perfil','direccion', 'codigo', 'telefono1', 'telefono2', 'is_admin', 'foto', 'active')
+        depth = 2
 
 class CategoriaProcesoSerializer(ModelSerializer):
     class Meta:
         model = CategoriaProceso
-        fields = ('pk','nombre', 'categoriaProceso', 'active')
+        fields = ('pk','nombre', 'descripcion','active')
 
         depth = 1
 
 class ProcesoSerializer(ModelSerializer):
     class Meta:
         model = Proceso
-        fields = ('pk','nombre', 'categoria', 'descripcion', 'formatos_asignados', 'active')
+        fields = ('pk','nombre', 'codigo', 'categoria', 'descripcion', 'formatos_asignados', 'active')
         depth = 1
 
-class PerfilesSerializer(ModelSerializer):
+class PerfilSerializer(ModelSerializer):
     class Meta:
         model = Perfil
-        fields = ('pk','nombre', 'empresa')
+        fields = ('pk','nombre', 'codigo','descripcion' ,'empresa', 'procesos', 'formatos_asignados', 'active')
         depth = 1
 
 class TareasSerializer(ModelSerializer):
     class Meta:
         model = Tarea
         fields = ('pk','nombre', 'empleado', 'descripcion', 'fecha_inicio', 'fecha_fin', 'active')
+        depth = 1
+
+class FormatosSerializer(ModelSerializer):
+    class Meta:
+        model = Formato
+        fields = ('pk', 'formulario', 'descripcion', 'empresa', 'active')
         depth = 1
