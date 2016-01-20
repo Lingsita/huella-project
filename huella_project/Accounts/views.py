@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from Accounts.models import UserSession
 import uuid
 from Empresas.models import Empleado, Proceso
+
 import constantes
 # Create your views here.
 
@@ -13,12 +14,17 @@ def index (request):
         if request.user.is_superuser:
             return admin_empresas(request)
         else:
+
             try:
                 empleado=Empleado.objects.get(usuario__user=request.user)
                 empresa=empleado.perfil.empresa
                 procesos_empresa=Proceso.objects.filter(active=True, categoria__empresa=empresa)
                 procesos=empleado.perfil.procesos
-                print procesos.all()
+                print(empleado)
+                if empleado.is_admin:
+                    print('is admin')
+                    return redirect('/inicio')
+                # print procesos.all()
                 return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
             except Empleado.DoesNotExist:
                 return render(request, 'empleado.html', {})
@@ -42,6 +48,8 @@ def index (request):
                             empresa=empleado.perfil.empresa
                             procesos_empresa=Proceso.objects.filter(active=True, categoria__empresa=empresa)
                             procesos=empleado.perfil.procesos
+                            if empleado.is_admin:
+                                return redirect('/inicio')
                             print procesos.all()
                             return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
                         except Empleado.DoesNotExist:
@@ -55,6 +63,19 @@ def index (request):
 
 def admin_empresas(request):
     return render(request, 'admin.html', {})
+
+def docs_empleado(request):
+    try:
+        empleado=Empleado.objects.get(usuario__user=request.user)
+        empresa=empleado.perfil.empresa
+        procesos_empresa=Proceso.objects.filter(active=True, categoria__empresa=empresa)
+        procesos=empleado.perfil.procesos
+        if empleado.is_admin:
+            return redirect('/inicio')
+        print procesos.all()
+        return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
+    except Empleado.DoesNotExist:
+        return render(request, 'empleado.html', {})
 
 def logout_session(request):
     # try:

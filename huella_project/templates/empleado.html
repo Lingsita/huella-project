@@ -7,7 +7,7 @@
     <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-folder-open"></i><span>Documentos</span> <b class="caret"></b></a>
         <ul class="dropdown-menu">
             <li><a href="documentos.html">Ver Documentos</a></li>
-            <li><a href="nuevo_documento_default.html">Crear Documento</a></li>
+            <li><a href="ver_formulario.html">Crear Documento</a></li>
         </ul>
     </li>
     <li><a href="tareas.html"><i class="icon-calendar"></i><span>Tareas</span> </a></li>
@@ -33,14 +33,15 @@
     <div class="main-inner">
 
         <div class="container" ng-controller="DocumentoCtrl">
-
+            {% csrf_token %}
             <div class="row" >
                 <div class="span3  procesos">
                     <ul class="nav nav-tabs nav-stacked ">
                         <li class="title-nav"><i class="icon-retweet" style="font-size: 18px"></i><h3 style="font-size: 16px;  font-weight: 800; padding-left: 5px;display: inline-block">PROCESOS</h3></li>
+
                         {% if procesos_empresa %}
                             {% for f in procesos_empresa %}
-                                <li><a {% for p in procesos.all %}{% ifequal f.pk p.pk %} ng-click="getDocumentos({{ f.pk }})" {% else %} {% endifequal %}{% endfor %} class="ver_proceso {% for p in procesos.all %}{% ifequal f.pk p.pk %} active {% else %}  {% endifequal %}{% endfor %}" href="#proceso"> {{f.nombre}}</a></li>
+                                <li><a {% for p in procesos.all %}{% ifequal f.pk p.pk %} ng-click="getDocumentos({{ f.pk }})" {% else %} {% endifequal %}{% endfor %} class="ver_proceso {% for p in procesos.all %}{% ifequal f.pk p.pk %} active {% else %}  {% endifequal %}{% endfor %}"> {{f.nombre}}</a></li>
                             {% endfor %}
                         {% endif %}
                     </ul>
@@ -57,7 +58,8 @@
     </div>
     <!-- /main-inner -->
 {% endblock %}
-
+{% block footer %}
+{% endblock %}
 {% block some_extra_js %}
 
     <script>

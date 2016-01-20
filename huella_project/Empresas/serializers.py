@@ -2,7 +2,7 @@
 __author__ = 'linglung'
 from django.forms import widgets
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
-from Empresas.models import Empresa, Empleado, Proceso, Perfil, Tarea, CategoriaProceso, Formato
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, Tarea, CategoriaProceso, Formato, Documento
 
 
 class EmpresaSerializer(ModelSerializer):
@@ -45,5 +45,12 @@ class TareasSerializer(ModelSerializer):
 class FormatosSerializer(ModelSerializer):
     class Meta:
         model = Formato
-        fields = ('pk', 'formulario', 'descripcion', 'empresa', 'active')
+        fields = ('pk', 'nombre', 'formulario', 'descripcion', 'empresa', 'active')
         depth = 1
+
+class DocumentoSerializer(ModelSerializer):
+    class Meta:
+        model = Documento
+        fields = ('pk', 'codigo','formato', 'formato_default', 'elaboro', 'proceso', 'tipo_documento', 'fecha_emision', 'paginas', 'external_link', 'is_external', 'archivo', 'restringido', 'ubicacion_original', 'active', 'version')
+        depth = 1
+

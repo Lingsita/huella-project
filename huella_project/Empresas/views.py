@@ -1,16 +1,21 @@
 # -*- encoding: utf-8 -*-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm, CrearPerfilForm, ModificarPerfilForm, \
-    ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm
-from Empresas.models import Empresa, Formato
+    ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm, \
+    CrearDocumentoForm
+from Empresas.models import Empresa, Formato, Empleado
 from Empresas.serializers import EmpresaSerializer, FormatosSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 # Create your views here.
+from Formularios.models import Formulario, Campo
+from Formularios.views import InputForm
+
+
 
 def admin_empresas(request):
     if request.method == "POST":
@@ -24,23 +29,54 @@ def admin_empresas(request):
         print(form)
     return render(request, 'admin_empresas.html', {'form': form})
 
-def empresa_detail(request):
-    if request.method == "GET":
-        id=request.GET['id']
-        try:
-            empresa = Empresa.objects.get(id=id)
-            form_procesos=CrearProcesoForm(empresa=empresa)
-            form_empleados=CrearEmpleadoForm(empresa=empresa)
-            form_perfiles=CrearPerfilForm(empresa=empresa)
-            form_mp = ModificarPerfilForm(empresa=empresa)
-            form_mpro = ModificarProcesoForm(empresa=empresa)
-            form_mempleado = ModificarEmpleadoForm(empresa=empresa)
-            form_categoria = CrearCategoriaProcesoForm(empresa=empresa)
-            form_tarea = CrearTareaForm(empresa=empresa)
-            form_mtarea = ModificaTareaForm(empresa=empresa)
-            return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos, 'form_perfiles':form_perfiles, 'form_mp':form_mp, 'form_mpro':form_mpro, 'form_mempleado':form_mempleado, 'form_categoria':form_categoria, 'form_tarea':form_tarea, 'form_mtarea':form_mtarea})
-        except Empresa.DoesNotExist:
-            return redirect('/empresas')
+def empresa_detail(request, id):
+
+    try:
+        empresa = Empresa.objects.get(id=id)
+        request.session['empresa']=empresa.id
+        form_procesos=CrearProcesoForm(empresa=empresa)
+        form_empleados=CrearEmpleadoForm(empresa=empresa)
+        form_perfiles=CrearPerfilForm(empresa=empresa)
+        form_mp = ModificarPerfilForm(empresa=empresa)
+        form_mpro = ModificarProcesoForm(empresa=empresa)
+        form_mempleado = ModificarEmpleadoForm(empresa=empresa)
+        form_categoria = CrearCategoriaProcesoForm(empresa=empresa)
+        form_tarea = CrearTareaForm(empresa=empresa)
+        form_mtarea = ModificaTareaForm(empresa=empresa)
+        return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos, 'form_perfiles':form_perfiles, 'form_mp':form_mp, 'form_mpro':form_mpro, 'form_mempleado':form_mempleado, 'form_categoria':form_categoria, 'form_tarea':form_tarea, 'form_mtarea':form_mtarea})
+    except Empresa.DoesNotExist:
+        return redirect('/empresas')
+
+def admin_empresa_detail(request):
+    print('edd')
+
+    try:
+        print('edd')
+        empleado=Empleado.objects.get(usuario__user=request.user)
+        empresa = empleado.perfil.empresa
+        form_procesos=CrearProcesoForm(empresa=empresa)
+        form_empleados=CrearEmpleadoForm(empresa=empresa)
+        form_perfiles=CrearPerfilForm(empresa=empresa)
+        form_mp = ModificarPerfilForm(empresa=empresa)
+        form_mpro = ModificarProcesoForm(empresa=empresa)
+        form_mempleado = ModificarEmpleadoForm(empresa=empresa)
+        form_categoria = CrearCategoriaProcesoForm(empresa=empresa)
+        form_tarea = CrearTareaForm(empresa=empresa)
+        form_mtarea = ModificaTareaForm(empresa=empresa)
+        return render(request, 'empresa.html', {'empresa':empresa, 'form_empleados':form_empleados, 'form_procesos':form_procesos, 'form_perfiles':form_perfiles, 'form_mp':form_mp, 'form_mpro':form_mpro, 'form_mempleado':form_mempleado, 'form_categoria':form_categoria, 'form_tarea':form_tarea, 'form_mtarea':form_mtarea})
+    except Empresa.DoesNotExist:
+        return redirect('/empresas')
+
+
+def montar_formulario_dinamico(request, id):
+
+    formulario=get_object_or_404(Formulario, id=id, active=True)
+    campos=Campo.objects.filter(formulario=formulario)
+    form = InputForm(fields=campos)
+    form_base=CrearDocumentoForm()
+    return render(request, 'nuevo_documento.html', {'nombre':formulario.nombre, 'form_base':form_base,'descripcion':formulario.descripcion, 'formulario': form})
+
+
 
 #Another django rest solutions
 

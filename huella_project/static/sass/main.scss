@@ -188,3 +188,29 @@ body{
         pointer-events: auto;
     }
 }
+
+.crea-formulario{
+    font: 22px 'Helvetica Neue';
+    label{
+        color:#696969;
+        font-weight: bold !important;
+
+    }
+    input{
+        font-size: 16px;
+    }
+    .nombre{
+        float: none;
+    }
+    .description{
+        float: none;
+        margin-top: 30px;
+        textarea{
+            font-size: 16px;
+        }
+    }
+}
+.form_error{
+    color: red;
+    font-size: 12px;
+}

@@ -11,4 +11,4 @@ class FormularioFilter(django_filters.FilterSet):
 
     class Meta:
         model = Formulario
-        fields = ['nombre', 'url']
+        fields = ['nombre']

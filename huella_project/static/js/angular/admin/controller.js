@@ -32,6 +32,9 @@ jQuery( document ).ready(function() {
              nit:null,
              id:null
          }
+        $scope.verEmpresa= function (id) {
+            location.href="/detail/"+id
+        }
         $scope.getEmpresas = function (url) {
 
             $http.get(url).success(function (response) {

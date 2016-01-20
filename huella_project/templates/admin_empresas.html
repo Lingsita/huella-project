@@ -196,7 +196,7 @@
                               <td ng-bind="empresa.NIT">  </td>
 
                           <td class="td-actions">
-                              <a href="{% url 'Empresas:detail' %}?id={% verbatim %}{{ empresa.pk}}{% endverbatim %}" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a>
+                              <a ng-click="verEmpresa(empresa.pk)" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-cog"> </i></a>
                               <a ng-click="confirmaEliminaEmpresa(empresa.nombre, empresa.NIT, empresa.pk )" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a>
                           </td>
                       </tr>
@@ -234,6 +234,7 @@
 <script>
     $( document ).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
+
     });
 
 </script>

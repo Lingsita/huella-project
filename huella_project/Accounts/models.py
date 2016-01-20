@@ -10,6 +10,8 @@ class Usuario(models.Model):
     change_password_date = models.DateTimeField(default=datetime.now, verbose_name='change password date')
     superuser = models.BooleanField(null=False, blank=False, default=False)
 
+    def __unicode__(self):
+        return u'%s' % (self.user.username)
 class Permiso(models.Model):
     nombre = models.CharField(max_length=150, null=False)
     url= models.CharField(max_length=150)

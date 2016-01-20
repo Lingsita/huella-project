@@ -228,6 +228,33 @@ class CrearPerfilForm(forms.ModelForm):
         self.fields['procesos'] = forms.ModelMultipleChoiceField(queryset=procesos)
         self.fields['formatos_asignados_perfil'] = forms.ModelMultipleChoiceField(queryset=formatos)
 
+class CrearDocumentoForm(forms.ModelForm):
+
+    procesos = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple())
+    formatos_asignados_perfil = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple())
+    empresa= forms.CharField(required=True, widget=forms.HiddenInput(attrs={'required':'required', 'ng-model':'datos.empresa'})),
+
+    class Meta:
+        model = Proceso
+        fields = '__all__'
+        exclude=['active']
+
+        widgets = {
+            'nombre': forms.TextInput(attrs={'required':'required', 'ng-model':'datos.nombre'}),
+            'codigo': forms.TextInput(attrs={'required':'required', 'ng-model':'datos.codigo'}),
+            'descripcion': forms.Textarea(attrs={'required':'required', 'ng-model':'datos.descripcion'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        empresa = kwargs.pop('empresa')
+        procesos= Proceso.objects.filter(categoria__empresa=empresa, active=True)
+        formatos= Formato.objects.filter(empresa=empresa, active=True)
+        super(CrearDocumentoForm, self).__init__(*args, **kwargs)
+        self.fields['empresa'] = forms.CharField(initial=empresa.pk,required=True, widget=forms.HiddenInput(attrs={'required':'required', 'ng-model':'datos.empresa'}))
+        self.fields['procesos'] = forms.ModelMultipleChoiceField(queryset=procesos)
+        self.fields['formatos_asignados_perfil'] = forms.ModelMultipleChoiceField(queryset=formatos)
+
+
 class ModificarPerfilForm(forms.ModelForm):
 
     current_perfil_procesos = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple())

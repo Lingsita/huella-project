@@ -143,3 +143,36 @@ body {
   cursor: pointer;
   pointer-events: auto;
 }
+
+/* line 192, ../sass/main.scss */
+.crea-formulario {
+  font: 22px 'Helvetica Neue';
+}
+/* line 194, ../sass/main.scss */
+.crea-formulario label {
+  color: #696969;
+  font-weight: bold !important;
+}
+/* line 199, ../sass/main.scss */
+.crea-formulario input {
+  font-size: 16px;
+}
+/* line 202, ../sass/main.scss */
+.crea-formulario .nombre {
+  float: none;
+}
+/* line 205, ../sass/main.scss */
+.crea-formulario .description {
+  float: none;
+  margin-top: 30px;
+}
+/* line 208, ../sass/main.scss */
+.crea-formulario .description textarea {
+  font-size: 16px;
+}
+
+/* line 213, ../sass/main.scss */
+.form_error {
+  color: red;
+  font-size: 12px;
+}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb " >
+        <div class="breadcrumb-title">
+            <li><a href="#"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li ><a href="#">Formularios</a> /</li>
+            <li class="active"><a href="#">Nuevo</a></li>
+
+        </div>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <div class="main-inner" ng-controller="NuevoformularioCtrl">
+    {% csrf_token %}
+        <div class="container">
+            <div id="status_message" class="alert alert-success" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div id="bad_status_message" class="alert alert-danger" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div class="row" >
+                <div class="widget widget-table action-table" >
+                    <div class="widget-header"> <i class="icon-th-list"></i>
+                        <h3>NUEVO FORMULARIO</h3>
+
+                    </div>
+                    <!-- /widget-header -->
+                    <div class="widget-content" >
+                        <form id="crea-formulario" class="form-horizontal crea-formulario">
+                            <fieldset STYLE="margin-top: 20px;">
+                                <div class="control-group" >
+                                    <div class="span9" style="margin-left: 0">
+                                        <div class="nombre">
+                                            <label class="span3" for="nombre">Nombre del Formulario</label>
+                                            <input type="text" ng-model="formulario.nombre" name="nombre" class="span6 disabled" id="nombre" placeholder="Inserta el nombre del formulario">
+                                        </div>
+                                        <div class="description">
+                                            <label class="span3" for="nombre">Descripción</label>
+                                            <textarea class="span6" ng-model="formulario.descripcion" placeholder="Agrega una descripción"></textarea>
+                                        </div>
+                                    </div>
+                                    <div><button  class="span2 guarda-formulario" ng-click="guardarFormulario()" type="button">Guardar</button></div>
+
+                                </div> <!-- /control-group -->
+                            </fieldset>
+
+
+                            <div>
+                                <div id="tipos" class="span3" >
+                                    <ul>
+                                        <li class="btn" id="text"><div class="tipo_icon"><i class="icon-text-height"></i></div><div class="tipo_texto">Texto</div></li>
+                                        <li class="btn" id="file"><div class="tipo_icon"><i class="icon-folder-open"></i></div><div class="tipo_texto">Archivo</div></li>
+                                        <li class="btn" id="number"><div class="tipo_icon"><i>123</i></div><div class="tipo_texto">Numero</div></li>
+                                        <li class="btn" id="textarea"><div class="tipo_icon"><i class=" icon-align-justify"></i></div><div class="tipo_texto">Area de texto</div></li>
+                                        <li class="btn" id="radio"><div class="tipo_icon"><i class="icon-ok-sign"></i></div><div class="tipo_texto">Boton de Radio</div></li>
+                                        <li class="btn" id="checkbox"><div class="tipo_icon"><i class="icon-check"></i></div><div class="tipo_texto">Campo de <br>Selección</div></li>
+                                        <li class="btn" id="date"><div class="tipo_icon"><i class="icon-calendar"></i></div><div class="tipo_texto">Fecha</div></li>
+                                    </ul>
+
+                                </div>
+                                <div id="campos"  class="span8">
+                                    <li class="placeholder" style="font-size: 22px; color :#CACACA; padding: 15px;">Agrega campos a tu formulario...</li>
+
+                                </div>
+                            </div>
+                        </form>
+                        <!-- /widget-content -->
+
+                    </div>
+                </div>
+                <!-- /span6 -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /main-inner -->
+
+<!-- Modal crea Campo-->
+<div ng-controller="NuevoformularioCtrl">
+        <script type="text/ng-template"  id="modal-insertaCampo.html">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Crear Campo</h4>
+            </div>
+            <div class="modal-body">
+                <form id="nuevo_campo_form">
+                    <label style="font-size: 16px">Nombre del campo:</label>
+                    <div id="nombre_error" class="form_error"></div>
+                    <input  ng-model="campo.nombre" style="height: 30px; width: 95%;" id="nombre"><br>
+                    <div id="ifNumber" style="display: none">
+
+                        <label>Valor Minimo</label>
+                        <div id="val_min_error" class="form_error"></div>
+                        <input type="number" ng-model="campo.min" id="val_min"><br>
+
+                        <label>Valor Máximo</label>
+                        <div id="val_max_error" class="form_error"></div>
+                        <input type="number" ng-model="campo.max" id="val_max"><br>
+                    </div>
+                    <textarea ng-model="campo.descripcion"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" ng-click="ok()" class="btn btn-primary">Guardar</button>
+            </div>
+{#            onclick="appendDraggable($('#nuevo_campo_form'))" #}
+    </script>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block some_extra_js %}
+
+    <script src="{% static 'js/angular/admin/formularios_controller.js' %}"></script>
+{#    <script src="{% static 'js/formularios/crear.js' %}"></script>#}
+{% endblock %}
+

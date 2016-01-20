@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block breadcrumb %}
+
+    <ol class="breadcrumb " >
+        <div class="breadcrumb-title">
+            <li><a href="#"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li class="active"><a href="#">Formatos</a></li>
+
+        </div>
+    </ol>
+{% endblock %}
+{% block content %}
+    <!-- List Formularios -->
+    <div class="main-inner" ng-controller="formatosCtrl">
+        <div class="container">
+            <div id="status_message" class="alert alert-success" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div id="bad_status_message" class="alert alert-danger" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div class="row" style="margin-left: auto;">
+                {% csrf_token %}
+                <div class="widget widget-table action-table" >
+                    <div class="widget-header"> <i class="icon-th-list"></i>
+                        <h3>FORMATOS</h3>
+                        <a href="{% url 'formularios:nuevo_form' %}" class="btn btn-success pull-right button-crear-formulario" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nuevo Formato</a>
+
+                    </div>
+                    <div id="buscar_empresa" class="widget-header">
+                        <i class="icon-search"></i>
+                        <label class="search" style="">Buscar por:</label>
+                        <div class="control-group" style="display: inline-block">
+                            <div class="controls">
+                                <label id="nombre_empresa" class="radio inline search_by">
+                                    <input id="nombre_empresa" type="radio" name="radiobtns"> Nombre
+                                </label>
+                                <label id="id_empresa" class="radio inline search_by">
+                                    <input  id="id_empresa" type="radio" name="radiobtns"> Fecha de Creación
+                                </label>
+                            </div>	<!-- /controls -->
+                        </div> <!-- /control-group -->
+
+                    </div>
+                    <div  class="widget-header" id="input_busqueda" style="display: none; padding: 5px 13px 0px 13px"></div>
+                    <!-- /widget-header -->
+                    <div class="widget-content" >
+                        <table class="table table-striped table-bordered" >
+                            <thead>
+                            <tr>
+                                <th> Nombre </th>
+                                <th> Descripción</th>
+                                <th class="td-actions"> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% verbatim %}
+                            <tr ng-repeat="form in formularios">
+                                <td ng-bind="form.nombre"></td>
+                                <td ng-bind="form.descripcion"></td>
+                                <td class="td-actions"><button ng-click="verFormulario(form.formulario.id)" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-zoom-in"> </i></button><button ng-click="eliminaFormulario(form)" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></button></td>
+                            </tr>
+                            <tr ng-if="!formularios">
+                                <td colspan="3">No hay formularios para mostrar</td>
+                            </tr>
+                            {% endverbatim %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /widget-content -->
+                </div>
+            </div>
+            <!-- /span6 -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+
+    <!-- Modal Elimina Empresa-->
+    <div ng-controller="formatosCtrl">
+        <script type="text/ng-template" class="eliminaModal" id="modal-eliminaFormulario.html">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Formato</h4>
+                </div>
+                <div class="modal-body">
+                    {% verbatim %}
+                    Usted desactivará el formato:<br><br>
+                    <span>Nombre:</span> {{ e_form.nombre }}<br>
+                    <span>Descripción:</span> {{ e_form.descripcion }}<br><br>
+                    Sólo el administrador del sistema podrá reactivarlo. Para confirma la acción presione Eliminar, de lo contrario presione Cancelar.
+                    {% endverbatim %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
+{% endblock %}
+
+{% block some_extra_js %}
+<script>
+    $(function(){
+        window.URL_VER_FORM="{% url 'formularios:url_muestra_form' %}";
+    })
+
+</script>
+<script src="{% static 'js/angular/admin/formularios_controller.js' %}"></script>
+{% endblock %}

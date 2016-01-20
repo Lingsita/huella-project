@@ -5,18 +5,21 @@ from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import DjangoFilterBackend
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import permissions
 from Accounts.models import Log, Usuario
 from Empresas.api.filters import EmpresaFilter, EmpleadoFilter, ProcesoFilter, PerfilFilter, CategoriaProcesoFilter
 from Empresas.api.pagination import StandardResultsSetPagination
 from Empresas.forms import CrearEmpresaForm
-from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso, Formato, Tarea
+from Empresas.models import Empresa, Empleado, Proceso, Perfil, CategoriaProceso, Formato, Tarea, Documento
 from Empresas.serializers import EmpresaSerializer, EmpleadoSerializer, ProcesoSerializer, PerfilSerializer, \
-    CategoriaProcesoSerializer, TareasSerializer
+    CategoriaProcesoSerializer, TareasSerializer, FormatosSerializer, DocumentoSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 # Create your views here.
+from Empresas.api.permissions import IsBusinessAdmin, IsAdminOrBusinessAdmin
+from Formularios.models import Formulario, Campo
+
 
 class EmpresaViewSet(viewsets.ModelViewSet):
     serializer_class = EmpresaSerializer
@@ -60,7 +63,7 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
     filter_class = EmpleadoFilter
 
     @detail_route(methods=['get'])
@@ -150,7 +153,7 @@ class CategoriaProcesoViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
     filter_class = CategoriaProcesoFilter
 
     def perform_create(self, serializer):
@@ -164,12 +167,26 @@ class ProcesoViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
     filter_class = ProcesoFilter
 
     @detail_route(methods=['get'])
     def get_procesos(self, request, id=None):
         queryset = Proceso.objects.filter(categoria__empresa=id, active=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['get'])
+    def empleado(self, request):
+
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        queryset = Proceso.objects.filter(categoria__empresa=empleado.perfil.empresa, active=True)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -229,7 +246,7 @@ class PerfilViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
     filter_class = PerfilFilter
 
     @detail_route(methods=['get'])
@@ -310,7 +327,7 @@ class TareasViewSet(viewsets.ModelViewSet):
     lookup_field = 'id'
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend,)
-    permission_classes = (IsAdminUser,)
+    permission_classes = (IsAuthenticated,)
 
     @detail_route(methods=['get'])
     def get_tareas(self, request, id=None):
@@ -357,9 +374,88 @@ class TareasViewSet(viewsets.ModelViewSet):
             return super(TareasViewSet,self).update(request, *args, **kwargs)
 
 
+class FormatoViewSet(viewsets.ModelViewSet):
+    serializer_class = FormatosSerializer
+    queryset = Formato.objects.all()
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminOrBusinessAdmin, )
+    # filter_class = FormatoFilter
 
+    def list(self, request):
+        try:
+            empleado= Empleado.objects.get(usuario__user=request.user)
+            empresa=empleado.perfil.empresa
+            queryset=Formato.objects.filter(empresa=empresa, active=True)
+        except Empleado.DoesNotExist:
+            empresa=get_object_or_404(Empresa, id=request.session['empresa'])
+            queryset=Formato.objects.filter(empresa=empresa, active=True)
 
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        try:
+            empleado= Empleado.objects.get(usuario__user=request.user)
+            empresa=empleado.perfil.empresa
+        except Empleado.DoesNotExist:
+             empresa=get_object_or_404(Empresa, id=request.session['empresa'])
+        formulario=Formulario(nombre=request.data['nombre'], descripcion=request.data['descripcion'])
+        formulario.save()
+        formato=Formato(nombre=request.data['nombre'], descripcion=request.data['descripcion'], empresa=empresa, formulario=formulario)
+        formato.save()
+        for c in request.data['campos']:
+            campo=Campo(id_campo=c['id_campo'],
+                        nombre = c['nombre'],
+                        descripcion= c['descripcion'],
+                        tipo=c['tipo'],
+                        max=c['max'],
+                        min=c['min'],
+                        formulario= formulario
+                        )
+            campo.save()
 
+        serializer = FormatosSerializer(formulario)
+        return Response(serializer.data)
 
+class DocumentoViewSet(viewsets.ModelViewSet):
+    serializer_class = DocumentoSerializer
+    queryset = Documento.objects.all()
+    lookup_field = 'id'
+    pagination_class = StandardResultsSetPagination
+    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAuthenticated, )
+
+    # def list(self, request):
+    #     empleado= Empleado.objects.get(usuario__user=request.user)
+    #     queryset=Documento.objects.filter(empleado=empleado, active=True)
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+    #     serializer = self.serializer_class(queryset, many=True)
+    #     return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def by_proceso(self, request, id=None):
+
+        empleado= Empleado.objects.get(usuario__user=request.user)
+
+        proceso=get_object_or_404(Proceso, pk=id, active=True)
+
+        queryset=Documento.objects.filter(elaboro=empleado, proceso=proceso, active=True)
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 

@@ -13,16 +13,12 @@ $(function() {
             $('#insertaCampo').find('#tipo').val(tipo)
             console.log(tipo)
             if(tipo=='number'){
-
                 $('#insertaCampo').find('#ifNumber').css('display','block')
             }else{
                 $('#insertaCampo').find('#ifNumber').css('display','none')
             }
             $('#insertaCampo').modal('show');
-
-
 //                $( "<li></li>" ).text( ui.draggable.text() ).appendTo( this );
-
         }
     }).sortable({
         items: "li:not(.placeholder)",

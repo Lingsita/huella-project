@@ -13,106 +13,23 @@
     </ol>
 {% endblock %}
 {% block content %}
-<div class="main">
-    <!-- Modal Crea Empresa-->
-    <div class="modal fade modal-lg" id="creaEmpresa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog " role="document" >
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="">NUEVA EMPRESA</h4>
-                </div>
-                <div class="modal-body modal-body-lg">
-                    <form id="crea_proceso" class="form-horizontal">
-                        <fieldset>
-
-                            <div class="control-group">
-                                <label class="control-label" for="firstname">Nombre</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="firstname" value="Mi Empresa">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">NIT o Identificación</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="lastname" value="900305826 - 1">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Dirección</label>
-                                <div class="controls">
-
-                                    <textarea class="span6">Esta es la direccion de mi empresa</textarea>
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Telefono 1</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="lastname" value="Donga">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">Telefono 2</label>
-                                <div class="controls">
-                                    <input type="text" class="span6" id="lastname" value="Donga">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-                            <div class="control-group">
-                                <label class="control-label" for="lastname">E-mail de contacto</label>
-                                <div class="controls">
-                                    <input type="email" class="span6" id="lastname" value="empresa@empresa.com">
-                                </div> <!-- /controls -->
-                            </div> <!-- /control-group -->
-
-                        </fieldset>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Crear</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!---------- Finish Modal--------------->
-
-    <!-- Modal Elimina Empresa-->
-    <div class="modal fade" id="eliminaEmpresa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Eliminar Formato</h4>
-                </div>
-                <div class="modal-body">
-                    Para eliminar este formulario usted debe ser usuario Administrador.<br>
-                    Por favor digite su clave para confirmar.<br>
-                    <input type="text">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!---------- Finish Modal--------------->
-
-    <!-- Button for add bussiness -->
-
-    <!-- List Bussiness -->
-    <div class="main-inner">
+    <!-- List Formularios -->
+    <div class="main-inner" ng-controller="formulariosCtrl">
         <div class="container">
+            <div id="status_message" class="alert alert-success" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
+            <div id="bad_status_message" class="alert alert-danger" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Atención!</strong> <div id="message" style="display: inline-block"></div>
+            </div>
             <div class="row" style="margin-left: auto;">
-
+                {% csrf_token %}
                 <div class="widget widget-table action-table" >
                     <div class="widget-header"> <i class="icon-th-list"></i>
                         <h3>FORMATOS</h3>
-                        <a href="{% url 'formularios:nuevo_form' %}" class="btn btn-success pull-right button-crear-formulario" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nuevo Formato</a>
+                        <a href="{% url 'formularios:nuevo_formulario' %}" class="btn btn-success pull-right button-crear-formulario" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Crear Nuevo Formato</a>
 
                     </div>
                     <div id="buscar_empresa" class="widget-header">
@@ -144,9 +61,12 @@
                             <tbody>
                             {% verbatim %}
                             <tr ng-repeat="form in formularios">
-                                <td>{{ form.nombre }}</td>
-                                <td> {{ form.descripcion }}</td>
-                                <td class="td-actions"><a href="" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-zoom-in"> </i></a><a href="javascript:;" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></a></td>
+                                <td ng-bind="form.nombre"></td>
+                                <td ng-bind="form.descripcion"></td>
+                                <td class="td-actions"><button ng-click="verFormulario(form.pk)" data-toggle="tooltip" title="Ver" class="btn btn-small btn-success"><i class="btn-icon-only icon-zoom-in"> </i></button><button ng-click="eliminaFormulario(form)" class="btn btn-danger btn-small btn-elimina_empresa"><i class="btn-icon-only icon-remove"> </i></button></td>
+                            </tr>
+                            <tr ng-if="!formularios">
+                                <td colspan="3">No hay formularios para mostrar</td>
                             </tr>
                             {% endverbatim %}
 
@@ -155,20 +75,45 @@
                     </div>
                     <!-- /widget-content -->
                 </div>
-
-
             </div>
             <!-- /span6 -->
         </div>
         <!-- /row -->
     </div>
     <!-- /container -->
-</div>
-<!-- /main-inner -->
-</div>
-<!-- /main -->
+
+    <!-- Modal Elimina Empresa-->
+    <div ng-controller="formulariosCtrl">
+        <script type="text/ng-template" class="eliminaModal" id="modal-eliminaFormulario.html">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Eliminar Formato</h4>
+                </div>
+                <div class="modal-body">
+                    {% verbatim %}
+                    Usted desactivará el formato:<br><br>
+                    <span>Nombre:</span> {{ e_form.nombre }}<br>
+                    <span>Descripción:</span> {{ e_form.descripcion }}<br><br>
+                    Sólo el administrador del sistema podrá reactivarlo. Para confirma la acción presione Eliminar, de lo contrario presione Cancelar.
+                    {% endverbatim %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" ng-click="ok()" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </script>
+    </div>
+    <!---------- Finish Modal--------------->
 {% endblock %}
 
 {% block some_extra_js %}
+<script>
+    $(function(){
+        window.URL_VER_FORM="{% url 'formularios:url_muestra_form' %}";
+    })
+
+</script>
 <script src="{% static 'js/angular/admin/formularios_controller.js' %}"></script>
 {% endblock %}

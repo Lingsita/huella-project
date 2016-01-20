@@ -3,12 +3,15 @@ from django.db import models
 
 # Create your models here.
 from Accounts.models import Usuario
-from Formularios.models import Registro, Formulario
+from Formularios.models import Formulario, Campo
 from datetime import datetime
 import os
 
 def get_image_path(instance, filename):
     return os.path.join('user_fotos', str(instance.id), filename)
+
+def get_file_path(instance, filename):
+    return os.path.join('docs', str(instance.id), filename)
 
 class Empresa(models.Model):
     permissions={
@@ -40,7 +43,7 @@ class Formato(models.Model):
     formulario=models.ForeignKey(Formulario)
     descripcion=models.CharField(max_length=150)
     empresa = models.ForeignKey(Empresa)
-    active=models.BooleanField(null=False, blank=False, default='')
+    active=models.BooleanField(null=False, blank=False, default=True)
     def __unicode__(self):
         return u'%s' % (self.descripcion)
 
@@ -71,37 +74,64 @@ class Perfil(models.Model):
 
 class Empleado(models.Model):
     usuario = models.ForeignKey(Usuario)
-    nombre=models.CharField(max_length=150)
-    apellido=models.CharField(max_length=150)
-    identificacion=models.CharField(max_length=150)
-    tipo_documento=models.CharField(max_length=150, blank=True, null=True)
+    nombre = models.CharField(max_length=150)
+    apellido = models.CharField(max_length=150)
+    identificacion = models.CharField(max_length=150)
+    tipo_documento = models.CharField(max_length=150, blank=True, null=True)
     perfil = models.ForeignKey(Perfil)
     direccion = models.CharField(max_length=150)
     codigo = models.CharField(max_length=150)
-    foto= models.FileField(upload_to=get_image_path, blank=True, null=True)
-    telefono1= models.CharField(max_length=20, blank=True)
-    telefono2= models.CharField(max_length=20, blank=True)
-    is_admin=models.BooleanField(default=False)
-    active=models.BooleanField(null=False, blank=False, default=True)
+    foto = models.FileField(upload_to=get_image_path, blank=True, null=True)
+    telefono1 = models.CharField(max_length=20, blank=True)
+    telefono2 = models.CharField(max_length=20, blank=True)
+    is_admin = models.BooleanField(default=False)
+    active = models.BooleanField(null=False, blank=False, default=True)
 
     def __unicode__(self):
         return u'%s %s' % (self.nombre, self.apellido)
+
+class TipoDocumento(models.Model):
+    nombre = models.CharField(max_length=150, null=False)
+    descripcion = models.CharField(max_length=250, null=False)
+    active = models.BooleanField(null=False, blank=False, default=True)
+    def __unicode__(self):
+        return u'%s' % (self.nombre)
 
 class Documento(models.Model):
-    formato = models.CharField(max_length=150, null=False)
-    proceso= models.CharField(max_length=150)
-    registro=models.ManyToManyField(Registro)
-    fecha= models.DateTimeField()
-    version= models.CharField(max_length=150)
+    formato = models.ForeignKey(Formato, null=True)
+    formato_default= models.BooleanField(null=False, blank=False, default=True)
+    elaboro=models.ForeignKey(Empleado, null=True)
+    proceso = models.ForeignKey(Proceso)
+    codigo= models.IntegerField(null=True, blank=True)
+    tipo_documento = models.ForeignKey(TipoDocumento, null=True)
+    fecha_emision = models.DateTimeField(default=datetime.now)
+    paginas = models.IntegerField(default=1, null=True)
+    external_link = models.CharField(max_length=254, null=False, blank=True)
+    is_external = models.BooleanField(null=False, blank=False, default=False)
+    archivo = models.FileField(upload_to=get_file_path, blank=True, null=True)
+    restringido = models.BooleanField(null=False, blank=False, default=False)
+    ubicacion_original = models.CharField(max_length=150, null=False, blank=True)
+    active = models.BooleanField(null=False, blank=False, default=True)
+    version = models.IntegerField(default=1, null=True)
     def __unicode__(self):
-        return u'%s %s' % (self.nombre, self.apellido)
+        return u'%s' % (self.formato.nombre)
+
+class Registro(models.Model):
+    documento = models.ForeignKey(Documento)
+    campo = models.ForeignKey(Campo)
+    valor = models.CharField(max_length=150)
+    active=models.BooleanField(null=False, blank=False, default=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.campo.nombre)
+
 
 class Tarea(models.Model):
-    empleado=models.ForeignKey(Empleado)
+    empleado = models.ForeignKey(Empleado)
     nombre = models.CharField(max_length=150, null=False)
-    descripcion= models.CharField(max_length=150)
+    descripcion = models.CharField(max_length=150)
     fecha_inicio = models.DateTimeField(default=datetime.now)
     fecha_fin = models.DateTimeField(default=datetime.now)
-    active=models.BooleanField(null=False, blank=False, default=True)
+    active = models.BooleanField(null=False, blank=False, default=True)
     def __unicode__(self):
         return u'%s' % (self.nombre)

@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% block breadcrumb %}
+    <ol class="breadcrumb " >
+        <div class="breadcrumb-title">
+            <li ><a href="empleado.html"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li ><a href="#">Formularios</a> /</li>
+            <li class="active"><a href="#">Ver Formulario</a></li>
+        </div>
+    </ol>
+{% endblock %}
+
+    {% block content %}
+    <div class="main-inner">
+
+        <div class="container">
+
+            <div class="row" >
+
+
+                <div class="span3  procesos">
+                    <ul class="nav nav-tabs nav-stacked ">
+                        <li class="title-nav"><i class="icon-edit" style="font-size: 18px"></i><h3 style="font-size: 16px;  font-weight: 800; padding-left: 5px;display: inline-block">FORMATOS</h3></li>
+{#                        <li class="active"><a class="ver_proceso" href="#"> Formato Estandar</a></li>#}
+                        <li><a class="ver_proceso" href="#"> Formato Actual</a></li>
+                    </ul>
+                </div>
+
+
+                <div class="span9">
+
+                    <div id="contenido" style="border: 1px solid #d9d9d9;min-height: 400px; background: white; padding-bottom: 0 !important;">
+
+                       <div class="widget ">
+                            <div class="widget-header">
+                                <i class="icon-file"></i>
+                                <h3>Nuevo Documento: <span style="text-transform: uppercase; ">{{ nombre }}</span></h3>
+                            </div> <!-- /widget-header -->
+
+                            <div class="widget-content">
+
+                                <form id="edit-profile" class="form-horizontal">
+                                    <fieldset>
+
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="username">Categoría</label>
+                                            <div class="controls">
+
+                                                <select class="span6 ">
+                                                    <option>PROCESOS ESTRATEGICOS</option>
+                                                    <option></option>
+                                                </select>
+
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="username">Proceso</label>
+                                            <div class="controls">
+
+                                                <select class="span6 ">
+                                                    <option>DIRECCIONESTRATEGICA</option>
+                                                    <option></option>
+                                                </select>
+                                                <p class="help-block">El documento se creará para este proceso</p>
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="username">Tipo de Documento</label>
+                                            <div class="controls">
+                                                <select class="span6 ">
+                                                    <option>CARACTERIZACION</option>
+                                                    <option></option>
+                                                </select>
+
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+
+                                        {% for field in formulario %}
+                                            {% ifequal field.help_text 'radio' %}
+                                            <div class="control-group">
+                                                <label class="control-label">{{ field.label }}</label>
+                                                <div class="controls">
+                                                    <label class="radio inline">
+                                                        {{ field }}
+                                                    </label>
+
+                                                </div>	<!-- /controls -->
+                                            </div> <!-- /control-group -->
+                                            {% else %}
+                                            <div class="control-group">
+
+                                                <label class="control-label" for="firstname">{{ field.label }}</label>
+                                                <div class="controls">
+                                                    {{ field }}
+                                                </div> <!-- /controls -->
+                                            </div> <!-- /control-group -->
+                                            {% endifequal %}
+                                        {% endfor %}
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Elaboró</label>
+                                            <div class="controls">
+                                                <input type="text" class="span6" id="lastname" value="Donga">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Revisó</label>
+                                            <div class="controls">
+                                                <input type="text" class="span6" id="lastname" value="Donga">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Aprovó</label>
+                                            <div class="controls">
+                                                <input type="text" class="span6" id="lastname" value="Donga">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Emisión</label>
+                                            <div class="controls">
+                                                <input type="number" class="span6" id="lastname" value="1">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Fecha de Emisión</label>
+                                            <div class="controls">
+                                                <input type="date" class="span6" id="lastname" value="">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="email">Descripción de Cambios</label>
+                                            <div class="controls">
+                                                            <textarea class="span6" id="email" >La descripcion de los cambios
+                                                                </textarea>
+                                                <p>Con respecto a la emisión anterior</p>
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Páginas</label>
+                                            <div class="controls">
+                                                <input type="number" class="span6" id="lastname" value="1">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label" for="lastname">Ubicacion Original</label>
+                                            <div class="controls">
+                                                <input type="text" class="span6" id="lastname" value="">
+                                            </div> <!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label">Documento Restringido</label>
+                                            <div class="controls">
+                                                <label class="radio inline">
+                                                    <input type="radio"  name="radiobtns" checked> Si
+                                                </label>
+
+                                                <label class="radio inline">
+                                                    <input type="radio"  name="radiobtns"> No
+                                                </label>
+
+                                            </div>	<!-- /controls -->
+                                        </div> <!-- /control-group -->
+                                        <div class="control-group">
+                                            <label class="control-label">Documento</label>
+                                            <div class="controls">
+                                                <label class="radio inline">
+                                                    <input type="radio" class="doc" id="doc_link" name="radiobtns"> Enlace Externo
+                                                </label>
+
+                                                <label class="radio inline">
+                                                    <input type="radio" class="doc" id="doc_file" name="radiobtns"> Subir Archivo desde este equipo
+                                                </label>
+
+                                                <label class="documento_link" style="display: none">
+                                                    <br>
+                                                    <input class="span6" type="text" name="radiobtns">
+                                                </label>
+
+                                                <label class="documento_archivo" style="display: none">
+                                                    <br>
+                                                    <button>Escoger Archivo</button>
+                                                    <input class="span6" style=" display:none" type="file" name="radiobtns">
+                                                </label>
+                                            </div>	<!-- /controls -->
+                                        </div> <!-- /control-group -->
+
+                                        <hr>
+
+                                        <div >
+                                            <button class="btn btn-primary pull-right" style="margin: 0 5px" type="submit" class="btn btn-primary">Guardar</button>
+                                            <button class="btn pull-right" >Cancelar</button>
+                                        </div>
+
+
+                                    </fieldset>
+                                </form>
+
+                            </div> <!-- /widget-content -->
+
+                        </div> <!-- /widget -->
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /main-inner -->
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block some_extra_js %}
+<script src="{% static 'js/angular/admin/formularios_controller.js' %}"></script>
+{% endblock %}
