@@ -131,10 +131,9 @@ body {
 
 /* line 179, ../sass/main.scss */
 .ver_proceso {
-  pointer-events: none;
-  cursor: default;
   background-color: #ddd;
   color: #000;
+  cursor: pointer;
 }
 /* line 184, ../sass/main.scss */
 .ver_proceso.active {

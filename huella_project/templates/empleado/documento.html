@@ -1,7 +1,7 @@
     <div class="widget widget-table action-table" ng-controller="DocsCtrl">
         <div class="widget-header"> <i class="icon-th-list"></i>
             <h3>DOCUMENTOS : <div style="display: inline-block" id="nombre_proceso"></div></h3>
-            <a href="documentos.html" class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Documento</a>
+            <a ng-click="nuevoDocumento()" class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Documento</a>
         </div>
         <div id="buscar_documento" class="widget-header">
             <i class="icon-search"></i>
@@ -67,7 +67,7 @@
                 </tbody>
             </table>
         </div>
-        <uib-pagination class="pull-right" total-items="totalItems" ng-model="currentPage" items-per-page="numPerPage" next-text="Siguiente" previous-text="Anterior" ng-change="pageChanged()"></uib-pagination>
+        <uib-pagination class="pull-right" total-items="totalItems" ng-model="currentPage" items-per-page="numPerPage" next-text="Siguiente" previous-text="Anterior"></uib-pagination>
         <!-- /widget-content -->
     </div>
 

@@ -177,10 +177,10 @@ body{
 }
 
 .ver_proceso {
-	pointer-events: none;
-	cursor: default;
+
 	background-color: #ddd;
 	color: #000;
+    cursor: pointer;
     &.active{
         background-color: #ffffff;
         color: #19bc9c;

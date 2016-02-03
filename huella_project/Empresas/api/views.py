@@ -225,6 +225,7 @@ class ProcesoViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         try:
             proceso = get_object_or_404(Proceso, codigo=request.data['codigo'])
+            print(request.data)
             return super(ProcesoViewSet,self).update(request, *args, **kwargs)
         except Proceso.DoesNotExist:
             content={

@@ -323,6 +323,7 @@ $( document ).ready(function(){
                         scope: $scope
                     });
                     modalInstance.result.then(function () {
+
                         console.log($scope.current_proceso)
                         var req = {
                             url: $scope.url+$scope.current_proceso.pk+"/",

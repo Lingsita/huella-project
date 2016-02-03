@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm, CrearPerfilForm, ModificarPerfilForm, \
     ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm, \
     CrearDocumentoForm
-from Empresas.models import Empresa, Formato, Empleado
+from Empresas.models import Empresa, Formato, Empleado, Proceso
 from Empresas.serializers import EmpresaSerializer, FormatosSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,6 +15,11 @@ from rest_framework.response import Response
 from Formularios.models import Formulario, Campo
 from Formularios.views import InputForm
 
+#forms
+from django.shortcuts import render, get_object_or_404
+from django import forms
+from django.forms import fields
+from Formularios.models import Formulario, Campo
 
 
 def admin_empresas(request):
@@ -76,6 +81,26 @@ def montar_formulario_dinamico(request, id):
     form_base=CrearDocumentoForm()
     return render(request, 'nuevo_documento.html', {'nombre':formulario.nombre, 'form_base':form_base,'descripcion':formulario.descripcion, 'formulario': form})
 
+def nuevo_documento(request, id=None):
+    empleado= Empleado.objects.get(usuario__user=request.user)
+    perfil=empleado.perfil
+    empresa=empleado.perfil.empresa
+    proceso=get_object_or_404(Proceso, id=id, active=True)
+    formatos =  perfil.formatos_asignados
+    return render(request, 'nuevo_documento.html', {'proceso':proceso,'default':True,'formatos': formatos})
+
+def nuevo_documento_by_formato(request, proceso=None, id=None):
+    print(proceso)
+    print(id)
+    empleado= Empleado.objects.get(usuario__user=request.user)
+    perfil=empleado.perfil
+    empresa=empleado.perfil.empresa
+    proceso=get_object_or_404(Proceso, id=proceso, active=True)
+    formatos =  perfil.formatos_asignados
+    formato=get_object_or_404(Formato, id=id, active=True)
+    campos=Campo.objects.filter(formulario=formato.formulario)
+    form = InputForm(fields=campos)
+    return render(request, 'nuevo_documento.html', {'proceso':proceso, 'formatos': formatos, 'formato': formato})
 
 
 #Another django rest solutions

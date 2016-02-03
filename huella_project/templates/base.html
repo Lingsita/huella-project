@@ -179,7 +179,13 @@
 <script src="https://code.angularjs.org/1.4.8/angular-resource.min.js"></script>
 <script src="{% static "js/ui-bootstrap-tpls-0.14.3.js" %}"></script>
 <script src="{% static "js/base.js" %}"></script>
+<script>
+     $( document ).ready(function(){
+           window.nuevo_documento_url='{% url 'empresas:nuevo_documento' %}'
+           window.nuevo_documento_by_formato_url='{% url 'empresas:nuevo_documento_by_formato' %}'
+     });
 
+</script>
     {% block some_extra_js %}
     {% endblock %}
 

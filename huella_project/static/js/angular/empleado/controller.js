@@ -28,48 +28,24 @@ $( document ).ready(function(){
             $scope.numPerPage=10
             $scope.totalItems=1
             $scope.filteredDocumentos = []
-            //paginate with bootstrap
-//            $scope.$watch('documentos.length', function(){
-//                $scope.totalItems = $scope.documentos.length;
-//                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-//                var end = begin + $scope.numPerPage;
-//
-//                $scope.filteredDocumentos = $scope.documentos.slice(begin, end);
-//
-//            })
+
             //paginate with django rest
-
             $scope.$watch('currentPage', function() {
-
-                if($scope.id_proceso=="" || $scope.id_proceso==null){
-
-                }else {
+                if($scope.id_proceso!="" && $scope.id_proceso!=null){
                     if ($scope.currentPage<=1){
                         $http.get($scope.url + $scope.id_proceso + '/by_proceso/').success(function (response) {
                             $scope.filteredDocumentos = response.results;
-                            console.log()
                         });
                     }else{
                         $http.get($scope.url + $scope.id_proceso + '/by_proceso/?page=' + $scope.currentPage).success(function (response) {
                             $scope.filteredDocumentos = response.results;
                         });
                     }
-
                 }
-
             });
-
-            $scope.pageChanged= function () {
-
-                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-                , end = begin + $scope.numPerPage;
-
-                $scope.filteredTodos = $scope.documentos.slice(begin, end);
-            }
             //-- End of Pagination
 
             $scope.getDocumentos= function () {
-
                 if($scope.id_proceso=="" || $scope.id_proceso==null){
                     location.href="/"
                 }else {
@@ -78,13 +54,17 @@ $( document ).ready(function(){
                         console.log($scope.documentos)
                         $scope.totalItems =response.count
                     });
-
                 }
-
             }
+
             $scope.verDocumento= function (pk) {
                 console.log(pk)
             }
+            
+            $scope.nuevoDocumento = function () {
+                location.href=window.nuevo_documento_url+$scope.id_proceso;
+            }
+            
             $scope.getDocumentos()
         }])
         .controller('DocumentoCtrl', ['$scope', '$rootScope', '$http','$uibModal', function($scope, $rootScope, $http, $uibModal) {
@@ -96,8 +76,6 @@ $( document ).ready(function(){
 
             $scope.csrftoken = $("[name='csrfmiddlewaretoken']").val();
             $scope.getDocumentos= function (id_proceso) {
-                console.log(id_proceso)
-
                 $rootScope.proceso = id_proceso;
                 location.href = "#proceso"
 
@@ -112,7 +90,37 @@ $( document ).ready(function(){
             }
             $scope.getProcesos();
 
+            $scope.nuevoDocumentoByFormato = function (id) {
+                location.href=window.nuevo_documento_by_formato_url+window.proceso+"/"+id;
+            }
 
+        }])
+        .controller('NuevoDocumentoCtrl', ['$scope', '$rootScope', '$http','$uibModal', function($scope, $rootScope, $http, $uibModal) {
+            $scope.documentos = []
+            $scope.url_procesos='/api-empresas/proceso/';
+            $scope.url='/api-empresas/documento/';
+
+            $scope.animationsEnabled = true;
+
+            $scope.csrftoken = $("[name='csrfmiddlewaretoken']").val();
+            $scope.getDocumentos= function (id_proceso) {
+                $rootScope.proceso = id_proceso;
+                location.href = "#proceso"
+
+            }
+
+            $scope.getProcesos = function () {
+
+                $http.get($scope.url_procesos+'empleado/').success(function (response) {
+                    $scope.procesos = response.results;
+                    console.log($scope.procesos)
+                });
+            }
+            $scope.getProcesos();
+
+            $scope.nuevoDocumentoByFormato = function (id) {
+                location.href=window.nuevo_documento_by_formato_url+window.proceso+"/"+id;
+            }
 
         }])
 
