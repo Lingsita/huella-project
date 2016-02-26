@@ -1,0 +1,149 @@
+/* line 5, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 3, ../sass/bootstrap3.scss */
+body {
+  background: #f9f6f1;
+  font: 13px/1.7em 'Open Sans';
+}
+
+/* line 8, ../sass/bootstrap3.scss */
+.navbar {
+  margin-bottom: 0;
+}
+/* line 10, ../sass/bootstrap3.scss */
+.navbar .brand {
+  float: left;
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 79px;
+  color: #ffffff;
+}
+/* line 18, ../sass/bootstrap3.scss */
+.navbar .container {
+  margin: 0;
+  width: 100%;
+}
+
+/* line 24, ../sass/bootstrap3.scss */
+.subnavbar {
+  margin-bottom: 0 !important;
+}
+/* line 27, ../sass/bootstrap3.scss */
+.subnavbar .subnavbar-inner .container {
+  margin: 0;
+  width: 100%;
+}
+
+/* line 34, ../sass/bootstrap3.scss */
+.breadcrumb {
+  background-color: #fbfbfb;
+  border: 1px solid #ddd;
+}
+/* line 37, ../sass/bootstrap3.scss */
+.breadcrumb i {
+  margin-right: 5px;
+}
+
+/* line 44, ../sass/bootstrap3.scss */
+.procesos ul li {
+  border: 1px solid #ddd;
+  text-transform: capitalize;
+}
+/* line 47, ../sass/bootstrap3.scss */
+.procesos ul li a {
+  border: 1px solid #ddd;
+  margin-right: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 18px;
+  border: none;
+  border-radius: 0;
+  margin-right: 0 !important;
+  font-size: 14px;
+  cursor: not-allowed;
+}
+/* line 58, ../sass/bootstrap3.scss */
+.procesos ul li a:hover {
+  background-color: #ddd;
+}
+/* line 61, ../sass/bootstrap3.scss */
+.procesos ul li a.active {
+  background-color: #ffffff;
+  color: #19bc9c;
+  cursor: pointer;
+}
+/* line 65, ../sass/bootstrap3.scss */
+.procesos ul li a.active:hover {
+  background-color: #EFEFEF;
+}
+/* line 70, ../sass/bootstrap3.scss */
+.procesos ul li.title-nav {
+  padding: 10px;
+  height: auto !important;
+  line-height: auto !important;
+  font-weight: 700px;
+}

@@ -100,9 +100,7 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         for chunk in file.chunks():
             destination.write(chunk)
         destination.close()
-
         # do some stuff with uploaded file
-
         empleado.foto=file
         empleado.save()
         serializer=EmpleadoSerializer(empleado)
@@ -196,6 +194,24 @@ class ProcesoViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @detail_route(methods=['get'])
+    def procesos_by_category(self, request, id=None):
+        print id
+        categoria=get_object_or_404(CategoriaProceso, active=True, pk=id)
+        print categoria
+
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        queryset=empleado.perfil.procesos.filter(categoria=categoria, active=True)
+        # queryset = Proceso.objects.filter(categoria=categoria, active=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         content={}
         if request.data['categoria']:
@@ -237,6 +253,12 @@ class ProcesoViewSet(viewsets.ModelViewSet):
         proceso =  self.get_object()
         proceso.active=False
         proceso.save()
+
+        perfiles = Perfil.objects.filter(active=True, empresa=proceso.categoria.empresa)
+
+        for p in perfiles:
+            p.procesos.remove(proceso)
+            p.save()
         log = Log(user=request.user, actividad='Desactivacion de Proceso', descripcion='Desactivacion de Proceso {0} en empresa: {1} '.format(proceso.nombre, proceso.categoria.empresa.nombre))
         log.save()
         return Response(status=204)

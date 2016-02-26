@@ -5,8 +5,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm, CrearPerfilForm, ModificarPerfilForm, \
     ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm, \
-    CrearDocumentoForm
-from Empresas.models import Empresa, Formato, Empleado, Proceso
+    CrearDocumentoForm, NuevoDocumentoForm
+from Empresas.models import Empresa, Formato, Empleado, Proceso, TipoDocumento, CategoriaProceso, Registro, Documento
 from Empresas.serializers import EmpresaSerializer, FormatosSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,6 +20,7 @@ from django.shortcuts import render, get_object_or_404
 from django import forms
 from django.forms import fields
 from Formularios.models import Formulario, Campo
+import time
 
 
 def admin_empresas(request):
@@ -82,25 +83,102 @@ def montar_formulario_dinamico(request, id):
     return render(request, 'nuevo_documento.html', {'nombre':formulario.nombre, 'form_base':form_base,'descripcion':formulario.descripcion, 'formulario': form})
 
 def nuevo_documento(request, id=None):
-    empleado= Empleado.objects.get(usuario__user=request.user)
-    perfil=empleado.perfil
-    empresa=empleado.perfil.empresa
-    proceso=get_object_or_404(Proceso, id=id, active=True)
-    formatos =  perfil.formatos_asignados
-    return render(request, 'nuevo_documento.html', {'proceso':proceso,'default':True,'formatos': formatos})
+    if request.method == 'GET':
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        perfil=empleado.perfil
+        empresa = empleado.perfil.empresa
+        proceso=get_object_or_404(Proceso, id=id, active=True)
+        formatos =  perfil.formatos_asignados
+        tipo_doc=TipoDocumento.objects.filter(active=True)
+        formND = NuevoDocumentoForm(empresa=empresa, proceso=proceso, perfil=perfil)
+        return render(request, 'nuevo_documento.html', {'proceso':proceso,'default':True,'formatos': formatos, 'tipo_doc': tipo_doc, 'form_default': formND})
+    else:
+        print(request.POST['external_link'])
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        perfil=empleado.perfil
+        empresa = empleado.perfil.empresa
+        proceso=get_object_or_404(Proceso, id=id, active=True)
+        if request.FILES:
+            form = NuevoDocumentoForm(request.POST, files=request.FILES, empresa=empresa, proceso=proceso, perfil=perfil)
+        else:
+            form = NuevoDocumentoForm(request.POST, empresa=empresa, proceso=proceso, perfil=perfil)
+
+        try:
+            documento = form.save(empleado=empleado)
+            if request.FILES:
+                file = request.FILES['archivo']
+                date =  time.strftime("%Y-%m-%d-%H%M%S")
+                print date
+                from django.conf import settings
+                new_path = settings.MEDIA_ROOT+"docs/"
+                ext = file.name.split('.')[-1]
+                filename = "%s_%s_%s_%s.%s" % ("formato_estandar", documento.proceso.nombre, documento.codigo, date, ext)
+                destination = open(new_path+filename, 'wb+')
+                for chunk in file.chunks():
+                    destination.write(chunk)
+                destination.close()
+                documento.archivo=file
+                documento.save()
+        except Documento.DoesNotExist:
+            return redirect('index')
+
+
+
+        return redirect('index')
 
 def nuevo_documento_by_formato(request, proceso=None, id=None):
-    print(proceso)
-    print(id)
-    empleado= Empleado.objects.get(usuario__user=request.user)
-    perfil=empleado.perfil
-    empresa=empleado.perfil.empresa
-    proceso=get_object_or_404(Proceso, id=proceso, active=True)
-    formatos =  perfil.formatos_asignados
-    formato=get_object_or_404(Formato, id=id, active=True)
-    campos=Campo.objects.filter(formulario=formato.formulario)
-    form = InputForm(fields=campos)
-    return render(request, 'nuevo_documento.html', {'proceso':proceso, 'formatos': formatos, 'formato': formato})
+
+    if request.method == 'GET':
+        print(proceso)
+        print(id)
+
+        empleado= get_object_or_404(Empleado,usuario__user=request.user)
+        perfil=empleado.perfil
+        empresa=empleado.perfil.empresa
+        proceso=get_object_or_404(Proceso, id=proceso, active=True)
+        formatos =  perfil.formatos_asignados
+        formato=get_object_or_404(Formato, id=id, active=True)
+        formND = NuevoDocumentoForm(empresa=empresa, proceso=proceso, perfil=perfil)
+        campos=Campo.objects.filter(formulario=formato.formulario)
+        tipo_doc=TipoDocumento.objects.filter(active=True)
+        form = InputForm(fields=campos)
+        return render(request, 'nuevo_documento.html', {'proceso':proceso, 'formatos': formatos, 'formato': formato, 'formulario': form, 'tipo_doc': tipo_doc, 'form_default': formND})
+    else:
+        print(request.POST['external_link'])
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        perfil=empleado.perfil
+        empresa = empleado.perfil.empresa
+        proceso=get_object_or_404(Proceso, id=proceso, active=True)
+        formato=get_object_or_404(Formato, id=id, active=True)
+        form = NuevoDocumentoForm(request.POST, empresa=empresa, proceso=proceso, perfil=perfil)
+        try:
+            documento = form.save(empleado=empleado, formato=formato)
+
+            for f in request.FILES:
+                file = request.FILES.get(f)
+                date =  time.strftime("%Y-%m-%d-%H%M%S")
+                from django.conf import settings
+                new_path = settings.MEDIA_ROOT+"docs/"
+                ext = file.name.split('.')[-1]
+                filename = "%s_%s_%s_%s.%s" % (documento.formato.nombre, documento.proceso.nombre, documento.codigo, date, ext)
+
+                from django.conf import settings
+                new_path = settings.MEDIA_ROOT+"docs/"
+                destination = open(new_path+filename, 'wb+')
+                for chunk in file.chunks():
+                    destination.write(chunk)
+                destination.close()
+                if f == 'archivo':
+                    documento.archivo=file
+                    documento.save()
+                else:
+                    campo = Campo.objects.get(id_campo=f)
+                    registro = Registro(documento=documento, campo=campo, valor=new_path+file.name)
+                    registro.save()
+        except Documento.DoesNotExist:
+            return redirect('index')
+
+        return redirect('index')
 
 
 #Another django rest solutions

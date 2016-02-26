@@ -540,18 +540,14 @@ jQuery( document ).ready(function() {
         .directive("eliminacampo", function(){
             return function(scope, element, attrs){
                 element.bind("click", function(){
-                    console.log(attrs.eliminacampo)
-                    console.log(scope.campos)
+                    
                     $.each( scope.campos, function( key, value ) {
                       alert( key + ": " + value );
                         $.each( value, function( key2, value2 ) {
                             if(key2=='id_campo'){
                                 if(value2==attrs.eliminacampo){
-                                    console.log("the fields are the same and will be deleted")
-                                    console.log(value2+" -- "+attrs.eliminacampo)
-                                    console.log("IndexOf:" +key)
+//
                                     scope.campos.splice(key, 1);
-                                    console.log(scope.campos)
                                     element.parent().parent().remove();
                                 }
                             }

@@ -2,6 +2,15 @@
 {% load staticfiles %}
 {% load static %}
 
+{% block bootstrap_css %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+{% endblock %}
+{% block custom_head %}
+     <link href="{% static "stylesheets/bootstrap3.css" %}" media="screen, projection" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block navbar %}
     <li class="active"><a href="empleado.html"><i class="icon-dashboard"></i><span>Inicio</span> </a> </li>
     <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-folder-open"></i><span>Documentos</span> <b class="caret"></b></a>
@@ -23,30 +32,30 @@
 
 {% block breadcrumb %}
     </div>
-    <ol class="breadcrumb " >
-        <div class="breadcrumb-title">
-            <li class="active"><a href="#"><i class=" icon-caret-right"></i> Inicio</a> </li>
-        </div>
+
+    <ol class="breadcrumb" style="margin-bottom: 5px;">
+      <li><i class="icon-caret-right"></i><a href="{% url 'index' %}">Inicio</a></li>
+      <li class="active"><a href="#procesos"> Procesos</a> </li>
     </ol>
 {% endblock %}
 {% block content %}
     <div class="main-inner">
 
-        <div class="container" ng-controller="DocumentoCtrl">
+        <div class="container-fluid" ng-controller="DocumentoCtrl">
             {% csrf_token %}
-            <div class="row" >
-                <div class="span3  procesos">
+            <div class="row">
+                <div class="col-sm-3 col-lg-2 procesos ">
                     <ul class="nav nav-tabs nav-stacked ">
                         <li class="title-nav"><i class="icon-retweet" style="font-size: 18px"></i><h3 style="font-size: 16px;  font-weight: 800; padding-left: 5px;display: inline-block">PROCESOS</h3></li>
 
                         {% if procesos_empresa %}
                             {% for f in procesos_empresa %}
-                                <li><a {% for p in procesos.all %}{% ifequal f.pk p.pk %} ng-click="getDocumentos({{ f.pk }})" {% else %} {% endifequal %}{% endfor %} class="ver_proceso {% for p in procesos.all %}{% ifequal f.pk p.pk %} active {% else %}  {% endifequal %}{% endfor %}"> {{f.nombre}}</a></li>
+                                <li><a {% for p in procesos.all %}{% ifequal f.pk p.pk %} ng-click="getDocumentos({{ f.pk }}, '{{ f.nombre }}')" {% else %} {% endifequal %}{% endfor %} class="ver_proceso {% for p in procesos.all %}{% ifequal f.pk p.pk %} active {% else %}  {% endifequal %}{% endfor %}"> {{f.nombre}}</a></li>
                             {% endfor %}
                         {% endif %}
                     </ul>
                 </div>
-                <div class="span9">
+                <div class="col-sm-9 col-lg-10">
                     <div class="contenido" id="contenido">
                         <div ng-view></div>
                     </div>
@@ -60,7 +69,12 @@
 {% endblock %}
 {% block footer %}
 {% endblock %}
+{% block bootstrap_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+{% endblock %}
 {% block some_extra_js %}
+
 
     <script>
         $( document ).ready(function(){

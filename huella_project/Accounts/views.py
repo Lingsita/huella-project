@@ -8,6 +8,7 @@ from Empresas.models import Empleado, Proceso
 
 import constantes
 # Create your views here.
+from django.views.decorators.csrf import csrf_exempt
 
 def index (request):
     if request.user.is_authenticated():
@@ -22,9 +23,7 @@ def index (request):
                 procesos=empleado.perfil.procesos
                 print(empleado)
                 if empleado.is_admin:
-                    print('is admin')
                     return redirect('/inicio')
-                # print procesos.all()
                 return render(request, 'empleado.html', {'procesos_empresa':procesos_empresa,'procesos': procesos})
             except Empleado.DoesNotExist:
                 return render(request, 'empleado.html', {})
@@ -36,10 +35,10 @@ def index (request):
                 # the password verified for the user
                 if user.is_active:
                     login(request, user)
-                    # device_uuid = str(uuid.uuid4())
-                    # userSession=UserSession(user=user, ip = device_uuid, active=True)
-                    # userSession.save()
-                    # request.session['uu_id'] = device_uuid
+                    device_uuid = str(uuid.uuid4())
+                    userSession=UserSession(user=user, ip = device_uuid, active=True)
+                    userSession.save()
+                    request.session['uu_id'] = device_uuid
                     if user.is_superuser:
                         return admin_empresas(request)
                     else:
@@ -78,11 +77,11 @@ def docs_empleado(request):
         return render(request, 'empleado.html', {})
 
 def logout_session(request):
-    # try:
-    #     userSession=UserSession.objects.get(ip = request.session['uu_id'])
-    #     userSession.active=False
-    #     userSession.save()
-    # except UserSession.DoesNotExist:
-    #     print "no existe el identificador de session"
+    try:
+        userSession=UserSession.objects.get(ip = request.session['uu_id'])
+        userSession.active=False
+        userSession.save()
+    except UserSession.DoesNotExist:
+        print "no existe el identificador de session"
     logout(request)
     return redirect('index')

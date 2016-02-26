@@ -29,8 +29,11 @@ class InputForm(forms.Form):
                 self.fields[field_name] = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, required=True, label=field_label, help_text='radio')
             elif field_type == 'date':
                 self.fields[field_name] = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}), required=True, label=field_label, help_text='date')
+            elif field_type == 'file':
+                self.fields[field_name] = forms.FileField(widget=forms.FileInput(attrs={'type':'file', 'ng-model': field.id_campo, 'style': 'visibility:hidden', 'onchange': "visibleFileValue('"+field.id_campo+"')"}), required=True, label=field_label, help_text='file')
             else:
                 self.fields[field_name] = forms.CharField(widget=forms.TextInput(attrs={'class':'span6'}),max_length=100, required=True, label=field_label)
+
 
 def montar_formulario_dinamico(request, id):
 

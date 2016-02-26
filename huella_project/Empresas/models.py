@@ -102,19 +102,21 @@ class Documento(models.Model):
     formato_default= models.BooleanField(null=False, blank=False, default=True)
     elaboro=models.ForeignKey(Empleado, null=True)
     proceso = models.ForeignKey(Proceso)
-    codigo= models.IntegerField(null=True, blank=True)
+    codigo= models.CharField(max_length=100, null=True, blank=True)
     tipo_documento = models.ForeignKey(TipoDocumento, null=True)
     fecha_emision = models.DateTimeField(default=datetime.now)
     paginas = models.IntegerField(default=1, null=True)
-    external_link = models.CharField(max_length=254, null=False, blank=True)
+    external_link = models.CharField(max_length=254, null=True, blank=True)
     is_external = models.BooleanField(null=False, blank=False, default=False)
     archivo = models.FileField(upload_to=get_file_path, blank=True, null=True)
     restringido = models.BooleanField(null=False, blank=False, default=False)
+    desc_cambios = models.CharField(max_length=250, null=False, blank=True)
     ubicacion_original = models.CharField(max_length=150, null=False, blank=True)
     active = models.BooleanField(null=False, blank=False, default=True)
     version = models.IntegerField(default=1, null=True)
+
     def __unicode__(self):
-        return u'%s' % (self.formato.nombre)
+        return u'%s' % (self.codigo)
 
 class Registro(models.Model):
     documento = models.ForeignKey(Documento)

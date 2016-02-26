@@ -1,9 +1,11 @@
-from Empresas.models import Perfil, CategoriaProceso, Formato
+# -*- encoding: utf-8 -*-
+from Empresas.models import Perfil, CategoriaProceso, Formato, TipoDocumento, Registro
+from Formularios.models import Campo
 
 __author__ = 'linglung'
 
 from django import forms
-from .models import Empresa, Empleado, Proceso
+from .models import Empresa, Empleado, Proceso, Documento
 from datetime import datetime
 
 perfiles=[]
@@ -256,43 +258,90 @@ class CrearDocumentoForm(forms.ModelForm):
 
 class NuevoDocumentoForm(forms.ModelForm):
 
-    procesos = forms.MultipleChoiceField(required=True, widget=forms.SelectMultiple())
-    empresa= forms.CharField(required=True, widget=forms.HiddenInput(attrs={'required':'required', 'ng-model':'datos.empresa'})),
+    CHOICES = (('1', 'Enlace Externo',), ('0', 'Subir Archivo desde este equipo',))
+    CHOICES_RESTRINGIDO = (('1', 'Si',), ('0', 'No',))
+    formato = forms.CharField(widget=forms.TextInput(attrs={'required': 'required'}))
+    formato_default = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.formato_default'}))
+    # elaboro = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.elaboro'}))
+    codigo = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.codigo'}))
+    tipo_documento = forms.ChoiceField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.tipo_documento'}))
+    fecha_emision = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'type': 'date', 'ng-model': 'fields.fecha_emision'}))
+    paginas = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.paginas', 'class': 'span6'}))
+    external_link = forms.CharField(widget=forms.TextInput(attrs={'ng-model':'fields.external_link', 'ng-required': 'fields.is_external==1', 'class': 'span6', 'placeholder': 'Pega la dirección de enlace aquí.'}))
+    is_external = forms.ChoiceField(widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.is_external', 'ng-change': 'tipoArchivo()'}), choices=CHOICES, initial=1)
+    archivo = forms.FileField(widget=forms.FileInput(attrs={'ng-required': 'fields.is_external==0', 'style':'visibility:hidden'}))
+    restringido = forms.ChoiceField(widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.restringido'}), choices=CHOICES_RESTRINGIDO)
+    ubicacion_original = forms.CharField(widget=forms.TextInput(attrs={ 'required': 'required', 'class': 'span6','ng-model': 'fields.ubicacion_original'}))
+    version = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.version'}))
+    desc_cambios = forms.CharField(widget=forms.Textarea(attrs={'class': 'span6', 'ng-model': 'fields.desc_cambios', 'placeholder': 'Llene este campo en caso de no ser la primera version del documento.'}))
 
     class Meta:
-        model = Proceso
+        model = Documento
         fields = '__all__'
         exclude=['active']
 
-        widgets = {
-            'codigo': forms.TextInput(attrs={'required':'required', 'ng-model':'datos.codigo'}),
-            'descripcion': forms.Textarea(attrs={'required':'required', 'ng-model':'datos.descripcion'})
-        }
-
-    # formato = models.ForeignKey(Formato, null=True)
-    # formato_default= models.BooleanField(null=False, blank=False, default=True)
-    # elaboro=models.ForeignKey(Empleado, null=True)
-    # proceso = models.ForeignKey(Proceso)
-    # codigo= models.IntegerField(null=True, blank=True)
-    # tipo_documento = models.ForeignKey(TipoDocumento, null=True)
-    # fecha_emision = models.DateTimeField(default=datetime.now)
-    # paginas = models.IntegerField(default=1, null=True)
-    # external_link = models.CharField(max_length=254, null=False, blank=True)
-    # is_external = models.BooleanField(null=False, blank=False, default=False)
-    # archivo = models.FileField(upload_to=get_file_path, blank=True, null=True)
-    # restringido = models.BooleanField(null=False, blank=False, default=False)
-    # ubicacion_original = models.CharField(max_length=150, null=False, blank=True)
-    # active = models.BooleanField(null=False, blank=False, default=True)
-    # version = models.IntegerField(default=1, null=True)
-
     def __init__(self, *args, **kwargs):
         empresa = kwargs.pop('empresa')
-        procesos= Proceso.objects.filter(categoria__empresa=empresa, active=True)
-        formatos= Formato.objects.filter(empresa=empresa, active=True)
+        proceso = kwargs.pop('proceso')
+        perfil = kwargs.pop('perfil')
+        categorias = CategoriaProceso.objects.filter(active=True, empresa=empresa)
+        procesos= perfil.procesos.filter(active=True, categoria=proceso.categoria)
+        tipos_documento=TipoDocumento.objects.filter(active=True)
         super(NuevoDocumentoForm, self).__init__(*args, **kwargs)
-        self.fields['empresa'] = forms.CharField(initial=empresa.pk,required=True, widget=forms.HiddenInput(attrs={'required':'required', 'ng-model':'datos.empresa'}))
-        self.fields['procesos'] = forms.ModelMultipleChoiceField(queryset=procesos)
-        self.fields['formatos_asignados_perfil'] = forms.ModelMultipleChoiceField(queryset=formatos)
+        self.fields['paginas'].initial='1'
+        self.fields['tipo_documento']=forms.ModelChoiceField(queryset=tipos_documento, widget=forms.Select(attrs={'class':'span6'}))
+        self.fields['proceso'] = forms.ModelChoiceField(queryset=procesos, widget=forms.Select(attrs={'class':'span6', 'ng-model':'fields.proceso', 'required':'required'}))
+        self.fields['categoria'] = forms.ModelChoiceField(queryset=categorias, widget=forms.Select(attrs={'class':'span6','ng-change':'getProcesosByCategoria()', 'ng-model':'fields.categoria'}))
+
+    def save(self, commit=True, *args, **kwargs):
+        results = []
+        if 'formato' in kwargs:
+            formato = kwargs.pop('formato')
+            formato_default = False
+        else:
+            formato = None
+            formato_default = True
+
+        print self.data
+        documento = Documento(
+            formato=formato,
+            formato_default=formato_default,
+            proceso=Proceso.objects.get(pk=self.data.get('proceso')),
+            elaboro=kwargs.pop('empleado'),
+            codigo=self.data.get('codigo'),
+            tipo_documento=TipoDocumento.objects.get(pk=self.data.get('tipo_documento')),
+            fecha_emision=self.data.get('fecha_emision'),
+            paginas=int(self.data.get('paginas')),
+            is_external=self.data.get('is_external'),
+            restringido=self.data.get('restringido'),
+            ubicacion_original=self.data.get('ubicacion_original'),
+            version=self.data.get('version'),
+            desc_cambios=self.data.get('desc_cambios'),
+        )
+        for d in self.data:
+            ext_link= self.data[d]
+            if d == 'external_link':
+                ext_link= self.data[d]
+                documento.external_link=ext_link
+
+        documento.save()
+
+        if formato is not None:
+            form = formato.formulario
+            campos = Campo.objects.filter(active=True, formulario=form)
+            for campo in campos:
+
+                if campo.nombre in self.data:
+                    print "{0} : {1}".format(campo.nombre, self.data.get(campo.nombre, default=None))
+                    if campo.tipo == 'radio' or campo.tipo == 'checkbox':
+                        valor = 'si'
+                    else:
+                        valor = self.data.get(campo.nombre, default=None)
+                else:
+                    valor='no'
+                registro = Registro(documento=documento, campo=campo, valor=valor)
+
+        return documento
 
 
 class ModificarPerfilForm(forms.ModelForm):
