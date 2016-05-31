@@ -180,6 +180,16 @@ def nuevo_documento_by_formato(request, proceso=None, id=None):
 
         return redirect('index')
 
+def mostrar_documento(request, id=None):
+    try:
+        empleado = Empleado.objects.get(usuario=request.user)
+        empresa = empleado.perfil.empresa
+        documento = Documento.objects.get(codigo=id, empresa=empresa, active=True)
+        registros = Registro.objects.filter(documento=documento, active=True)
+        return render(request, 'nuevo_documento.html', {'documento': documento, 'registros': registros})
+
+    except Documento.DoesNotExist:
+        return redirect('index')
 
 #Another django rest solutions
 

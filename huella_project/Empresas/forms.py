@@ -51,7 +51,6 @@ class CrearEmpleadoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         empresa = kwargs.pop('empresa')
         perfiles= Perfil.objects.filter(empresa=empresa, active=True)
-        print(empresa)
         super(CrearEmpleadoForm, self).__init__(*args, **kwargs)
         self.fields['perfil'] = forms.ModelChoiceField(queryset=perfiles, widget=forms.Select(attrs={'ng-model':'datos.perfil'}))
 

@@ -29,7 +29,7 @@
 
                 <tr ng-repeat="doc in filteredDocumentos | filter:search" id="ling">
                     {% verbatim %}
-                    <td> {{ doc.codigo }}</td>
+                    <td style="text-align:center;"> <a  ng-click="verDocumento(doc.pk);" style="cursor: pointer;"> {{ doc.codigo }} </a> </td>
                     <td> {{ doc.formato.nombre || 'Formato'}}</td>
                     <td> {{ doc.tipo_documento.nombre }} </td>
                     <td> {{ doc.version }} </td>
@@ -37,11 +37,9 @@
                     <td>  {{ doc.fecha_emision | dateString }} </td>
 
                     <!-- <td> 01/06/2015 08:30 AM </td>   -->
-                    <td ng-if="!doc.formato_default" class="td-actions"><a  ng-click="verDocumento(doc.pk);" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"> </i></a></td>
+                    <td class="td-actions">
 
-
-                    <td ng-if="doc.formato_default" class="td-actions">
-                        <a ng-if="doc.is_external" href="{{ doc.external_link }}" class="btn btn-small btn-success"><i class="btn-icon-only icon-paper-clip"></i> </a>
+                        <a ng-if="doc.is_external" href="{{ doc.external_link }}" class="btn btn-small btn-success"><i class="btn-icon-only icon-external-link"></i> </a>
 
                         <a ng-if="!doc.is_external" href="{{ doc.archivo }}" class="btn btn-small btn-success"><i class="btn-icon-only icon-paper-clip"> </i></a>
                     </td>

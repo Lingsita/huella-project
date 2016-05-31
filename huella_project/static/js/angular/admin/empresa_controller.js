@@ -29,7 +29,7 @@ $( document ).ready(function(){
                 })
             // $locationProvider.html5Mode(true).hashPrefix('!');
         })
-        .controller('EmpleadosCtrl', ['$scope', '$http','$uibModal', 'fileUpload', function($scope, $http, $uibModal, fileUpload) {
+        .controller('EmpleadosCtrl', ['$scope', '$http','$uibModal', 'fileUpload', 'ShowMessage', function($scope, $http, $uibModal, fileUpload, ShowMessage) {
             $scope.empleados = []
             $scope.datos = {
                 nombre : "",
@@ -91,7 +91,6 @@ $( document ).ready(function(){
                     });
                     modalInstance.result.then(function () {
                             $scope.current_empleado.perfil=$scope.current_empleado.perfil.id.toString()
-                            console.log($scope.current_empleado)
                             var modalInstance = $uibModal.open({
                                 animation: $scope.animationsEnabled,
                                 templateUrl: 'modal-modificaEmpleado.html',
@@ -101,6 +100,7 @@ $( document ).ready(function(){
                             });
                             modalInstance.result.then(function (foto) {
                                 $scope.mfoto=foto
+
                                 console.log($scope.current_empleado)
                                 var file = $scope.mfoto;
                                 var req = {
@@ -183,15 +183,15 @@ $( document ).ready(function(){
                     $http(req).then(function (response) {
                         $scope.getEmpleados()
                         var file = $scope.foto;
-                        console.log(response)
+                        ShowMessage.successMessage('Usuario Creado Satisfactoriamente');
                         var uploadUrl = $scope.url+response.data.pk+"/upload_foto/?id="+response.data.pk;
                         fileUpload.uploadFileToUrl(file, uploadUrl, csrftoken);
 
                     }, function(response){
-                        console.log(response)
-
+                        ShowMessage.errorMessage(response.data.message);
                     });
                 }, function () {
+
                     // console.log('dismiss modal')
                 });
             }
@@ -1189,6 +1189,24 @@ $( document ).ready(function(){
                 })
                 .error(function(){
                 });
+        }
+    }])
+    .factory('ShowMessage', [function(){
+        return {
+            errorMessage : function(message){
+                $('#bad_status_message').find('#message').html(message);
+                $('#bad_status_message').css('display', 'block')
+                setTimeout(function(){
+                    $('#bad_status_message').css('display', 'none')
+                }, 3000);
+            },
+            successMessage : function(message){
+                $('#status_message').find('#message').html(message);
+                $('#status_message').css('display', 'block')
+                setTimeout(function(){
+                    $('#status_message').css('display', 'none')
+                }, 3000);
+            }
         }
     }]);
 

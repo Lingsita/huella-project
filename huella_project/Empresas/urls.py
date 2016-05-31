@@ -20,5 +20,4 @@ urlpatterns = patterns('Empresas.views',
     url(r'^procesos.html$', TemplateView.as_view(template_name="empresa/procesos.html")),
     url(r'^perfiles.html$', TemplateView.as_view(template_name="empresa/perfiles.html")),
     url(r'^tareas.html$', TemplateView.as_view(template_name="empresa/tareas.html")),
-
     )

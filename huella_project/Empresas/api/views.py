@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import DjangoFilterBackend
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -19,6 +20,7 @@ from django.contrib.auth.models import User
 # Create your views here.
 from Empresas.api.permissions import IsBusinessAdmin, IsAdminOrBusinessAdmin
 from Formularios.models import Formulario, Campo
+from django.conf import settings
 
 
 class EmpresaViewSet(viewsets.ModelViewSet):
@@ -107,6 +109,7 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
+        print request.data['is_admin']
         empleado= self.get_object()
         empleado.nombre= request.data['nombre']
         empleado.apellido= request.data['apellido']
@@ -125,17 +128,43 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
         serializer=EmpleadoSerializer(empleado)
         return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        user = User(username=self.request.data['identificacion'], email=self.request.data['email'])
-        password = User.objects.make_random_password()
-        user.set_password(password)
-        user.save()
-        usuario=Usuario(user=user)
-        usuario.save()
-        # send_mail('New User Huella Gestion', 'Here is the password: {0}.'.format(password), 'linglung1047@gmail.com',
-        #     [self.request.data['email']], fail_silently=False)
+    def create(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(username=self.request.data['identificacion'])
+            content = {'message': 'Este Usuario ya existe'}
+            return Response(content, status=status.HTTP_302_FOUND)
+        except User.DoesNotExist:
+            user = User(username=self.request.data['identificacion'], email=self.request.data['email'])
+            password = User.objects.make_random_password()
+            user.set_password(password)
+            user.first_name = self.request.data['nombre']
+            user.last_name = self.request.data['apellido']
+            user.save()
+            usuario=Usuario(user=user)
+            usuario.save()
+
         perfil=Perfil.objects.get(id=self.request.data['perfil'])
-        serializer.save(usuario=usuario, perfil=perfil)
+        empleado = Empleado(
+            usuario=usuario,
+            nombre=request.data['nombre'],
+            apellido=request.data['apellido'],
+            direccion=request.data['direccion'],
+            tipo_documento=request.data['tipo_documento'],
+            identificacion=request.data['identificacion'],
+            codigo=request.data['codigo'],
+            telefono1=request.data['telefono1'],
+            telefono2=request.data['telefono2'],
+            is_admin=request.data['is_admin'],
+            perfil=perfil
+            )
+        print empleado
+        empleado.save()
+        # send_mail('New User Huella Gestion', ('Here is the password: {0}.').format(password), settings.EMAIL_HOST_USER,
+            #     [self.request.data['email']], fail_silently=False)
+        log = Log(user=request.user, actividad='Creacion de Empleado', descripcion='Creacion de Empleado {0} en empresa: {1} '.format(empleado.nombre, empleado.perfil.empresa.nombre))
+
+        serializer = EmpleadoSerializer(empleado)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         empleado =  self.get_object()
