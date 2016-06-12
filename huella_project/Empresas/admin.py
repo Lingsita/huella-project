@@ -9,7 +9,8 @@ class PerfilAdmin(admin.ModelAdmin):
     list_display=['nombre','descripcion','empresa','active']
 
 class DocumentoAdmin(admin.ModelAdmin):
-    list_display=['formato','proceso','elaboro','tipo_documento', 'active']
+    list_display=['codigo', 'formato','proceso','elaboro','tipo_documento', 'restringido', 'version', 'is_history_log', 'active']
+    list_filter = ('proceso',)
 
 admin.site.register(Empresa, PruebaAdmin)
 admin.site.register(Perfil, PerfilAdmin)

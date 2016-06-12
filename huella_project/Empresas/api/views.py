@@ -500,7 +500,7 @@ class DocumentoViewSet(viewsets.ModelViewSet):
 
         proceso=get_object_or_404(Proceso, pk=id, active=True)
 
-        queryset=Documento.objects.filter(elaboro=empleado, proceso=proceso, active=True)
+        queryset=Documento.objects.filter(elaboro=empleado, proceso=proceso, active=True, is_history_log=False)
 
         page = self.paginate_queryset(queryset)
 

@@ -72,6 +72,7 @@ class Perfil(models.Model):
     def __unicode__(self):
         return u'%s' % (self.nombre)
 
+
 class Empleado(models.Model):
     usuario = models.ForeignKey(Usuario)
     nombre = models.CharField(max_length=150)
@@ -90,12 +91,15 @@ class Empleado(models.Model):
     def __unicode__(self):
         return u'%s %s' % (self.nombre, self.apellido)
 
+
 class TipoDocumento(models.Model):
     nombre = models.CharField(max_length=150, null=False)
     descripcion = models.CharField(max_length=250, null=False)
     active = models.BooleanField(null=False, blank=False, default=True)
+
     def __unicode__(self):
-        return u'%s' % (self.nombre)
+        return u'%s' % self.nombre
+
 
 class Documento(models.Model):
     formato = models.ForeignKey(Formato, null=True)
@@ -114,14 +118,16 @@ class Documento(models.Model):
     ubicacion_original = models.CharField(max_length=150, null=False, blank=True)
     active = models.BooleanField(null=False, blank=False, default=True)
     version = models.IntegerField(default=1, null=True)
+    is_history_log = models.BooleanField(null=False, blank=False, default=False)
 
     def __unicode__(self):
         return u'%s' % (self.codigo)
 
+
 class Registro(models.Model):
     documento = models.ForeignKey(Documento)
     campo = models.ForeignKey(Campo)
-    valor = models.CharField(max_length=150)
+    valor = models.CharField(max_length=255)
     active=models.BooleanField(null=False, blank=False, default=True)
 
     def __unicode__(self):

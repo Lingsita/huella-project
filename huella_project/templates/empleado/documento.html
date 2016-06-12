@@ -3,7 +3,7 @@
             {% verbatim %}
             <h3>DOCUMENTOS : <div style="display: inline-block; text-transform: uppercase" id="nombre_proceso" ng-bind="nombre_proceso"></div></h3>
             {% endverbatim %}
-            <a ng-click="nuevoDocumento()" class="btn btn-success pull-right button-crear-proceso" style="margin-right: 25px;   margin-top: 6px;"><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Documento</a>
+            <a ng-click="nuevoDocumento()" class="btn btn-success pull-right button-crear-proceso" ><i class="btn-icon-only icon-plus-sign" style="color: white; vertical-align: middle"></i> Nuevo Documento</a>
         </div>
         <div id="buscar_documento" class="widget-header">
             <i class="icon-search"></i>
@@ -27,9 +27,9 @@
                 </thead>
                 <tbody>
 
-                <tr ng-repeat="doc in filteredDocumentos | filter:search" id="ling">
+                <tr ng-if="!empty_text" ng-repeat="doc in filteredDocumentos | filter:search" id="ling">
                     {% verbatim %}
-                    <td style="text-align:center;"> <a  ng-click="verDocumento(doc.pk);" style="cursor: pointer;"> {{ doc.codigo }} </a> </td>
+                    <td style="text-align:center;"> <a  ng-click="verDocumento(doc.codigo);" style="cursor: pointer;"> {{ doc.codigo }} </a> </td>
                     <td> {{ doc.formato.nombre || 'Formato'}}</td>
                     <td> {{ doc.tipo_documento.nombre }} </td>
                     <td> {{ doc.version }} </td>
@@ -46,6 +46,7 @@
 
                     {% endverbatim %}
                 </tr>
+                <tr ng-if="empty_text"> <td colspan="6">No hay documentos para mostrar.</td></tr>
                 </tbody>
             </table>
         </div>

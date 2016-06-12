@@ -4,9 +4,9 @@
 {% block breadcrumb %}
     <ol class="breadcrumb " >
         <div class="breadcrumb-title">
-            <li ><a href="empleado.html"><i class=" icon-caret-right"></i> Inicio</a> /</li>
-            <li ><a href="#">Formularios</a> /</li>
-            <li class="active"><a href="#">Ver Formulario</a></li>
+            <li ><a href="{% url 'index' %}"><i class=" icon-caret-right"></i> Inicio</a> /</li>
+            <li ><a href="#">{{ documento.proceso.nombre }}</a> /</li>
+            <li class="active"><a href="#">{% if documento.formato %}{{ documento.formato.nombre }} - {% endif %}{{ documento.codigo }}</a></li>
         </div>
     </ol>
 {% endblock %}
@@ -40,165 +40,99 @@
                                 <div class="widget-header">
                                     <i class="icon-file"></i>
 
-                                    {% if default %}
-                                        <h3>Proceso: <span style="text-transform: uppercase; ">{{ documento.proceso}}</span></h3>
+                                    {% if documento.formato %}
+                                        <h3>Nombre: <span style="text-transform: uppercase; ">{{ documento.formato.nombre }}</span></h3>
+
                                     {% else %}
-                                        <h3>Nuevo Documento: <span style="text-transform: uppercase; ">{{ formato.nombre }}</span></h3>
+                                       <h3>Proceso: <span style="text-transform: uppercase; ">{{ documento.proceso.nombre}}</span></h3>
                                     {% endif %}
                                 </div> <!-- /widget-header -->
 
-                                <div class="widget-content">
+                                <tr class="widget-content">
 
-                                    <form name="creaDocumento" id="crea-documento" class="form-horizontal" ng-submit="enviar()" enctype="multipart/form-data" method="POST" action="#">
-                                        {% if default %}
-                                            Usted está utilizando el <b>formato por defecto</b>, si desea utilizar otro formato por favor escojalo en el menu de la izquierda.<br><br>
-                                        {% endif %}
-                                        <fieldset>
-                                            {% csrf_token %}
+                                    <form name="muestraDocumento" id="muestra-documento" class="form-horizontal" ng-submit="enviar()" enctype="multipart/form-data" method="POST" action="#">
+                                        {% csrf_token %}
+                                        <table>
+                                            <thead>
+                                                <tr class="separator">
+                                                    <td>Descripción</td>
+                                                    <td></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td >Categoría</td>
+                                                    <td >{{documento.proceso.categoria}}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Proceso</td>
+                                                    <td >{{documento.proceso.nombre}}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Tipo de Documento</td>
+                                                    <td >{{documento.tipo_documento}}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Codigo</td>
+                                                    <td >{{documento.codigo}}</td>
+                                                </tr>
 
-                                            <div class="control-group">
-                                                <label class="control-label" for="username">Categoría</label>
-                                                <div class="controls">
-                                                    {{ form_default.categoria }}
-                                                </div> <!-- /controls -->
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group">
-                                                <label class="control-label" for="username">Proceso</label>
-                                                <div class="controls">
-                                                    {{ form_default.proceso }}
-
-                                                    <p class="help-block">El documento se creará para este proceso</p>
-                                                </div> <!-- /controls -->
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group">
-                                                <label class="control-label" for="username">Tipo de Documento</label>
-                                                <div class="controls">
-                                                    {{ form_default.tipo_documento }}
-                                                </div> <!-- /controls -->
-                                            </div> <!-- /control-group -->
-                                            <div class="control-group">
-                                                <label class="control-label" for="codigo">Codigo</label>
-                                                <div class="controls">
-                                                    {{ form_default.codigo }}
-                                                </div> <!-- /controls -->
-                                            </div> <!-- /control-group -->
-
-                                            {% for field in formulario %}
-                                                {% ifequal field.help_text 'radio' %}
-                                                    <div class="control-group">
-                                                        <label class="control-label">{{ field.label }}</label>
-                                                        <div class="controls">
-                                                            <label class="radio inline">
-                                                                {{ field }}
-                                                            </label>
-
-                                                        </div>	<!-- /controls -->
-                                                    </div> <!-- /control-group -->
-                                                {% else %}
-                                                    {% ifequal field.help_text 'file' %}
-                                                        <div class="control-group">
-
-                                                            <label class="control-label" for="firstname">{{ field.label }}</label>
-
-                                                            <div class="controls">
-                                                                <button type="button" ng-click="abrirArchivo('{{ field.html_name }}')" style="float: left;">Escoger Archivo</button> <div id="id_file_label_{{ field.html_name }}" style="float: left; margin-left: 5px;"></div>
-                                                                {{ field }}
-                                                            </div> <!-- /controls -->
-                                                        </div> <!-- /control-group -->
-                                                    {% else %}
-                                                        <div class="control-group">
-
-                                                            <label class="control-label" for="firstname">{{ field.label }}</label>
-                                                            <div class="controls">
-                                                                {{ field }}
-                                                            </div> <!-- /controls -->
-                                                        </div> <!-- /control-group -->
-                                                    {% endifequal %}
-                                                {% endifequal %}
-                                            {% endfor %}
-
-{#                                            <div class="control-group">#}
-{#                                                <label class="control-label" for="lastname">Elaboró</label>#}
-{#                                                <div class="controls">#}
-{#                                                    {{ form_default.elaboro }}#}
-{#                                                </div>#}
-{#                                            </div>#}
-
-                                            <div class="control-group">
-                                                <label class="control-label" for="lastname">Emisión</label>
-                                                <div class="controls">
-                                                    {{ form_default.version }}
-                                                </div>
-                                            </div>
-
-                                            <div class="control-group">
-                                                <label class="control-label" for="lastname">Fecha de Emisión</label>
-                                                <div class="controls">
-                                                    {{ form_default.fecha_emision }}
-                                                </div>
-                                            </div>
-
-                                            <div class="control-group">
-                                                <label class="control-label" for="email">Descripción de Cambios</label>
-                                                <div class="controls">
-                                                    {{ form_default.desc_cambios }}
-                                                    <p>Con respecto a la emisión anterior</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="control-group">
-                                                <label class="control-label" for="lastname">Páginas</label>
-                                                <div class="controls">
-                                                    {{ form_default.paginas }}
-                                                </div>
-                                            </div>
-
-                                            <div class="control-group">
-                                                <label class="control-label" for="lastname">Ubicacion Original</label>
-                                                <div class="controls">
-                                                    {{ form_default.ubicacion_original }}
-                                                </div>
-                                            </div>
-
-                                            <div class="control-group">
-                                                <label class="control-label">Documento Restringido</label>
-                                                <div class="controls">
-                                                    {% for option in form_default.restringido  %}
-                                                        <label class="radio inline">
-                                                            {{ option }}
-                                                        </label>
+                                                {% if registros %}
+                                                    <tr class="separator">
+                                                        <td >Contenido</td>
+                                                        <td ></td>
+                                                    </tr>
+                                                    {% for registro in registros %}
+                                                    <tr >
+                                                        <td >{{registro.campo.nombre}}</td>
+                                                        <td >{{registro.valor}}</td>
+                                                    </tr>
                                                     {% endfor %}
-                                                </div>
-                                            </div>
+                                                    <tr class="separator">
+                                                        <td >Información Adicional</td>
+                                                        <td ></td>
+                                                    </tr>
+                                                {% endif %}
+                                                <tr>
+                                                    <td >Fecha de Emisión</td>
+                                                    <td >{{documento.fecha_emision}}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Emisión</td>
+                                                    <td >{{documento.version}}</td>
+                                                </tr>
+                                                {% ifnotequal documento.desc_cambios "" %}
+                                                <tr>
+                                                    <td >Descripción de Cambios</td>
+                                                    <td >{{documento.desc_cambios}}</td>
+                                                </tr>
+                                                {% endifnotequal %}
+                                                <tr >
+                                                    <td >Páginas</td>
+                                                    <td >{{documento.paginas}}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Documento Restringido</td>
 
-                                            <div class="control-group">
-                                                <label class="control-label">Documento</label>
-                                                <div class="controls">
-                                                    {% for option in form_default.is_external  %}
-                                                        <label class="radio inline">
-                                                            {{ option }}
-                                                        </label>
-                                                    {% endfor %}
+                                                    <td >{% ifequal documento.restringido True %} Si {% else %} No {% endifequal %}</td>
+                                                </tr>
+                                                <tr >
+                                                    <td >Ubicación Original</td>
+                                                    <td >{{documento.ubicacion_original}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <hr>
+                                        <div >
+                                        {% if documento.is_external%}
+                                            <a class="btn btn-info base-color" href="{{documento.external_link}}"><i class="btn-icon-only  icon-external-link-sign"></i>Ir a enlace de documento original</a>
+                                        {% else %}
+                                            <a class="btn btn-info" href="{{MEDIA_URL}}{{documento.archivo}}" download="" target="_blank"><i class="btn-icon-only  icon-download-alt"></i>Descargar archivo Original</a>
+                                        {% endif%}
+                                            <a class="btn btn-success" href="{{MEDIA_URL}}{{documento.archivo}}" download="" target="_blank"><i class="btn-icon-only  icon-download-alt"></i>Descargar versión PDF</a>
+                                            <a class="btn btn-primary" href="{% url 'empresas:nueva_version_documento' documento.codigo %}" ><i class="btn-icon-only  icon-plus-sign"></i>Crear nueva versión</a>
 
-                                                    <label class="documento_url" style="display: none">
-                                                        <br>
-                                                        {{ form_default.external_link }}
-                                                    </label>
-
-                                                    <label class="documento_archivo" style="display: none">
-                                                        <br>
-                                                        <button type="button" ng-click="openArchivoWindow()">Escoger Archivo</button>
-                                                        {{ form_default.archivo }}
-                                                    </label>
-                                                </div>	<!-- /controls -->
-                                            </div> <!-- /control-group -->
-                                            <hr>
-                                            <div >
-                                                <button ng-disabled="!creaDocumento.$valid" class="btn btn-primary pull-right" style="margin: 0 5px" type="submit" class="btn btn-primary">Guardar</button>
-                                                <button class="btn pull-right" >Cancelar</button>
-                                            </div>
-
-                                        </fieldset>
+                                        </div>
                                     </form>
 
                                 </div> <!-- /widget-content -->
@@ -239,5 +173,6 @@
     }
     </script>
 <script src="{% static 'js/angular/empleado/controller.js' %}"></script>
+
 
 {% endblock %}

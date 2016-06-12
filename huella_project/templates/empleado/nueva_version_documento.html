@@ -13,7 +13,7 @@
 
     {% block content %}
 
-        <div class="main-inner" ng-controller="NuevoDocumentoCtrl">
+        <div class="main-inner" ng-controller="NuevaVersionDocumentoCtrl">
 
             <div class="container">
 
@@ -69,33 +69,37 @@
 
                                             </div>
                                         {% endif %}
+
+                                        {% if form_default.non_field_errors %}
+                                            {% for error in form_default.non_field_errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        {% endif %}
                                         <fieldset>
                                             {% csrf_token %}
 
                                             <div class="control-group">
                                                 <label class="control-label" for="username">Categoría</label>
                                                 <div class="controls">
-                                                    {{ form_default.categoria }}
+                                                    <input class='span6' disabled value="{{ current_document.proceso.categoria.nombre }}">
                                                 </div> <!-- /controls -->
                                             </div> <!-- /control-group -->
                                             <div class="control-group">
                                                 <label class="control-label" for="username">Proceso</label>
                                                 <div class="controls">
-                                                    {{ form_default.proceso }}
-
-                                                    <p class="help-block">El documento se creará para este proceso</p>
+                                                    <input class='span6' disabled value="{{ current_document.proceso.nombre }}">
                                                 </div> <!-- /controls -->
                                             </div> <!-- /control-group -->
                                             <div class="control-group">
                                                 <label class="control-label" for="username">Tipo de Documento</label>
                                                 <div class="controls">
-                                                    {{ form_default.tipo_documento }}
+                                                    <input class='span6' disabled value="{{ current_document.tipo_documento }}">
                                                 </div> <!-- /controls -->
                                             </div> <!-- /control-group -->
                                             <div class="control-group">
                                                 <label class="control-label" for="codigo">Codigo</label>
                                                 <div class="controls">
-                                                    {{ form_default.codigo }}
+                                                    <input class='span6' disabled value="{{ current_document.codigo }}">
                                                 </div> <!-- /controls -->
                                             </div> <!-- /control-group -->
 
@@ -132,13 +136,6 @@
                                                     {% endifequal %}
                                                 {% endifequal %}
                                             {% endfor %}
-
-{#                                            <div class="control-group">#}
-{#                                                <label class="control-label" for="lastname">Elaboró</label>#}
-{#                                                <div class="controls">#}
-{#                                                    {{ form_default.elaboro }}#}
-{#                                                </div>#}
-{#                                            </div>#}
 
                                             <div class="control-group">
                                                 <label class="control-label" for="lastname">Emisión</label>

@@ -55,6 +55,7 @@
                         {% endif %}
                     </ul>
                 </div>
+
                 <div class="col-sm-9 col-lg-10">
                     <div class="contenido" id="contenido">
                         <div ng-view></div>
@@ -78,6 +79,8 @@
 
     <script>
         $( document ).ready(function(){
+
+            window.mostrar_documento_url="{% url 'empresas:mostrar_documento' %}"
             window.empresa='{{ empresa.pk }}'
 
         });

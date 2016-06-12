@@ -103,6 +103,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.media',
             ],
         },
     },
@@ -173,6 +174,8 @@ EMAIL_HOST_PASSWORD = 'hairolung'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL  = 'linglung1047@gmail.com'
+
+
 try:
     from local_settings import *
 except ImportError:

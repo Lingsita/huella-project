@@ -1,16 +1,23 @@
 # -*- encoding: utf-8 -*-
+from cgi import escape
+
+from django.http.response import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.template.context import Context
+from django.template.loader import get_template
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from xhtml2pdf import pisa
+
 from Empresas.forms import CrearEmpresaForm, CrearEmpleadoForm, CrearProcesoForm, CrearPerfilForm, ModificarPerfilForm, \
     ModificarProcesoForm, ModificarEmpleadoForm, CrearCategoriaProcesoForm, CrearTareaForm, ModificaTareaForm, \
-    CrearDocumentoForm, NuevoDocumentoForm
+    CrearDocumentoForm, NuevoDocumentoForm, NuevaVersionDocumentoForm
 from Empresas.models import Empresa, Formato, Empleado, Proceso, TipoDocumento, CategoriaProceso, Registro, Documento
 from Empresas.serializers import EmpresaSerializer, FormatosSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from django.db.models import Q
 # Create your views here.
 from Formularios.models import Formulario, Campo
 from Formularios.views import InputForm
@@ -93,7 +100,7 @@ def nuevo_documento(request, id=None):
         formND = NuevoDocumentoForm(empresa=empresa, proceso=proceso, perfil=perfil)
         return render(request, 'nuevo_documento.html', {'proceso':proceso,'default':True,'formatos': formatos, 'tipo_doc': tipo_doc, 'form_default': formND})
     else:
-        print(request.POST['external_link'])
+
         empleado= Empleado.objects.get(usuario__user=request.user)
         perfil=empleado.perfil
         empresa = empleado.perfil.empresa
@@ -103,7 +110,7 @@ def nuevo_documento(request, id=None):
         else:
             form = NuevoDocumentoForm(request.POST, empresa=empresa, proceso=proceso, perfil=perfil)
 
-        try:
+        if form.is_valid():
             documento = form.save(empleado=empleado)
             if request.FILES:
                 file = request.FILES['archivo']
@@ -119,39 +126,42 @@ def nuevo_documento(request, id=None):
                 destination.close()
                 documento.archivo=file
                 documento.save()
-        except Documento.DoesNotExist:
-            return redirect('index')
+            return redirect('empresas:mostrar_documento', id=documento.codigo)
+        else:
+            formatos = perfil.formatos_asignados
+            tipo_doc = TipoDocumento.objects.filter(active=True)
+            print form.errors
 
-
+            return render(request, 'nuevo_documento.html',
+                          {'proceso': proceso, 'default': True, 'formatos': formatos, 'tipo_doc': tipo_doc,
+                           'form_default': form})
 
         return redirect('index')
 
 def nuevo_documento_by_formato(request, proceso=None, id=None):
 
     if request.method == 'GET':
-        print(proceso)
-        print(id)
 
-        empleado= get_object_or_404(Empleado,usuario__user=request.user)
+        empleado= get_object_or_404(Empleado, usuario__user=request.user)
         perfil=empleado.perfil
         empresa=empleado.perfil.empresa
         proceso=get_object_or_404(Proceso, id=proceso, active=True)
         formatos =  perfil.formatos_asignados
         formato=get_object_or_404(Formato, id=id, active=True)
         formND = NuevoDocumentoForm(empresa=empresa, proceso=proceso, perfil=perfil)
-        campos=Campo.objects.filter(formulario=formato.formulario)
+        campos=Campo.objects.filter(formulario=formato.formulario).order_by('id')
         tipo_doc=TipoDocumento.objects.filter(active=True)
         form = InputForm(fields=campos)
         return render(request, 'nuevo_documento.html', {'proceso':proceso, 'formatos': formatos, 'formato': formato, 'formulario': form, 'tipo_doc': tipo_doc, 'form_default': formND})
     else:
-        print(request.POST['external_link'])
         empleado= Empleado.objects.get(usuario__user=request.user)
         perfil=empleado.perfil
         empresa = empleado.perfil.empresa
         proceso=get_object_or_404(Proceso, id=proceso, active=True)
         formato=get_object_or_404(Formato, id=id, active=True)
         form = NuevoDocumentoForm(request.POST, empresa=empresa, proceso=proceso, perfil=perfil)
-        try:
+
+        if form.is_valid():
             documento = form.save(empleado=empleado, formato=formato)
 
             for f in request.FILES:
@@ -175,26 +185,121 @@ def nuevo_documento_by_formato(request, proceso=None, id=None):
                     campo = Campo.objects.get(id_campo=f)
                     registro = Registro(documento=documento, campo=campo, valor=new_path+file.name)
                     registro.save()
-        except Documento.DoesNotExist:
-            return redirect('index')
+            return redirect('empresas:mostrar_documento', id=documento.codigo)
+        else:
+            formatos = perfil.formatos_asignados
+            formato = get_object_or_404(Formato, id=id, active=True)
+            campos = Campo.objects.filter(formulario=formato.formulario).order_by('id')
+            tipo_doc = TipoDocumento.objects.filter(active=True)
+            formulario = InputForm(fields=campos)
+            print form.errors
+
+            return render(request, 'nuevo_documento.html',
+                          {'proceso': proceso, 'formatos': formatos, 'formato': formato, 'formulario': formulario,
+                           'tipo_doc': tipo_doc,
+                           'form_default': form}
+                          )
 
         return redirect('index')
+
 
 def mostrar_documento(request, id=None):
     try:
-        empleado = Empleado.objects.get(usuario=request.user)
+        empleado = Empleado.objects.get(usuario__user=request.user)
         empresa = empleado.perfil.empresa
-        documento = Documento.objects.get(codigo=id, empresa=empresa, active=True)
+        documento = Documento.objects.filter(codigo=id, proceso__categoria__empresa=empresa, is_history_log=False, active=True).latest('id')
         registros = Registro.objects.filter(documento=documento, active=True)
-        return render(request, 'nuevo_documento.html', {'documento': documento, 'registros': registros})
-
+        return render(request, 'empleado/mostrar_documento.html', {'documento': documento, 'registros': registros})
     except Documento.DoesNotExist:
         return redirect('index')
 
-#Another django rest solutions
+
+def nueva_version_documento(request, id=None):
+
+    if request.method == 'GET':
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        empresa = empleado.perfil.empresa
+        try:
+            documento = Documento.objects.filter(codigo=id, proceso__categoria__empresa=empresa, active=True).latest('id')
+        except Documento.DoesNotExist:
+            raise Http404
+        proceso=documento.proceso
+        formND = NuevaVersionDocumentoForm(documento=documento)
+        if documento.formato is not None:
+            campos = Campo.objects.filter(formulario=documento.formato.formulario).order_by('id')
+            registros = Registro.objects.filter(documento=documento)
+            formulario = InputForm(fields=campos, registros=registros)
+            return render(request, 'empleado/nueva_version_documento.html',
+                          {'current_document': documento, 'proceso': proceso, 'form_default': formND, 'formulario': formulario})
+        return render(request, 'empleado/nueva_version_documento.html',
+                      {'current_document': documento, 'proceso':proceso, 'form_default': formND})
+    else:
+
+        empleado= Empleado.objects.get(usuario__user=request.user)
+        empresa = empleado.perfil.empresa
+        try:
+            documento = Documento.objects.filter(codigo=id, proceso__categoria__empresa=empresa, active=True).latest('id')
+        except Documento.DoesNotExist:
+            raise Http404
+        proceso = documento.proceso
+        if request.FILES:
+            form = NuevaVersionDocumentoForm(request.POST, files=request.FILES, documento=documento)
+        else:
+            form = NuevaVersionDocumentoForm(request.POST, documento=documento)
+
+        if form.is_valid():
+            documento = form.save(documento=documento, empleado=empleado)
+            if request.FILES:
+                file = request.FILES['archivo']
+                date =  time.strftime("%Y-%m-%d-%H%M%S")
+                print date
+                from django.conf import settings
+                new_path = settings.MEDIA_ROOT+"docs/"
+                ext = file.name.split('.')[-1]
+                filename = "%s_%s_%s_%s.%s" % ("formato_estandar", documento.proceso.nombre, documento.codigo, date, ext)
+                destination = open(new_path+filename, 'wb+')
+                for chunk in file.chunks():
+                    destination.write(chunk)
+                destination.close()
+                documento.archivo=file
+                documento.save()
+            return redirect('empresas:mostrar_documento', id=documento.codigo)
+        else:
+            print form.errors
+            return render(request, 'empleado/nueva_version_documento.html',
+                          {'current_document': documento, 'proceso': proceso, 'form_default': form})
+
+        return redirect('index')
+
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    context = Context(context_dict)
+    html = template.render(context)
+    import cStringIO as StringIO
+    result = StringIO.StringIO()
+
+    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        response = HttpResponse(result.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        return response
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+
+#Exportar PDF
+def exportar_documento_pdf(request):
+    results = ["ling", "lung"]
+    # Retrieve data or whatever you need
+    return render_to_pdf(
+        'pdf_report.html',
+        {
+            'pagesize': 'A4',
+            'mylist': results,
+        }
+    )
 
 class JSONResponse(HttpResponse):
     """
+    Another django rest solutions
     An HttpResponse that renders its content into JSON.
     """
     def __init__(self, data, **kwargs):

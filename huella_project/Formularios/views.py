@@ -3,12 +3,17 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django import forms
 from django.forms import fields
+
+from Empresas.models import Registro
 from Formularios.models import Formulario, Campo
 
 class InputForm(forms.Form):
     def __init__(self, *args, **kwargs):
         form_fields = kwargs.pop("fields", {})
-
+        if 'registros' in kwargs:
+            registros = kwargs.pop("registros")
+        else:
+            registros = None
         super(InputForm, self).__init__(*args, **kwargs)
 
         for field in form_fields:
@@ -34,6 +39,12 @@ class InputForm(forms.Form):
             else:
                 self.fields[field_name] = forms.CharField(widget=forms.TextInput(attrs={'class':'span6'}),max_length=100, required=True, label=field_label)
 
+            if registros is not None:
+                try:
+                    registro = registros.get(campo__id_campo=field_name)
+                    self.fields[field_name].initial = registro.valor
+                except Registro.DoesNotExist:
+                    pass
 
 def montar_formulario_dinamico(request, id):
 

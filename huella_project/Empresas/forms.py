@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+from django.core.exceptions import FieldError, ValidationError
+
 from Empresas.models import Perfil, CategoriaProceso, Formato, TipoDocumento, Registro
 from Formularios.models import Campo
 
@@ -259,28 +261,28 @@ class NuevoDocumentoForm(forms.ModelForm):
 
     CHOICES = (('1', 'Enlace Externo',), ('0', 'Subir Archivo desde este equipo',))
     CHOICES_RESTRINGIDO = (('1', 'Si',), ('0', 'No',))
-    formato = forms.CharField(widget=forms.TextInput(attrs={'required': 'required'}))
-    formato_default = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.formato_default'}))
-    # elaboro = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.elaboro'}))
+    formato = forms.CharField(required=False, widget=forms.TextInput(attrs={'required': 'required'}))
+    formato_default = forms.CharField(required=False, widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.formato_default'}))
     codigo = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.codigo'}))
     tipo_documento = forms.ChoiceField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.tipo_documento'}))
     fecha_emision = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'type': 'date', 'ng-model': 'fields.fecha_emision'}))
     paginas = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'ng-model': 'fields.paginas', 'class': 'span6'}))
-    external_link = forms.CharField(widget=forms.TextInput(attrs={'ng-model':'fields.external_link', 'ng-required': 'fields.is_external==1', 'class': 'span6', 'placeholder': 'Pega la dirección de enlace aquí.'}))
-    is_external = forms.ChoiceField(widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.is_external', 'ng-change': 'tipoArchivo()'}), choices=CHOICES, initial=1)
-    archivo = forms.FileField(widget=forms.FileInput(attrs={'ng-required': 'fields.is_external==0', 'style':'visibility:hidden'}))
+    external_link = forms.CharField(required=False, widget=forms.TextInput(attrs={'ng-model':'fields.external_link', 'ng-required': 'fields.is_external==1', 'class': 'span6', 'placeholder': 'Pega la dirección de enlace aquí.'}))
+    is_external = forms.ChoiceField(required=False, widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.is_external', 'ng-change': 'tipoArchivo()'}), choices=CHOICES, initial=1)
+    archivo = forms.FileField(required=False, widget=forms.FileInput(attrs={'ng-required': 'fields.is_external==0', 'style':'visibility:hidden'}))
     restringido = forms.ChoiceField(widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.restringido'}), choices=CHOICES_RESTRINGIDO)
     ubicacion_original = forms.CharField(widget=forms.TextInput(attrs={ 'required': 'required', 'class': 'span6','ng-model': 'fields.ubicacion_original'}))
     version = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6', 'ng-model': 'fields.version'}))
-    desc_cambios = forms.CharField(widget=forms.Textarea(attrs={'class': 'span6', 'ng-model': 'fields.desc_cambios', 'placeholder': 'Llene este campo en caso de no ser la primera version del documento.'}))
+    desc_cambios = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'span6', 'ng-model': 'fields.desc_cambios', 'placeholder': 'Llene este campo en caso de no ser la primera version del documento.'}))
 
     class Meta:
         model = Documento
         fields = '__all__'
-        exclude=['active']
+        exclude=['active', 'elaboro']
 
     def __init__(self, *args, **kwargs):
         empresa = kwargs.pop('empresa')
+        self.empresa = empresa
         proceso = kwargs.pop('proceso')
         perfil = kwargs.pop('perfil')
         categorias = CategoriaProceso.objects.filter(active=True, empresa=empresa)
@@ -292,6 +294,14 @@ class NuevoDocumentoForm(forms.ModelForm):
         self.fields['proceso'] = forms.ModelChoiceField(queryset=procesos, widget=forms.Select(attrs={'class':'span6', 'ng-model':'fields.proceso', 'required':'required'}))
         self.fields['categoria'] = forms.ModelChoiceField(queryset=categorias, widget=forms.Select(attrs={'class':'span6','ng-change':'getProcesosByCategoria()', 'ng-model':'fields.categoria'}))
 
+    def clean_codigo(self):
+        documento = Documento.objects.filter(codigo=self.cleaned_data['codigo'], elaboro__perfil__empresa=self.empresa)
+        if documento.count()>0:
+            raise ValidationError(('Código Inválido, ya existe un documento con este código.'), code='invalid')
+        else:
+            return self.cleaned_data['codigo']
+
+
     def save(self, commit=True, *args, **kwargs):
         results = []
         if 'formato' in kwargs:
@@ -301,7 +311,12 @@ class NuevoDocumentoForm(forms.ModelForm):
             formato = None
             formato_default = True
 
-        print self.data
+        is_external = self.data.get('is_external')
+
+        if self.data.get('restringido') == '0':
+            restringido = False
+        else:
+            restringido = True
         documento = Documento(
             formato=formato,
             formato_default=formato_default,
@@ -311,17 +326,16 @@ class NuevoDocumentoForm(forms.ModelForm):
             tipo_documento=TipoDocumento.objects.get(pk=self.data.get('tipo_documento')),
             fecha_emision=self.data.get('fecha_emision'),
             paginas=int(self.data.get('paginas')),
-            is_external=self.data.get('is_external'),
-            restringido=self.data.get('restringido'),
+            restringido=restringido,
             ubicacion_original=self.data.get('ubicacion_original'),
             version=self.data.get('version'),
             desc_cambios=self.data.get('desc_cambios'),
         )
-        for d in self.data:
-            ext_link= self.data[d]
-            if d == 'external_link':
-                ext_link= self.data[d]
-                documento.external_link=ext_link
+
+        if 'external_link' in self.data and is_external == '1':
+            ext_link = self.data['external_link']
+            documento.is_external = True
+            documento.external_link=ext_link
 
         documento.save()
 
@@ -329,18 +343,105 @@ class NuevoDocumentoForm(forms.ModelForm):
             form = formato.formulario
             campos = Campo.objects.filter(active=True, formulario=form)
             for campo in campos:
-
-                if campo.nombre in self.data:
-                    print "{0} : {1}".format(campo.nombre, self.data.get(campo.nombre, default=None))
+                if campo.id_campo in self.data:
                     if campo.tipo == 'radio' or campo.tipo == 'checkbox':
                         valor = 'si'
                     else:
-                        valor = self.data.get(campo.nombre, default=None)
+                        valor = self.data.get(campo.id_campo, default=None)
                 else:
                     valor='no'
                 registro = Registro(documento=documento, campo=campo, valor=valor)
+                registro.save()
 
         return documento
+
+class NuevaVersionDocumentoForm(forms.ModelForm):
+
+    CHOICES = (('1', 'Enlace Externo',), ('0', 'Subir Archivo desde este equipo',))
+    CHOICES_RESTRINGIDO = (('1', 'Si',), ('0', 'No',))
+    fecha_emision = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'type': 'date'}))
+    paginas = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6'}))
+    external_link = forms.CharField(required=False, widget=forms.TextInput(attrs={'ng-model':'fields.external_link', 'ng-required': 'fields.is_external==1', 'class': 'span6', 'placeholder': 'Pega la dirección de enlace aquí.'}))
+    is_external = forms.ChoiceField(required=False, widget=forms.RadioSelect(attrs={'required': 'required', 'ng-model': 'fields.is_external', 'ng-change': 'tipoArchivo()'}), choices=CHOICES, initial=1)
+    archivo = forms.FileField(required=False, widget=forms.FileInput(attrs={'ng-required': 'fields.is_external==0', 'style':'visibility:hidden'}))
+    restringido = forms.ChoiceField(widget=forms.RadioSelect(attrs={'required': 'required'}), choices=CHOICES_RESTRINGIDO)
+    ubicacion_original = forms.CharField(widget=forms.TextInput(attrs={ 'required': 'required', 'class': 'span6'}))
+    version = forms.CharField(widget=forms.TextInput(attrs={'required': 'required', 'class': 'span6'}))
+    desc_cambios = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'span6', 'placeholder': 'Llene este campo en caso de no ser la primera version del documento.'}))
+
+    class Meta:
+        model = Documento
+        fields = '__all__'
+        exclude=['active', 'elaboro', 'formato', 'proceso', 'tipo_documento']
+
+    def __init__(self, *args, **kwargs):
+        self.documento = kwargs.pop('documento')
+        super(NuevaVersionDocumentoForm, self).__init__(*args, **kwargs)
+        self.fields['paginas'].initial='1'
+        self.fields['version'].initial = self.documento.version + 1
+        self.fields['desc_cambios'].initial = self.documento.desc_cambios
+        if self.documento.restringido:
+            self.fields['restringido'].initial = '1'
+        else:
+            self.fields['restringido'].initial = '0'
+        self.fields['ubicacion_original'].initial = self.documento.ubicacion_original
+        from datetime import datetime
+        from django.utils import formats
+        self.fields['fecha_emision'].initial = datetime.strftime(self.documento.fecha_emision, '%Y-%m-%d')
+
+    def save(self, commit=True, *args, **kwargs):
+        documento = kwargs.pop('documento')
+
+        results = []
+
+        is_external = self.data.get('is_external')
+
+        if self.data.get('restringido') == '0':
+            restringido = False
+        else:
+            restringido = True
+
+        nuevo_documento = Documento(
+            formato=documento.formato,
+            formato_default=documento.formato_default,
+            proceso=documento.proceso,
+            elaboro=kwargs.pop('empleado'),
+            codigo=documento.codigo,
+            tipo_documento=documento.tipo_documento,
+            fecha_emision=self.data.get('fecha_emision'),
+            paginas=int(self.data.get('paginas')),
+            restringido=restringido,
+            ubicacion_original=self.data.get('ubicacion_original'),
+            version=documento.version+1,
+            desc_cambios=self.data.get('desc_cambios'),
+        )
+
+        if 'external_link' in self.data and is_external == '1':
+            ext_link = self.data['external_link']
+            nuevo_documento.is_external = True
+            nuevo_documento.external_link=ext_link
+
+        nuevo_documento.save()
+
+        if nuevo_documento.formato is not None:
+            form = nuevo_documento.formato.formulario
+            campos = Campo.objects.filter(active=True, formulario=form)
+            for campo in campos:
+                print self.data
+                if campo.id_campo in self.data:
+                    if campo.tipo == 'radio' or campo.tipo == 'checkbox':
+                        valor = 'si'
+                    else:
+                        valor = self.data.get(campo.id_campo, default=None)
+                else:
+                    valor='no'
+                registro = Registro(documento=nuevo_documento, campo=campo, valor=valor)
+                registro.save()
+
+        documento.is_history_log = True
+        documento.save()
+
+        return nuevo_documento
 
 
 class ModificarPerfilForm(forms.ModelForm):

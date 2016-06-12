@@ -1,0 +1,7 @@
+# Django stuff:
+*.log
+local_settings.py
+media/
+bower_components/
+static/.sass-cache/
+.idea/

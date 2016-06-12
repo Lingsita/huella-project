@@ -68,8 +68,9 @@ body{
     background-color: #FCE3E3;
     border: 1px solid #FBD5D5;
     color: #C05353;
-    .close{
-        padding-bottom: 7px;
+
+    strong{
+        font-weight: 600;
     }
     &.one-session{
         padding: 40px;
@@ -213,4 +214,39 @@ body{
 .form_error{
     color: red;
     font-size: 12px;
+}
+
+#muestra-documento{
+    margin :20px;
+    table{
+        width :100%;
+        border:1px solid #00ba8b;
+
+        tbody{
+            td{
+                font-size: 14px;
+                padding: 10px;
+                border:1px solid #00ba8b;
+            }
+        }
+        .separator{
+                color: white;
+                background-color: #00ba8b;
+            font-size: 14px;
+                td{
+                    padding: 5px;
+                }
+            }
+
+    }
+
+}
+
+.button-crear-proceso{
+    @include vertical-relative-center;
+}
+.btn-info{
+    &.base-color{
+        background-color: #00ba8b;
+    }
 }

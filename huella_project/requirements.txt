@@ -4,14 +4,22 @@ django_compressor
 django-grappelli
 djangorestframework
 markdown
-django-filter 
+django-filter
+
+#run this command sudo apt-get install libjpeg-dev (this is a jpeg dependency for pillow, in order to install reportlab)
+reportlab
+
+xhtml2pdf
+html5lib
+pypdf
+
 #The first thing to do is installing the dependencies.
 
 #sudo apt-get build-dep python-psycopg2
 #After that go inside your virtualenv and use
 
 #pip install psycopg2
-#These two commands should solve the problem.
+#These two commands should solve the probl
 
 #to install requirements
 #run this command pip install -r /path/to/requirements.txt

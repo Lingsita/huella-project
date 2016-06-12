@@ -6,7 +6,7 @@ $( document ).ready(function(){
     var app= angular.module('Documentos', ['ngRoute','ui.bootstrap'])
         .config(function($routeProvider, $locationProvider) {
             $routeProvider
-                .when('/proceso', {
+                .when('/proceso/:proceso_id', {
                     templateUrl: 'documento.html',
                     // controllerAs: 'documento',
                     controller: 'DocsCtrl'
@@ -16,18 +16,20 @@ $( document ).ready(function(){
                 })
             // $locationProvider.html5Mode(true).hashPrefix('!');
         })
-        .controller('DocsCtrl', ['$scope', '$rootScope', '$http','$uibModal',  function($scope, $rootScope, $http, $uibModal) {
-            $scope.documentos = []
+        .controller('DocsCtrl', ['$scope', '$rootScope', '$http','$uibModal', '$routeParams',  function($scope, $rootScope, $http, $uibModal, $routeParams) {
+
+            $scope.documentos = [];
             $scope.url='/api-empresas/documento/';
             $scope.url_procesos='/api-empresas/proceso/empleado';
             $scope.csrftoken = $("[name='csrfmiddlewaretoken']").val();
-            $scope.id_proceso= $rootScope.proceso
+            $scope.id_proceso= $routeParams.proceso_id
+            $scope.empty_text = true;
 
             // Pagination Schema
-            $scope.currentPage=1
-            $scope.numPerPage=10
-            $scope.totalItems=1
-            $scope.filteredDocumentos = []
+            $scope.currentPage=1;
+            $scope.numPerPage=10;
+            $scope.totalItems=1;
+            $scope.filteredDocumentos = [];
 
             //paginate with django rest
             $scope.$watch('currentPage', function() {
@@ -47,25 +49,31 @@ $( document ).ready(function(){
 
             $scope.getDocumentos= function () {
                 if($scope.id_proceso=="" || $scope.id_proceso==null){
-                    location.href="/"
+                    location.href="/";
                 }else {
                     $http.get($scope.url+$scope.id_proceso+'/by_proceso/').success(function (response) {
+
                         $scope.documentos = response.results;
-                        console.log($scope.documentos)
-                        $scope.totalItems =response.count
+                        $scope.totalItems =response.count;
+                        if($scope.totalItems>0) {
+                            $scope.nombre_proceso = response.results[0].proceso.nombre;
+                            $scope.empty_text = false;
+                        }else{
+                            $scope.empty_text = true;
+                        }
                     });
                 }
             }
 
             $scope.verDocumento= function (pk) {
-                console.log(pk)
+                location.href = window.mostrar_documento_url+pk;
             }
             
             $scope.nuevoDocumento = function () {
                 location.href=window.nuevo_documento_url+$scope.id_proceso;
             }
             
-            $scope.getDocumentos()
+            $scope.getDocumentos();
         }])
         .controller('DocumentoCtrl', ['$scope', '$rootScope', '$http','$uibModal', function($scope, $rootScope, $http, $uibModal) {
             $scope.documentos = []
@@ -78,14 +86,13 @@ $( document ).ready(function(){
             $scope.getDocumentos= function (id_proceso, nombre) {
                 $rootScope.proceso = id_proceso;
                 $scope.nombre_proceso=nombre;
-                location.href = "#proceso";
+                location.href = "#proceso/"+id_proceso;
             }
 
             $scope.getProcesos = function () {
 
                 $http.get($scope.url_procesos+'empleado/').success(function (response) {
                     $scope.procesos = response.results;
-                    console.log($scope.procesos)
                 });
             }
             $scope.getProcesos();
@@ -186,7 +193,43 @@ $( document ).ready(function(){
                 }
             }
         }])
+        .controller('NuevaVersionDocumentoCtrl', ['$scope', '$rootScope', '$http','$uibModal', function($scope, $rootScope, $http, $uibModal) {
+            $scope.fields={
+                external_link: '',
+                is_external:'',
+                archivo: '',
+            }
+            $scope.animationsEnabled = true;
 
+            $scope.csrftoken = $("[name='csrfmiddlewaretoken']").val();
+
+            $scope.enviar= function () {
+                if($scope.fields.is_external==0){
+                    if($('#id_archivo').get(0).files.length === 0){
+                        return false;
+                    }
+                }
+                $('#creaDocumento').submit()
+            }
+            $scope.abrirArchivo= function (field) {
+                $('#id_'+field).click()
+            }
+
+            $scope.openArchivoWindow = function () {
+
+                $('#id_archivo').click()
+            }
+            $scope.tipoArchivo = function () {
+
+                if($scope.fields.is_external=="1"){
+                    $('.documento_archivo').css('display', 'none')
+                    $('.documento_url').css('display', 'block')
+                }else if($scope.fields.is_external=='0'){
+                    $('.documento_url').css('display', 'none')
+                    $('.documento_archivo').css('display', 'block')
+                }
+            }
+        }])
 
         .controller('GenericModalInstanceCtrl', function ($scope, $uibModalInstance) {
             $scope.ok = function () {
